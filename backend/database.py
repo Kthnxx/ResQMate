@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = "mysql+pymysql://root:mysql123@localhost/resqmate_db"
+DATABASE_URL = "mysql+pymysql://root:@localhost/resqmate_db"
 
 engine = create_engine(DATABASE_URL)
 

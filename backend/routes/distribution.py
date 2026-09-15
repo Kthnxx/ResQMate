@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import text
 from database import engine
 
@@ -44,34 +44,58 @@ def create_distribution(
     quantity_given: int
 ):
 
-    insert_query = text("""
-        INSERT INTO distributions
-        (
-            request_id,
-            resource_id,
-            staff_id,
-            quantity_given
+    # Prevent zero or negative distributions
+    if quantity_given <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Quantity given must be greater than 0"
         )
-        VALUES
-        (
-            :request_id,
-            :resource_id,
-            :staff_id,
-            :quantity_given
-        )
-    """)
-
-    update_resource_query = text("""
-        UPDATE resources
-        SET quantity_available =
-            quantity_available - :quantity_given
-        WHERE resource_id = :resource_id
-    """)
 
     with engine.begin() as conn:
 
+        # Check if resource exists and get available quantity
+        resource = conn.execute(
+            text("""
+                SELECT resource_id, quantity_available
+                FROM resources
+                WHERE resource_id = :resource_id
+            """),
+            {
+                "resource_id": resource_id
+            }
+        ).fetchone()
+
+        if not resource:
+            raise HTTPException(
+                status_code=404,
+                detail="Resource not found"
+            )
+
+        # Check if enough stock is available
+        if resource.quantity_available < quantity_given:
+            raise HTTPException(
+                status_code=400,
+                detail="Insufficient resource quantity"
+            )
+
+        # Insert distribution
         conn.execute(
-            insert_query,
+            text("""
+                INSERT INTO distributions
+                (
+                    request_id,
+                    resource_id,
+                    staff_id,
+                    quantity_given
+                )
+                VALUES
+                (
+                    :request_id,
+                    :resource_id,
+                    :staff_id,
+                    :quantity_given
+                )
+            """),
             {
                 "request_id": request_id,
                 "resource_id": resource_id,
@@ -80,8 +104,14 @@ def create_distribution(
             }
         )
 
+        # Deduct quantity from resources
         conn.execute(
-            update_resource_query,
+            text("""
+                UPDATE resources
+                SET quantity_available =
+                    quantity_available - :quantity_given
+                WHERE resource_id = :resource_id
+            """),
             {
                 "quantity_given": quantity_given,
                 "resource_id": resource_id
@@ -97,20 +127,56 @@ def create_distribution(
 @router.delete("/{distribution_id}")
 def delete_distribution(distribution_id: int):
 
-    query = text("""
-        DELETE FROM distributions
-        WHERE distribution_id = :distribution_id
-    """)
-
     with engine.begin() as conn:
 
+        # Get distribution before deleting it
+        distribution = conn.execute(
+            text("""
+                SELECT
+                    distribution_id,
+                    resource_id,
+                    quantity_given
+                FROM distributions
+                WHERE distribution_id = :distribution_id
+            """),
+            {
+                "distribution_id": distribution_id
+            }
+        ).fetchone()
+
+        # Distribution does not exist
+        if not distribution:
+            raise HTTPException(
+                status_code=404,
+                detail="Distribution not found"
+            )
+
+        # Restore quantity back to resources
         conn.execute(
-            query,
+            text("""
+                UPDATE resources
+                SET quantity_available =
+                    quantity_available + :quantity_given
+                WHERE resource_id = :resource_id
+            """),
+            {
+                "quantity_given": distribution.quantity_given,
+                "resource_id": distribution.resource_id
+            }
+        )
+
+        # Delete distribution
+        conn.execute(
+            text("""
+                DELETE FROM distributions
+                WHERE distribution_id = :distribution_id
+            """),
             {
                 "distribution_id": distribution_id
             }
         )
 
     return {
-        "message": "Distribution Deleted Successfully"
+        "message": "Distribution Deleted Successfully",
+        "quantity_restored": distribution.quantity_given
     }

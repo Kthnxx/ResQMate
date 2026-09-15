@@ -362,10 +362,7 @@ def get_user_requests(user_id: int):
             ar.status,
             ar.date_requested,
             c.category_name,
-            l.location_name,
-            l.address,
-            l.city,
-            l.province
+            l.location_name
         FROM assistance_requests ar
         LEFT JOIN categories c
             ON ar.category_id = c.category_id
@@ -391,9 +388,6 @@ def get_user_requests(user_id: int):
                 "category_name": row.category_name,
                 "location_id": row.location_id,
                 "location": row.location_name,
-                "address": row.address,
-                "city": row.city,
-                "province": row.province,
                 "request_details": row.request_details,
                 "priority_level": row.priority_level,
                 "status": row.status,
