@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ResQMate – Admin Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-  <link href="css/style.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
 </head>
+
 <body class="rq-dashboard-body">
 
   <div class="d-flex rq-dashboard-wrapper">
@@ -15,7 +17,7 @@
     <!-- ── SIDEBAR ── -->
     <aside class="rq-sidebar">
       <div class="rq-sidebar-brand">
-        <img src="https://img.icons8.com/color/48/hand-holding-heart.png" width="30" height="30" alt="logo"/>
+        <img src="https://img.icons8.com/color/48/hand-holding-heart.png" width="30" height="30" alt="logo" />
         <span>ResQMate</span>
       </div>
       <nav class="rq-sidebar-nav">
@@ -62,7 +64,8 @@
             <div class="fw-semibold small">Admin</div>
             <div class="text-muted" style="font-size:.75rem;">Administrator</div>
           </div>
-          <img src="https://img.icons8.com/color/48/user-shield.png" width="40" height="40" alt="avatar" class="rounded-circle"/>
+          <img src="https://img.icons8.com/color/48/user-shield.png" width="40" height="40" alt="avatar"
+            class="rounded-circle" />
         </div>
       </div>
 
@@ -111,15 +114,15 @@
               <h6 class="fw-bold mb-4">Assistance Types</h6>
               <div class="d-flex align-items-center gap-4">
                 <svg viewBox="0 0 120 120" width="120" height="120">
-                  <circle cx="60" cy="60" r="50" fill="none" stroke="#e9ecef" stroke-width="20"/>
+                  <circle cx="60" cy="60" r="50" fill="none" stroke="#e9ecef" stroke-width="20" />
                   <circle cx="60" cy="60" r="50" fill="none" stroke="#2563EB" stroke-width="20"
-                    stroke-dasharray="110 204" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+                    stroke-dasharray="110 204" stroke-dashoffset="0" transform="rotate(-90 60 60)" />
                   <circle cx="60" cy="60" r="50" fill="none" stroke="#F97316" stroke-width="20"
-                    stroke-dasharray="70 244" stroke-dashoffset="-110" transform="rotate(-90 60 60)"/>
+                    stroke-dasharray="70 244" stroke-dashoffset="-110" transform="rotate(-90 60 60)" />
                   <circle cx="60" cy="60" r="50" fill="none" stroke="#22C55E" stroke-width="20"
-                    stroke-dasharray="50 264" stroke-dashoffset="-180" transform="rotate(-90 60 60)"/>
+                    stroke-dasharray="50 264" stroke-dashoffset="-180" transform="rotate(-90 60 60)" />
                   <circle cx="60" cy="60" r="50" fill="none" stroke="#EF4444" stroke-width="20"
-                    stroke-dasharray="30 284" stroke-dashoffset="-230" transform="rotate(-90 60 60)"/>
+                    stroke-dasharray="30 284" stroke-dashoffset="-230" transform="rotate(-90 60 60)" />
                   <text x="60" y="55" text-anchor="middle" font-size="16" font-weight="700" fill="#1e293b">342</text>
                   <text x="60" y="70" text-anchor="middle" font-size="8" fill="#94a3b8">Total</text>
                 </svg>
@@ -181,14 +184,14 @@
             <div class="rq-card h-100">
               <h6 class="fw-bold mb-3">Distribution Trends</h6>
               <svg viewBox="0 0 320 100" width="100%" style="overflow:visible;">
-                <polyline points="10,80 60,60 110,70 160,35 210,50 270,20 310,30"
-                  fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round"/>
-                <polyline points="10,80 60,60 110,70 160,35 210,50 270,20 310,30"
-                  fill="url(#blueGrad)" stroke="none" opacity="0.15"/>
+                <polyline points="10,80 60,60 110,70 160,35 210,50 270,20 310,30" fill="none" stroke="#2563EB"
+                  stroke-width="2.5" stroke-linejoin="round" />
+                <polyline points="10,80 60,60 110,70 160,35 210,50 270,20 310,30" fill="url(#blueGrad)" stroke="none"
+                  opacity="0.15" />
                 <defs>
                   <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#2563EB"/>
-                    <stop offset="100%" stop-color="#2563EB" stop-opacity="0"/>
+                    <stop offset="0%" stop-color="#2563EB" />
+                    <stop offset="100%" stop-color="#2563EB" stop-opacity="0" />
                   </linearGradient>
                 </defs>
               </svg>
@@ -240,7 +243,8 @@
         <div class="rq-card mb-4">
           <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
             <h6 class="fw-bold mb-0 me-auto">Manage Users</h6>
-            <input type="text" id="searchBar" class="form-control rq-input" placeholder="Search users…" style="max-width:220px;"/>
+            <input type="text" id="searchBar" class="form-control rq-input" placeholder="Search users…"
+              style="max-width:220px;" />
             <select id="statusFilter" class="form-select rq-input" style="max-width:180px;">
               <option value="">All Roles</option>
               <option value="community">Community</option>
@@ -276,7 +280,8 @@
                 <tr data-status="staff">
                   <td>Mark Santos</td>
                   <td>mark@example.com</td>
-                  <td><span class="rq-badge rq-badge-pending" style="background:#fef3c7;color:#92400e;">Staff</span></td>
+                  <td><span class="rq-badge rq-badge-pending" style="background:#fef3c7;color:#92400e;">Staff</span>
+                  </td>
                   <td><span class="rq-badge" style="background:#d1fae5;color:#065f46;">Active</span></td>
                   <td>
                     <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
@@ -296,7 +301,8 @@
                 <tr data-status="staff">
                   <td>Carla Mercado</td>
                   <td>carla@example.com</td>
-                  <td><span class="rq-badge rq-badge-pending" style="background:#fef3c7;color:#92400e;">Staff</span></td>
+                  <td><span class="rq-badge rq-badge-pending" style="background:#fef3c7;color:#92400e;">Staff</span>
+                  </td>
                   <td><span class="rq-badge" style="background:#fee2e2;color:#991b1b;">Inactive</span></td>
                   <td>
                     <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
@@ -381,11 +387,17 @@
           <div class="table-responsive">
             <table class="table rq-table align-middle mb-0">
               <thead>
-                <tr><th>Location Name</th><th>City</th><th>Active Requests</th><th>Actions</th></tr>
+                <tr>
+                  <th>Location Name</th>
+                  <th>City</th>
+                  <th>Active Requests</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>QC Main Warehouse</td><td>Quezon City</td>
+                  <td>QC Main Warehouse</td>
+                  <td>Quezon City</td>
                   <td><span class="rq-badge rq-badge-pending">12</span></td>
                   <td>
                     <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
@@ -393,7 +405,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Pasig Relief Hub</td><td>Pasig City</td>
+                  <td>Pasig Relief Hub</td>
+                  <td>Pasig City</td>
                   <td><span class="rq-badge rq-badge-processing">7</span></td>
                   <td>
                     <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
@@ -401,7 +414,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Marikina Depot</td><td>Marikina City</td>
+                  <td>Marikina Depot</td>
+                  <td>Marikina City</td>
                   <td><span class="rq-badge rq-badge-approved">3</span></td>
                   <td>
                     <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
@@ -409,7 +423,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Manila Central</td><td>Manila</td>
+                  <td>Manila Central</td>
+                  <td>Manila</td>
                   <td><span class="rq-badge rq-badge-high">18</span></td>
                   <td>
                     <button class="btn btn-sm btn-outline-primary me-1">Edit</button>
@@ -436,11 +451,18 @@
           <div class="table-responsive">
             <table class="table rq-table align-middle mb-0">
               <thead>
-                <tr><th>Resource</th><th>Category</th><th>Quantity</th><th>Location</th><th>Actions</th></tr>
+                <tr>
+                  <th>Resource</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Location</th>
+                  <th>Actions</th>
+                </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Relief Food Packs</td><td>Food</td>
+                  <td>Relief Food Packs</td>
+                  <td>Food</td>
                   <td><span class="fw-semibold text-success">240 units</span></td>
                   <td>QC Warehouse</td>
                   <td>
@@ -449,7 +471,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Bottled Water (500ml)</td><td>Water</td>
+                  <td>Bottled Water (500ml)</td>
+                  <td>Water</td>
                   <td><span class="fw-semibold text-warning">80 cases</span></td>
                   <td>Pasig Hub</td>
                   <td>
@@ -458,7 +481,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Emergency Tents</td><td>Shelter</td>
+                  <td>Emergency Tents</td>
+                  <td>Shelter</td>
                   <td><span class="fw-semibold text-danger">12 units</span></td>
                   <td>Marikina Depot</td>
                   <td>
@@ -467,7 +491,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>First Aid Kits</td><td>Medicine</td>
+                  <td>First Aid Kits</td>
+                  <td>Medicine</td>
                   <td><span class="fw-semibold text-success">150 kits</span></td>
                   <td>QC Warehouse</td>
                   <td>
@@ -476,7 +501,8 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Blankets</td><td>Shelter</td>
+                  <td>Blankets</td>
+                  <td>Shelter</td>
                   <td><span class="fw-semibold text-success">320 pcs</span></td>
                   <td>QC Warehouse</td>
                   <td>
@@ -527,8 +553,10 @@
         <div class="rq-card mb-4">
           <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
             <h6 class="fw-bold mb-0 me-auto">All Request Records</h6>
-            <input type="text" id="recordsSearchBar" class="form-control rq-input" placeholder="Search records…" style="max-width:220px;" oninput="filterRecords()"/>
-            <select id="recordsStatusFilter" class="form-select rq-input" style="max-width:180px;" onchange="filterRecords()">
+            <input type="text" id="recordsSearchBar" class="form-control rq-input" placeholder="Search records…"
+              style="max-width:220px;" oninput="filterRecords()" />
+            <select id="recordsStatusFilter" class="form-select rq-input" style="max-width:180px;"
+              onchange="filterRecords()">
               <option value="">All Status</option>
               <option value="pending">Pending</option>
               <option value="processing">Processing</option>
@@ -556,74 +584,104 @@
               </thead>
               <tbody>
                 <tr data-record-status="pending">
-                  <td class="fw-semibold">#0012</td><td>Juan Dela Cruz</td><td>Food</td>
+                  <td class="fw-semibold">#0012</td>
+                  <td>Juan Dela Cruz</td>
+                  <td>Food</td>
                   <td>Quezon City</td>
                   <td><span class="rq-badge rq-badge-high">High</span></td>
                   <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td>Sept 10, 2026</td><td>Mark Santos</td>
+                  <td>Sept 10, 2026</td>
+                  <td>Mark Santos</td>
                 </tr>
                 <tr data-record-status="processing">
-                  <td class="fw-semibold">#0011</td><td>Maria Santos</td><td>Water</td>
+                  <td class="fw-semibold">#0011</td>
+                  <td>Maria Santos</td>
+                  <td>Water</td>
                   <td>Pasig City</td>
                   <td><span class="rq-badge rq-badge-medium">Medium</span></td>
                   <td><span class="rq-badge rq-badge-processing">Processing</span></td>
-                  <td>Sept 9, 2026</td><td>Mark Santos</td>
+                  <td>Sept 9, 2026</td>
+                  <td>Mark Santos</td>
                 </tr>
                 <tr data-record-status="approved">
-                  <td class="fw-semibold">#0010</td><td>Pedro Reyes</td><td>Shelter</td>
+                  <td class="fw-semibold">#0010</td>
+                  <td>Pedro Reyes</td>
+                  <td>Shelter</td>
                   <td>Marikina City</td>
                   <td><span class="rq-badge rq-badge-high">High</span></td>
                   <td><span class="rq-badge rq-badge-approved">Approved</span></td>
-                  <td>Sept 8, 2026</td><td>Carla Mercado</td>
+                  <td>Sept 8, 2026</td>
+                  <td>Carla Mercado</td>
                 </tr>
                 <tr data-record-status="approved">
-                  <td class="fw-semibold">#0009</td><td>Ana Garcia</td><td>Medicine</td>
+                  <td class="fw-semibold">#0009</td>
+                  <td>Ana Garcia</td>
+                  <td>Medicine</td>
                   <td>Quezon City</td>
                   <td><span class="rq-badge rq-badge-low">Low</span></td>
                   <td><span class="rq-badge rq-badge-approved">Approved</span></td>
-                  <td>Sept 8, 2026</td><td>Mark Santos</td>
+                  <td>Sept 8, 2026</td>
+                  <td>Mark Santos</td>
                 </tr>
                 <tr data-record-status="pending">
-                  <td class="fw-semibold">#0008</td><td>Carlos Lim</td><td>Food</td>
+                  <td class="fw-semibold">#0008</td>
+                  <td>Carlos Lim</td>
+                  <td>Food</td>
                   <td>Manila</td>
                   <td><span class="rq-badge rq-badge-medium">Medium</span></td>
                   <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td>Sept 7, 2026</td><td>Unassigned</td>
+                  <td>Sept 7, 2026</td>
+                  <td>Unassigned</td>
                 </tr>
                 <tr data-record-status="completed">
-                  <td class="fw-semibold">#0007</td><td>Rosa Cruz</td><td>Water</td>
+                  <td class="fw-semibold">#0007</td>
+                  <td>Rosa Cruz</td>
+                  <td>Water</td>
                   <td>Pasig City</td>
                   <td><span class="rq-badge rq-badge-low">Low</span></td>
                   <td><span class="rq-badge rq-badge-completed">Completed</span></td>
-                  <td>Sept 6, 2026</td><td>Mark Santos</td>
+                  <td>Sept 6, 2026</td>
+                  <td>Mark Santos</td>
                 </tr>
                 <tr data-record-status="pending">
-                  <td class="fw-semibold">#0006</td><td>Miguel Torres</td><td>Shelter</td>
+                  <td class="fw-semibold">#0006</td>
+                  <td>Miguel Torres</td>
+                  <td>Shelter</td>
                   <td>Manila</td>
                   <td><span class="rq-badge rq-badge-high">High</span></td>
                   <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td>Sept 6, 2026</td><td>Unassigned</td>
+                  <td>Sept 6, 2026</td>
+                  <td>Unassigned</td>
                 </tr>
                 <tr data-record-status="completed">
-                  <td class="fw-semibold">#0005</td><td>Linda Ramos</td><td>Medicine</td>
+                  <td class="fw-semibold">#0005</td>
+                  <td>Linda Ramos</td>
+                  <td>Medicine</td>
                   <td>Quezon City</td>
                   <td><span class="rq-badge rq-badge-medium">Medium</span></td>
                   <td><span class="rq-badge rq-badge-completed">Completed</span></td>
-                  <td>Sept 5, 2026</td><td>Carla Mercado</td>
+                  <td>Sept 5, 2026</td>
+                  <td>Carla Mercado</td>
                 </tr>
                 <tr data-record-status="completed">
-                  <td class="fw-semibold">#0004</td><td>Ben Aquino</td><td>Food</td>
+                  <td class="fw-semibold">#0004</td>
+                  <td>Ben Aquino</td>
+                  <td>Food</td>
                   <td>Marikina City</td>
                   <td><span class="rq-badge rq-badge-low">Low</span></td>
                   <td><span class="rq-badge rq-badge-completed">Completed</span></td>
-                  <td>Sept 4, 2026</td><td>Mark Santos</td>
+                  <td>Sept 4, 2026</td>
+                  <td>Mark Santos</td>
                 </tr>
                 <tr data-record-status="completed">
-                  <td class="fw-semibold">#0003</td><td>Claire Tan</td><td>Water</td>
+                  <td class="fw-semibold">#0003</td>
+                  <td>Claire Tan</td>
+                  <td>Water</td>
                   <td>Manila</td>
                   <td><span class="rq-badge rq-badge-medium">Medium</span></td>
                   <td><span class="rq-badge rq-badge-completed">Completed</span></td>
-                  <td>Sept 3, 2026</td><td>Carla Mercado</td>
+                  <td>Sept 3, 2026</td>
+                  <td>Carla Mercado</td>
                 </tr>
               </tbody>
             </table>
@@ -668,7 +726,8 @@
               </div>
             </div>
           </div>
-          <p class="text-muted small">Full report export and date-range filtering will connect to the backend API once integrated.</p>
+          <p class="text-muted small">Full report export and date-range filtering will connect to the backend API once
+            integrated.</p>
         </div>
       </div><!-- end #section-reports -->
 
@@ -689,11 +748,11 @@
         </div>
         <div class="mb-3">
           <label class="form-label small fw-semibold">Full Name</label>
-          <input type="text" class="form-control rq-input" placeholder="Juan Dela Cruz" required/>
+          <input type="text" class="form-control rq-input" placeholder="Juan Dela Cruz" required />
         </div>
         <div class="mb-3">
           <label class="form-label small fw-semibold">Email</label>
-          <input type="email" class="form-control rq-input" placeholder="you@example.com" required/>
+          <input type="email" class="form-control rq-input" placeholder="you@example.com" required />
         </div>
         <div class="mb-3">
           <label class="form-label small fw-semibold">Role</label>
@@ -705,7 +764,7 @@
         </div>
         <div class="mb-4">
           <label class="form-label small fw-semibold">Temporary Password</label>
-          <input type="password" class="form-control rq-input" placeholder="••••••••" required/>
+          <input type="password" class="form-control rq-input" placeholder="••••••••" required />
         </div>
         <div class="d-flex gap-3">
           <button class="btn btn-outline-secondary flex-grow-1" data-bs-dismiss="modal">Cancel</button>
@@ -725,7 +784,7 @@
         </div>
         <div class="mb-3">
           <label class="form-label small fw-semibold">Category Name</label>
-          <input type="text" class="form-control rq-input" placeholder="e.g. Clothing" required/>
+          <input type="text" class="form-control rq-input" placeholder="e.g. Clothing" required />
         </div>
         <div class="mb-4">
           <label class="form-label small fw-semibold">Description</label>
@@ -744,15 +803,15 @@
   <script>
 
     // ── Section navigation ──────────────────────────────────────────────
-    const adminSections = ['overview','users','categories','locations','resources','records','reports'];
-    const adminTitles   = {
-      overview:   'Dashboard',
-      users:      'Manage Users',
+    const adminSections = ['overview', 'users', 'categories', 'locations', 'resources', 'records', 'reports'];
+    const adminTitles = {
+      overview: 'Dashboard',
+      users: 'Manage Users',
       categories: 'Manage Categories',
-      locations:  'Manage Locations',
-      resources:  'Manage Resources',
-      records:    'Request Records',
-      reports:    'Reports & Analytics'
+      locations: 'Manage Locations',
+      resources: 'Manage Resources',
+      records: 'Request Records',
+      reports: 'Reports & Analytics'
     };
 
     function showSection(name) {
@@ -781,10 +840,10 @@
       const search = document.getElementById('searchBar')?.value.toLowerCase() || '';
       const status = document.getElementById('statusFilter')?.value.toLowerCase() || '';
       document.querySelectorAll('#requestsTable tbody tr').forEach(row => {
-        const text      = row.textContent.toLowerCase();
+        const text = row.textContent.toLowerCase();
         const rowStatus = row.dataset.status || '';
-        const matchS    = text.includes(search);
-        const matchF    = !status || rowStatus === status;
+        const matchS = text.includes(search);
+        const matchF = !status || rowStatus === status;
         row.style.display = (matchS && matchF) ? '' : 'none';
       });
     }
@@ -794,14 +853,15 @@
       const search = document.getElementById('recordsSearchBar')?.value.toLowerCase() || '';
       const status = document.getElementById('recordsStatusFilter')?.value.toLowerCase() || '';
       document.querySelectorAll('#recordsTable tbody tr').forEach(row => {
-        const text      = row.textContent.toLowerCase();
+        const text = row.textContent.toLowerCase();
         const rowStatus = row.dataset.recordStatus || '';
-        const matchS    = text.includes(search);
-        const matchF    = !status || rowStatus === status;
+        const matchS = text.includes(search);
+        const matchF = !status || rowStatus === status;
         row.style.display = (matchS && matchF) ? '' : 'none';
       });
     }
 
   </script>
 </body>
+
 </html>

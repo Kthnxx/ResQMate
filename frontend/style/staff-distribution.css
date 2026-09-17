@@ -1,0 +1,165 @@
+/* =========================================
+   PAGE SECTION
+========================================= */
+
+.distribution-section {
+    padding: 24px;
+}
+
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+
+.distribution-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 24px;
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.distribution-search {
+    max-width: 420px;
+    margin-bottom: 20px;
+}
+
+.distribution-search .input-group-text {
+    background: #ffffff;
+    border-right: none;
+    color: #6c757d;
+}
+
+.distribution-search .form-control {
+    border-left: none;
+}
+
+.distribution-search .form-control:focus {
+    border-left: none;
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+.distribution-message {
+    display: none;
+
+    margin-bottom: 20px;
+    padding: 12px 15px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+}
+
+.distribution-message.success {
+    display: block;
+
+    background: #e9f7ef;
+    border: 1px solid #b7dfc6;
+    color: #176b36;
+}
+
+.distribution-message.error {
+    display: block;
+
+    background: #fdecec;
+    border: 1px solid #efb5b5;
+    color: #9b1c1c;
+}
+
+
+/* =========================================
+   DISTRIBUTION TABLE
+========================================= */
+
+.distribution-section .table-responsive {
+    width: 100%;
+}
+
+.distribution-section .rq-table {
+    min-width: 900px;
+}
+
+.distribution-section .rq-table th {
+    white-space: nowrap;
+}
+
+.distribution-section .rq-table td {
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   ACTION BUTTON
+========================================= */
+
+.delete-distribution-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    border: 1px solid #dc3545;
+    border-radius: 6px;
+
+    background: transparent;
+    color: #dc3545;
+
+    transition: 0.2s ease;
+}
+
+.delete-distribution-btn:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+#distributionModal .modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+
+    .distribution-section {
+        padding: 16px;
+    }
+
+    .distribution-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .distribution-header .btn {
+        width: 100%;
+    }
+
+    .distribution-search {
+        max-width: 100%;
+    }
+
+}
