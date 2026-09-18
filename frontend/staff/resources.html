@@ -1,287 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ResQMate – Staff Resources</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-  <link href="css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources</title>
+
+  <link rel="stylesheet" href="../style/customer-sidebar.css">
+  <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="../style/staff-resources.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="rq-dashboard-body">
 
-  <div class="d-flex rq-dashboard-wrapper">
+<body>
 
-    <!-- ── SIDEBAR ── -->
-    <aside class="rq-sidebar">
-      <div class="rq-sidebar-brand">
-        <img src="../assets/logo.png" width="30" height="30" alt="ResQMate logo" onerror="this.src='https://img.icons8.com/color/48/hand-holding-heart.png'"/>
-        <span>ResQMate</span>
-      </div>
-      <nav class="rq-sidebar-nav">
-        <a href="dashboard.html" class="rq-nav-item">
-          <i class="bi bi-house-door"></i> <span>Dashboard</span>
-        </a>
-        <a href="requests.html" class="rq-nav-item">
-          <i class="bi bi-list-task"></i> <span>Requests</span>
-        </a>
-        <a href="resources.html" class="rq-nav-item active">
-          <i class="bi bi-box-seam"></i> <span>Resources</span>
-        </a>
-        <a href="distribution.html" class="rq-nav-item">
-          <i class="bi bi-truck"></i> <span>Distributions</span>
-        </a>
-        <a href="profile.html" class="rq-nav-item">
-          <i class="bi bi-person"></i> <span>Profile</span>
-        </a>
-      </nav>
-      <div class="rq-sidebar-footer">
-        <a href="../index.html" class="rq-nav-item text-danger">
-          <i class="bi bi-box-arrow-left"></i> <span>Logout</span>
-        </a>
-      </div>
-    </aside>
+  <div class="dashboard-container">
 
-    <!-- ── MAIN ── -->
-    <main class="rq-main flex-grow-1">
+    <div id="sidebar-container"></div>
 
-      <!-- Top bar -->
-      <div class="rq-topbar">
+    <main class="main-content">
+
+      <div class="topbar">
         <div>
-          <h5 class="mb-0 fw-bold">Resources</h5>
-          <div class="text-muted" style="font-size:.75rem;">View and manage available relief resources</div>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-          <div class="text-end">
-            <div class="fw-semibold small" id="staffName">Staff</div>
-            <div class="text-muted" style="font-size:.75rem;">Relief Staff</div>
-          </div>
-          <img src="https://img.icons8.com/color/48/user-male-circle.png" width="40" height="40" alt="avatar" class="rounded-circle"/>
+          <h2>Resources</h2>
+          <p>View and manage available relief resources</p>
         </div>
       </div>
 
-      <!-- Summary cards -->
-      <div class="row g-3 mb-4">
-        <div class="col-6 col-md-3">
-          <div class="rq-stat-card rq-stat-blue">
-            <div class="rq-stat-label">Total Resources</div>
-            <div class="rq-stat-num" id="totalResources">—</div>
-          </div>
+      <!-- Stats -->
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <h3>Total Resources</h3>
+          <div id="totalResources">0</div>
         </div>
-        <div class="col-6 col-md-3">
-          <div class="rq-stat-card rq-stat-green">
-            <div class="rq-stat-label">Available</div>
-            <div class="rq-stat-num" id="availableResources">—</div>
-          </div>
+
+        <div class="stat-card">
+          <h3>Available</h3>
+          <div id="availableResources">0</div>
         </div>
-        <div class="col-6 col-md-3">
-          <div class="rq-stat-card rq-stat-orange">
-            <div class="rq-stat-label">Low Stock</div>
-            <div class="rq-stat-num" id="lowStockResources">—</div>
-          </div>
+
+        <div class="stat-card">
+          <h3>Low Stock</h3>
+          <div id="lowStockResources">0</div>
         </div>
-        <div class="col-6 col-md-3">
-          <div class="rq-stat-card rq-stat-gray">
-            <div class="rq-stat-label">Depleted</div>
-            <div class="rq-stat-num" id="depletedResources">—</div>
-          </div>
+
+        <div class="stat-card">
+          <h3>Depleted</h3>
+          <div id="depletedResources">0</div>
         </div>
+
       </div>
 
-      <!-- Resources Table -->
-      <div class="rq-card">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h6 class="fw-bold mb-0">Resource Inventory</h6>
-          <button class="btn btn-primary btn-sm px-3" id="refreshBtn" style="border-radius:8px;background:#2563EB;border-color:#2563EB;">
-            <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+      <!-- Table Card -->
+      <div class="table-card">
+
+        <div class="table-header">
+
+          <h3>Resource Inventory</h3>
+
+          <button id="refreshBtn">
+            <i class="fas fa-rotate-right"></i>
+            Refresh
           </button>
+
         </div>
 
-        <!-- Search and filter row — IDs used by app.js -->
         <div class="rq-filter-row">
-          <input
-            type="text"
-            id="searchBar"
-            class="rq-input form-control"
-            placeholder="Search resources…"
-            aria-label="Search resources"
-          />
-          <select id="statusFilter" class="rq-input form-select">
-            <option value="all">All Types</option>
+
+          <input type="text" id="searchBar" class="rq-input" placeholder="Search resources...">
+
+          <select id="statusFilter" class="rq-input">
+
+            <option value="all">All Categories</option>
             <option value="food">Food</option>
             <option value="water">Water</option>
             <option value="shelter">Shelter</option>
             <option value="medicine">Medicine</option>
-            <option value="general">General</option>
+
           </select>
+
         </div>
 
-        <div class="table-responsive">
-          <table class="table rq-table align-middle mb-0">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Resource Name</th>
-                <th>Category</th>
-                <th>Quantity</th>
-                <th>Unit</th>
-                <th>Location</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="resourcesTableBody">
-              <!-- Static fallback rows — replaced by fetch() when backend is running -->
-              <tr>
-                <td class="fw-semibold">#R001</td>
-                <td>Rice (25kg sacks)</td>
-                <td>Food</td>
-                <td>200</td>
-                <td>sacks</td>
-                <td>Quezon City Warehouse</td>
-                <td><span class="rq-badge rq-badge-approved">Available</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R002</td>
-                <td>Bottled Water (1.5L)</td>
-                <td>Water</td>
-                <td>500</td>
-                <td>bottles</td>
-                <td>Pasig Distribution Hub</td>
-                <td><span class="rq-badge rq-badge-approved">Available</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R003</td>
-                <td>Emergency Tarpaulin</td>
-                <td>Shelter</td>
-                <td>15</td>
-                <td>pcs</td>
-                <td>Manila Storage</td>
-                <td><span class="rq-badge rq-badge-pending">Low Stock</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R004</td>
-                <td>First Aid Kit</td>
-                <td>Medicine</td>
-                <td>80</td>
-                <td>kits</td>
-                <td>Marikina Relief Center</td>
-                <td><span class="rq-badge rq-badge-approved">Available</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R005</td>
-                <td>Canned Sardines</td>
-                <td>Food</td>
-                <td>3</td>
-                <td>boxes</td>
-                <td>Quezon City Warehouse</td>
-                <td><span class="rq-badge rq-badge-pending">Low Stock</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R006</td>
-                <td>Oral Rehydration Salts</td>
-                <td>Medicine</td>
-                <td>0</td>
-                <td>sachets</td>
-                <td>Manila Storage</td>
-                <td><span class="rq-badge rq-badge-processing">Depleted</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R007</td>
-                <td>Hygiene Kit</td>
-                <td>General</td>
-                <td>120</td>
-                <td>kits</td>
-                <td>Taguig Distribution Hub</td>
-                <td><span class="rq-badge rq-badge-approved">Available</span></td>
-              </tr>
-              <tr>
-                <td class="fw-semibold">#R008</td>
-                <td>Blankets</td>
-                <td>Shelter</td>
-                <td>60</td>
-                <td>pcs</td>
-                <td>Caloocan Storage</td>
-                <td><span class="rq-badge rq-badge-approved">Available</span></td>
-              </tr>
-            </tbody>
-          </table>
+        <table>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Resource</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="resourcesTableBody"></tbody>
+
+        </table>
+
+        <div id="emptyState">
+          No resources found.
         </div>
 
-        <div id="emptyState" class="text-center py-5 d-none">
-          <i class="bi bi-box text-muted" style="font-size:2.5rem;"></i>
-          <p class="text-muted mt-2 mb-0">No resources found.</p>
-        </div>
       </div>
 
     </main>
+
   </div>
 
-  <!-- ── SCRIPTS ── -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const API_URL = 'http://127.0.0.1:8000';
+  <div id="logout-modal-wrapper"></div>
 
-    async function loadResources() {
-      try {
-        const res = await fetch(`${API_URL}/resources/`);
-        if (!res.ok) throw new Error('Backend not reachable');
-        const data = await res.json();
-        renderResources(data);
-      } catch (err) {
-        console.warn('Backend offline, showing static data:', err.message);
-        countStaticResources();
-      }
-    }
+  <script src="../components/logout-modal.js"></script>
+  <script src="../components/loadStaffSidebar.js"></script>
+  <script src="../js/staff-resources.js"></script>
 
-    function renderResources(resources) {
-      const tbody = document.getElementById('resourcesTableBody');
-      if (!resources.length) {
-        tbody.innerHTML = '';
-        document.getElementById('emptyState').classList.remove('d-none');
-        return;
-      }
-      tbody.innerHTML = resources.map(r => {
-        const qty = parseInt(r.quantity_available) || 0;
-        const statusLabel = qty === 0 ? 'Depleted' : qty <= 20 ? 'Low Stock' : 'Available';
-        const statusClass = qty === 0 ? 'rq-badge-processing' : qty <= 20 ? 'rq-badge-pending' : 'rq-badge-approved';
-        return `
-          <tr>
-            <td class="fw-semibold">#R${String(r.resource_id).padStart(3,'0')}</td>
-            <td>${r.resource_name || '—'}</td>
-            <td>${r.category || '—'}</td>
-            <td>${r.quantity_available ?? '—'}</td>
-            <td>${r.unit || '—'}</td>
-            <td>${r.location || '—'}</td>
-            <td><span class="rq-badge ${statusClass}">${statusLabel}</span></td>
-          </tr>`;
-      }).join('');
-      const total     = resources.length;
-      const available = resources.filter(r => (r.quantity_available || 0) > 20).length;
-      const low       = resources.filter(r => (r.quantity_available || 0) > 0 && (r.quantity_available || 0) <= 20).length;
-      const depleted  = resources.filter(r => (r.quantity_available || 0) === 0).length;
-      document.getElementById('totalResources').textContent     = total;
-      document.getElementById('availableResources').textContent = available;
-      document.getElementById('lowStockResources').textContent  = low;
-      document.getElementById('depletedResources').textContent  = depleted;
-    }
-
-    function countStaticResources() {
-      const rows = document.querySelectorAll('#resourcesTableBody tr');
-      document.getElementById('totalResources').textContent     = rows.length;
-      document.getElementById('availableResources').textContent =
-        [...rows].filter(r => r.textContent.includes('Available')).length;
-      document.getElementById('lowStockResources').textContent  =
-        [...rows].filter(r => r.textContent.includes('Low Stock')).length;
-      document.getElementById('depletedResources').textContent  =
-        [...rows].filter(r => r.textContent.includes('Depleted')).length;
-    }
-
-    document.getElementById('refreshBtn').addEventListener('click', loadResources);
-    document.addEventListener('DOMContentLoaded', () => {
-      loadResources();
-    });
-  </script>
-  <script src="../js/app.js"></script>
 </body>
+
 </html>

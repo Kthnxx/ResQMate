@@ -1,0 +1,68 @@
+<aside class="sidebar">
+    <div class="sidebar-header-wrapper"
+        style="display: flex; align-items: center; justify-content: space-between; padding-right: 4px;">
+        <div class="logo" style="padding: 15px 10px; margin-bottom: 10px;">
+            <img src="../assets/logo.png" alt="ResQMate Logo">
+            <h2>ResQMate</h2>
+        </div>
+        <!-- 3 lines Toggle Button -->
+        <button class="toggle-btn" aria-label="Toggle Sidebar"
+            style="background: transparent; border: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer; padding: 8px; border-radius: 8px;">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+
+    <ul class="menu">
+        <li>
+            <a href="../staff/dashboard.html">
+                <i class="fas fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="../staff/requests.html">
+                <i class="fas fa-list-check"></i>
+                <span>Requests</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="../staff/resources.html">
+                <i class="fas fa-boxes-stacked"></i>
+                <span>Resources</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="../staff/distributions.html">
+                <i class="fas fa-truck"></i>
+                <span>Distributions</span>
+            </a>
+        </li>
+
+    </ul>
+
+    <!-- Bottom Section -->
+    <div class="sidebar-bottom">
+        <div class="sidebar-footer-row">
+
+            <button class="profile-button">
+                <div class="profile-avatar" id="profileAvatar">S</div>
+
+                <div class="profile-info">
+                    <strong id="profileName">Loading...</strong>
+                    <span id="profileRole">Loading...</span>
+                </div>
+            </button>
+
+            <!-- Logout Button (Moved to Left) -->
+            <div class="logout">
+                <button title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</aside>

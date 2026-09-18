@@ -1,597 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ResQMate – Staff Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-  <link href="css/style.css" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Staff Dashboard</title>
+
+  <link rel="stylesheet" href="../style/customer-sidebar.css">
+  <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="../style/staff-dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="rq-dashboard-body">
 
-  <div class="d-flex rq-dashboard-wrapper">
+<body>
 
-    <!-- ── SIDEBAR ── -->
-    <aside class="rq-sidebar">
-      <div class="rq-sidebar-brand">
-        <img src="https://img.icons8.com/color/48/hand-holding-heart.png" width="30" height="30" alt="logo"/>
-        <span>ResQMate</span>
-      </div>
-      <nav class="rq-sidebar-nav">
-        <a href="#" class="rq-nav-item active" onclick="showSection('overview');return false;">
-          <i class="bi bi-house-door"></i> <span>Dashboard</span>
-        </a>
-        <a href="#" class="rq-nav-item" onclick="showSection('requests');return false;">
-          <i class="bi bi-list-task"></i> <span>Requests</span>
-        </a>
-        <a href="#" class="rq-nav-item" onclick="showSection('resources');return false;">
-          <i class="bi bi-box-seam"></i> <span>Resources</span>
-        </a>
-        <a href="#" class="rq-nav-item" onclick="showSection('distributions');return false;">
-          <i class="bi bi-truck"></i> <span>Distributions</span>
-        </a>
-        <a href="#" class="rq-nav-item">
-          <i class="bi bi-person"></i> <span>Profile</span>
-        </a>
-      </nav>
-      <div class="rq-sidebar-footer">
-        <a href="index.html" class="rq-nav-item text-danger">
-          <i class="bi bi-box-arrow-left"></i> <span>Logout</span>
-        </a>
-      </div>
-    </aside>
+  <div class="dashboard-container">
 
-    <!-- ── MAIN ── -->
-    <main class="rq-main flex-grow-1">
+    <div id="sidebar-container"></div>
+    
 
-      <!-- Top bar -->
-      <div class="rq-topbar">
+    <main class="main-content">
+
+      <!-- Top Bar -->
+      <div class="topbar">
         <div>
-          <h5 class="mb-0 fw-bold" id="pageTitle">Dashboard</h5>
-        </div>
-        <div class="d-flex align-items-center gap-3">
-          <div class="text-end">
-            <div class="fw-semibold small">Mark Santos</div>
-            <div class="text-muted" style="font-size:.75rem;">Relief Staff</div>
-          </div>
-          <img src="https://img.icons8.com/color/48/user-male-circle.png" width="40" height="40" alt="avatar" class="rounded-circle"/>
+          <h2>
+            Staff Dashboard
+          </h2>
+
+          <p>
+            Manage requests and relief operations
+          </p>
         </div>
       </div>
 
-      <!-- ═══════════════════════════════════════
-           SECTION: OVERVIEW (default)
-      ═══════════════════════════════════════ -->
-      <div id="section-overview">
+      <!-- Statistics -->
 
-        <!-- Stat cards -->
-        <div class="row g-3 mb-4">
-          <div class="col-6 col-md-4">
-            <div class="rq-stat-card rq-stat-blue">
-              <div class="rq-stat-label">Total Requests</div>
-              <div class="rq-stat-num">24</div>
-              <a href="#" class="rq-stat-link" onclick="showSection('requests');return false;">View all →</a>
-            </div>
-          </div>
-          <div class="col-6 col-md-4">
-            <div class="rq-stat-card rq-stat-orange">
-              <div class="rq-stat-label">Pending Requests</div>
-              <div class="rq-stat-num">8</div>
-              <a href="#" class="rq-stat-link" onclick="showSection('requests');return false;">View all →</a>
-            </div>
-          </div>
-          <div class="col-12 col-md-4">
-            <div class="rq-stat-card rq-stat-green">
-              <div class="rq-stat-label">Available Resources</div>
-              <div class="rq-stat-num">16</div>
-              <a href="#" class="rq-stat-link" onclick="showSection('resources');return false;">View all →</a>
-            </div>
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <h3>Total Requests</h3>
+          <div id="totalRequests">
+            0
           </div>
         </div>
 
-        <!-- Recent Requests preview -->
-        <div class="rq-card mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="fw-bold mb-0">Recent Requests</h6>
-            <a href="#" class="small rq-link" onclick="showSection('requests');return false;">View all</a>
-          </div>
-          <div class="table-responsive">
-            <table class="table rq-table align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Type</th>
-                  <th>Priority</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>#0012</td><td>Food</td>
-                  <td><span class="rq-badge rq-badge-high">High</span></td>
-                  <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0012','Food','Pending')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#0011</td><td>Water</td>
-                  <td><span class="rq-badge rq-badge-medium">Medium</span></td>
-                  <td><span class="rq-badge rq-badge-processing">Processing</span></td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0011','Water','Processing')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#0010</td><td>Shelter</td>
-                  <td><span class="rq-badge rq-badge-high">High</span></td>
-                  <td><span class="rq-badge rq-badge-approved">Approved</span></td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0010','Shelter','Approved')">View</button></td>
-                </tr>
-                <tr>
-                  <td>#0009</td><td>Medicine</td>
-                  <td><span class="rq-badge rq-badge-low">Low</span></td>
-                  <td><span class="rq-badge rq-badge-approved">Approved</span></td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0009','Medicine','Approved')">View</button></td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="stat-card">
+          <h3>Pending Requests</h3>
+          <div id="pendingRequests">
+            0
           </div>
         </div>
 
-      </div><!-- end #section-overview -->
-
-      <!-- ═══════════════════════════════════════
-           SECTION: REQUESTS (full searchable table)
-           NOTE: searchBar, statusFilter, requestsTable IDs here
-           — your classmate's app.js hooks automatically.
-      ═══════════════════════════════════════ -->
-      <div id="section-requests" class="d-none">
-        <div class="rq-card mb-4">
-          <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
-            <h6 class="fw-bold mb-0 me-auto">All Requests</h6>
-            <input type="text" id="searchBar" class="form-control rq-input" placeholder="Search requests…" style="max-width:220px;"/>
-            <select id="statusFilter" class="form-select rq-input" style="max-width:180px;">
-              <option value="">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="processing">Processing</option>
-              <option value="approved">Approved</option>
-              <option value="completed">Completed</option>
-            </select>
-          </div>
-
-          <div class="table-responsive">
-            <table class="table rq-table align-middle mb-0" id="requestsTable">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Requester</th>
-                  <th>Type</th>
-                  <th>Priority</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr data-status="pending">
-                  <td>#0012</td><td>Juan Dela Cruz</td><td>Food</td>
-                  <td><span class="rq-badge rq-badge-high">High</span></td>
-                  <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td>Sept 10, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0012','Food','Pending')">View</button></td>
-                </tr>
-                <tr data-status="processing">
-                  <td>#0011</td><td>Maria Santos</td><td>Water</td>
-                  <td><span class="rq-badge rq-badge-medium">Medium</span></td>
-                  <td><span class="rq-badge rq-badge-processing">Processing</span></td>
-                  <td>Sept 9, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0011','Water','Processing')">View</button></td>
-                </tr>
-                <tr data-status="approved">
-                  <td>#0010</td><td>Pedro Reyes</td><td>Shelter</td>
-                  <td><span class="rq-badge rq-badge-high">High</span></td>
-                  <td><span class="rq-badge rq-badge-approved">Approved</span></td>
-                  <td>Sept 8, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0010','Shelter','Approved')">View</button></td>
-                </tr>
-                <tr data-status="approved">
-                  <td>#0009</td><td>Ana Garcia</td><td>Medicine</td>
-                  <td><span class="rq-badge rq-badge-low">Low</span></td>
-                  <td><span class="rq-badge rq-badge-approved">Approved</span></td>
-                  <td>Sept 8, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0009','Medicine','Approved')">View</button></td>
-                </tr>
-                <tr data-status="pending">
-                  <td>#0008</td><td>Carlos Lim</td><td>Food</td>
-                  <td><span class="rq-badge rq-badge-medium">Medium</span></td>
-                  <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td>Sept 7, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0008','Food','Pending')">View</button></td>
-                </tr>
-                <tr data-status="completed">
-                  <td>#0007</td><td>Rosa Cruz</td><td>Water</td>
-                  <td><span class="rq-badge rq-badge-low">Low</span></td>
-                  <td><span class="rq-badge rq-badge-completed">Completed</span></td>
-                  <td>Sept 6, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0007','Water','Completed')">View</button></td>
-                </tr>
-                <tr data-status="pending">
-                  <td>#0006</td><td>Miguel Torres</td><td>Shelter</td>
-                  <td><span class="rq-badge rq-badge-high">High</span></td>
-                  <td><span class="rq-badge rq-badge-pending">Pending</span></td>
-                  <td>Sept 6, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0006','Shelter','Pending')">View</button></td>
-                </tr>
-                <tr data-status="completed">
-                  <td>#0005</td><td>Linda Ramos</td><td>Medicine</td>
-                  <td><span class="rq-badge rq-badge-medium">Medium</span></td>
-                  <td><span class="rq-badge rq-badge-completed">Completed</span></td>
-                  <td>Sept 5, 2026</td>
-                  <td><button class="btn btn-sm btn-outline-primary" onclick="openUpdateModal('#0005','Medicine','Completed')">View</button></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div><!-- end #section-requests -->
-
-      <!-- ═══════════════════════════════════════
-           SECTION: RESOURCES
-      ═══════════════════════════════════════ -->
-      <div id="section-resources" class="d-none">
-
-        <!-- Summary cards -->
-        <div class="row g-3 mb-4">
-          <div class="col-6 col-md-3">
-            <div class="rq-stat-card rq-stat-orange text-center">
-              <i class="bi bi-egg-fried fs-3 text-warning mb-2 d-block"></i>
-              <div class="rq-stat-label">Food Packs</div>
-              <div class="rq-stat-num">240</div>
-              <div class="small text-muted">units available</div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="rq-stat-card rq-stat-blue text-center">
-              <i class="bi bi-droplet fs-3 text-info mb-2 d-block"></i>
-              <div class="rq-stat-label">Water Cases</div>
-              <div class="rq-stat-num">80</div>
-              <div class="small text-muted">cases available</div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="rq-stat-card rq-stat-gray text-center">
-              <i class="bi bi-house fs-3 text-success mb-2 d-block"></i>
-              <div class="rq-stat-label">Emergency Tents</div>
-              <div class="rq-stat-num">12</div>
-              <div class="small text-muted">units available</div>
-            </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="rq-stat-card rq-stat-green text-center">
-              <i class="bi bi-capsule fs-3 text-danger mb-2 d-block"></i>
-              <div class="rq-stat-label">First Aid Kits</div>
-              <div class="rq-stat-num">150</div>
-              <div class="small text-muted">kits available</div>
-            </div>
+        <div class="stat-card">
+          <h3>Distributions</h3>
+          <div id="completedDistributions">
+            0
           </div>
         </div>
 
-        <!-- Resource table -->
-        <div class="rq-card mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h6 class="fw-bold mb-0">Resource Inventory</h6>
-            <span class="small text-muted">Last updated: Sept 13, 2026</span>
-          </div>
-          <div class="table-responsive">
-            <table class="table rq-table align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>Resource</th>
-                  <th>Category</th>
-                  <th>Quantity</th>
-                  <th>Location</th>
-                  <th>Stock Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><i class="bi bi-egg-fried text-warning me-2"></i>Relief Food Packs</td>
-                  <td>Food</td>
-                  <td><span class="fw-semibold text-success">240 units</span></td>
-                  <td>QC Warehouse</td>
-                  <td><span class="rq-badge rq-badge-approved">Sufficient</span></td>
-                </tr>
-                <tr>
-                  <td><i class="bi bi-droplet text-info me-2"></i>Bottled Water (500ml)</td>
-                  <td>Water</td>
-                  <td><span class="fw-semibold text-warning">80 cases</span></td>
-                  <td>Pasig Hub</td>
-                  <td><span class="rq-badge rq-badge-processing">Low Stock</span></td>
-                </tr>
-                <tr>
-                  <td><i class="bi bi-house text-success me-2"></i>Emergency Tents</td>
-                  <td>Shelter</td>
-                  <td><span class="fw-semibold text-danger">12 units</span></td>
-                  <td>Marikina Depot</td>
-                  <td><span class="rq-badge rq-badge-high">Critical</span></td>
-                </tr>
-                <tr>
-                  <td><i class="bi bi-capsule text-danger me-2"></i>First Aid Kits</td>
-                  <td>Medicine</td>
-                  <td><span class="fw-semibold text-success">150 kits</span></td>
-                  <td>QC Warehouse</td>
-                  <td><span class="rq-badge rq-badge-approved">Sufficient</span></td>
-                </tr>
-                <tr>
-                  <td><i class="bi bi-thermometer-half text-secondary me-2"></i>Blankets</td>
-                  <td>Shelter</td>
-                  <td><span class="fw-semibold text-success">320 pcs</span></td>
-                  <td>QC Warehouse</td>
-                  <td><span class="rq-badge rq-badge-approved">Sufficient</span></td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="stat-card">
+          <h3>Resources</h3>
+          <div id="totalResources">
+            0
           </div>
         </div>
 
-      </div><!-- end #section-resources -->
+      </div>
 
-      <!-- ═══════════════════════════════════════
-           SECTION: DISTRIBUTIONS (Transactions)
-      ═══════════════════════════════════════ -->
-      <div id="section-distributions" class="d-none">
-        <div class="rq-card mb-4">
-          <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
-            <h6 class="fw-bold mb-0 me-auto">Distribution Transactions</h6>
-            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addDistributionModal">
-              <i class="bi bi-plus-lg me-1"></i> Log Distribution
-            </button>
-          </div>
+      <!-- Requests Table -->
 
-          <!-- Transaction summary -->
-          <div class="row g-3 mb-4">
-            <div class="col-6 col-md-3">
-              <div class="rq-stat-card rq-stat-green">
-                <div class="rq-stat-label">Delivered</div>
-                <div class="rq-stat-num">2</div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="rq-stat-card rq-stat-blue">
-                <div class="rq-stat-label">In Transit</div>
-                <div class="rq-stat-num">2</div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="rq-stat-card rq-stat-orange">
-                <div class="rq-stat-label">Preparing</div>
-                <div class="rq-stat-num">1</div>
-              </div>
-            </div>
-            <div class="col-6 col-md-3">
-              <div class="rq-stat-card rq-stat-gray">
-                <div class="rq-stat-label">Total Logged</div>
-                <div class="rq-stat-num">5</div>
-              </div>
-            </div>
-          </div>
+      <div class="table-card">
 
-          <div class="table-responsive">
-            <table class="table rq-table align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>Transaction ID</th>
-                  <th>Request ID</th>
-                  <th>Resource</th>
-                  <th>Qty Given</th>
-                  <th>Recipient</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="fw-semibold">TXN-001</td>
-                  <td>#0007</td>
-                  <td>Water (500ml)</td>
-                  <td>10 cases</td>
-                  <td>Rosa Cruz</td>
-                  <td>Sept 6, 2026</td>
-                  <td><span class="rq-badge rq-badge-completed">Delivered</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-semibold">TXN-002</td>
-                  <td>#0005</td>
-                  <td>First Aid Kit</td>
-                  <td>2 kits</td>
-                  <td>Linda Ramos</td>
-                  <td>Sept 5, 2026</td>
-                  <td><span class="rq-badge rq-badge-completed">Delivered</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-semibold">TXN-003</td>
-                  <td>#0010</td>
-                  <td>Emergency Tent</td>
-                  <td>1 unit</td>
-                  <td>Pedro Reyes</td>
-                  <td>Sept 8, 2026</td>
-                  <td><span class="rq-badge rq-badge-processing">In Transit</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-semibold">TXN-004</td>
-                  <td>#0011</td>
-                  <td>Water (500ml)</td>
-                  <td>5 cases</td>
-                  <td>Maria Santos</td>
-                  <td>Sept 9, 2026</td>
-                  <td><span class="rq-badge rq-badge-processing">In Transit</span></td>
-                </tr>
-                <tr>
-                  <td class="fw-semibold">TXN-005</td>
-                  <td>#0009</td>
-                  <td>First Aid Kit</td>
-                  <td>1 kit</td>
-                  <td>Ana Garcia</td>
-                  <td>Sept 8, 2026</td>
-                  <td><span class="rq-badge rq-badge-pending">Preparing</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div><!-- end #section-distributions -->
+        <h3>
+          Recent Requests
+        </h3>
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Priority</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="recentRequestsTable">
+          </tbody>
+
+        </table>
+
+      </div>
 
     </main>
+
   </div>
 
-  <!-- ═══════════════════════════════════════
-       MODALS
-  ═══════════════════════════════════════ -->
+  <div id="logout-modal-wrapper"></div>
 
-  <!-- Status Update Modal -->
-  <div class="modal fade" id="updateModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rq-auth-card p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="fw-bold mb-0">Update Request</h5>
-          <button class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="mb-3">
-          <div class="text-muted small mb-1">Request ID</div>
-          <div class="fw-semibold" id="modal-req-id">—</div>
-        </div>
-        <div class="mb-3">
-          <div class="text-muted small mb-1">Type</div>
-          <div class="fw-semibold" id="modal-req-type">—</div>
-        </div>
-        <div class="mb-4">
-          <label class="form-label small fw-semibold" for="newStatus">Update Status</label>
-          <select id="newStatus" class="form-select rq-input">
-            <option value="Pending">Pending</option>
-            <option value="Processing">Processing</option>
-            <option value="Approved">Approved</option>
-            <option value="Completed">Completed</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="form-label small fw-semibold" for="staffNotes">Staff Notes</label>
-          <textarea id="staffNotes" class="form-control rq-input" rows="3" placeholder="Add notes or remarks…"></textarea>
-        </div>
-        <div class="d-flex gap-3">
-          <button class="btn btn-outline-secondary flex-grow-1" data-bs-dismiss="modal">Cancel</button>
-          <button class="btn btn-primary flex-grow-1" onclick="saveStatus()">Save Changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <script src="../components/logout-modal.js"></script>
+  <script src="../components/loadStaffSidebar.js"></script>
+  <script src="../js/staff-dashboard.js"></script>
 
-  <!-- Log Distribution Modal -->
-  <div class="modal fade" id="addDistributionModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content rq-auth-card p-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="fw-bold mb-0">Log Distribution</h5>
-          <button class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-semibold">Linked Request ID</label>
-          <input type="text" class="form-control rq-input" placeholder="e.g. #0012" required/>
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-semibold">Resource</label>
-          <select class="form-select rq-input" required>
-            <option value="">Select resource…</option>
-            <option value="food">Relief Food Packs</option>
-            <option value="water">Bottled Water (500ml)</option>
-            <option value="tent">Emergency Tents</option>
-            <option value="medicine">First Aid Kits</option>
-            <option value="other">Blankets</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-semibold">Quantity Given</label>
-          <input type="number" class="form-control rq-input" placeholder="e.g. 5" min="1" required/>
-        </div>
-        <div class="mb-3">
-          <label class="form-label small fw-semibold">Recipient Name</label>
-          <input type="text" class="form-control rq-input" placeholder="Full name" required/>
-        </div>
-        <div class="mb-4">
-          <label class="form-label small fw-semibold">Notes (optional)</label>
-          <textarea class="form-control rq-input" rows="2" placeholder="Any additional notes…"></textarea>
-        </div>
-        <div class="d-flex gap-3">
-          <button class="btn btn-outline-secondary flex-grow-1" data-bs-dismiss="modal">Cancel</button>
-          <button class="btn btn-primary flex-grow-1" onclick="logDistribution()">Log Transaction</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-
-    // ── Section navigation ──────────────────────────────────────────────
-    const staffSections = ['overview','requests','resources','distributions'];
-    const staffTitles   = {
-      overview:      'Dashboard',
-      requests:      'Requests',
-      resources:     'Resources',
-      distributions: 'Distributions'
-    };
-
-    function showSection(name) {
-      staffSections.forEach(s => {
-        const el = document.getElementById('section-' + s);
-        if (el) el.classList.toggle('d-none', s !== name);
-      });
-      document.getElementById('pageTitle').textContent = staffTitles[name] || 'Dashboard';
-
-      // Highlight active nav link
-      document.querySelectorAll('.rq-nav-item').forEach(a => a.classList.remove('active'));
-      const keyword = name === 'overview' ? 'dashboard' : name;
-      document.querySelectorAll('.rq-nav-item').forEach(a => {
-        if (a.textContent.trim().toLowerCase().includes(keyword)) {
-          a.classList.add('active');
-        }
-      });
-    }
-
-    // ── Status Update Modal ─────────────────────────────────────────────
-    function openUpdateModal(id, type, status) {
-      document.getElementById('modal-req-id').textContent   = id;
-      document.getElementById('modal-req-type').textContent = type;
-      document.getElementById('newStatus').value            = status;
-      new bootstrap.Modal(document.getElementById('updateModal')).show();
-    }
-
-    function saveStatus() {
-      bootstrap.Modal.getInstance(document.getElementById('updateModal')).hide();
-      alert('Status updated successfully!');
-    }
-
-    // ── Log Distribution ────────────────────────────────────────────────
-    function logDistribution() {
-      bootstrap.Modal.getInstance(document.getElementById('addDistributionModal')).hide();
-      alert('Distribution logged successfully!');
-    }
-
-    // ── Search & Filter (hooks for classmate's app.js) ──────────────────
-    // IDs: searchBar, statusFilter, requestsTable
-    document.getElementById('searchBar')?.addEventListener('input', filterTable);
-    document.getElementById('statusFilter')?.addEventListener('change', filterTable);
-
-    function filterTable() {
-      const search = document.getElementById('searchBar')?.value.toLowerCase() || '';
-      const status = document.getElementById('statusFilter')?.value.toLowerCase() || '';
-      document.querySelectorAll('#requestsTable tbody tr').forEach(row => {
-        const text      = row.textContent.toLowerCase();
-        const rowStatus = row.dataset.status || '';
-        const matchS    = text.includes(search);
-        const matchF    = !status || rowStatus === status;
-        row.style.display = (matchS && matchF) ? '' : 'none';
-      });
-    }
-
-  </script>
 </body>
+
 </html>
