@@ -1,0 +1,579 @@
+/* ===========================
+   STAFF REQUESTS PAGE
+=========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #fdf2f2;
+    color: #333;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ===========================
+   MAIN CONTENT
+=========================== */
+
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    padding: 35px;
+    min-height: 100vh;
+    transition: .3s;
+}
+
+.dashboard-container.sidebar-collapsed .main-content {
+    margin-left: 80px;
+}
+
+/* ===========================
+   TOPBAR
+=========================== */
+
+.rq-topbar {
+    margin-bottom: 30px;
+}
+
+.rq-topbar h4 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #7f1d1d;
+}
+
+.rq-topbar small {
+    color: #6b7280;
+}
+
+/* ===========================
+   STAT CARDS
+=========================== */
+
+.rq-stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 4px 10px rgba(127, 29, 29, .08);
+    height: 100%;
+}
+
+.col-md-3:nth-child(1) .rq-stat-card {
+    background: #ef4444;
+    color: white;
+}
+
+.col-md-3:nth-child(2) .rq-stat-card {
+    background: #dc2626;
+    color: white;
+}
+
+.col-md-3:nth-child(3) .rq-stat-card {
+    background: #991b1b;
+    color: white;
+}
+
+.col-md-3:nth-child(4) .rq-stat-card {
+    background: #7f1d1d;
+    color: white;
+}
+
+.rq-stat-card h6 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    opacity: .9;
+}
+
+.rq-stat-card h3 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* ===========================
+   CARDS
+=========================== */
+
+.rq-card {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(127, 29, 29, .06);
+    margin-bottom: 25px;
+    /* Added spacing after cards/sections */
+}
+
+/* ===========================
+   FILTERS
+=========================== */
+
+.form-control,
+.form-select {
+    height: 48px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 .2rem rgba(220, 38, 38, .15);
+}
+
+.btn-primary {
+    background: #dc2626;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #991b1b;
+}
+
+/* ===========================
+   TABLE (Centered Content & Spacing)
+=========================== */
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead {
+    background: #fef2f2;
+}
+
+.table thead th {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 16px;
+    border-bottom: 1px solid #fecaca;
+    text-align: center;
+    /* Center header text */
+}
+
+.table tbody td {
+    padding: 18px 16px;
+    border-bottom: 1px solid #fee2e2;
+    vertical-align: middle;
+    text-align: center;
+    /* Center row content horizontally */
+}
+
+.table tbody tr:hover {
+    background: #fff7f7;
+}
+
+/* ===========================
+   BADGES
+=========================== */
+
+.rq-badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.rq-badge-pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.rq-badge-approved {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.rq-badge-processing {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.rq-badge-completed {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.rq-badge-high {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+.rq-btn-view {
+    background: #e5e7eb;
+    color: #374151;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.rq-btn-view:hover {
+    background: #d1d5db;
+}
+
+.rq-btn-approve {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+.rq-btn-approve:hover {
+    background: #991b1b;
+}
+
+.rq-btn-reject {
+    background: #7f1d1d;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+.rq-btn-reject:hover {
+    background: #450a0a;
+}
+
+/* ===========================
+   MODAL
+=========================== */
+
+.modal-content {
+    border: none;
+    border-radius: 18px;
+}
+
+.modal-title {
+    color: #7f1d1d;
+    font-weight: 700;
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+
+#emptyState {
+    padding: 50px 20px;
+}
+
+#emptyState i {
+    font-size: 3rem;
+}
+
+/* ===========================
+   REQUEST MODAL
+=========================== */
+
+.custom-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+}
+
+.custom-modal-overlay.show {
+    display: flex;
+}
+
+.custom-modal {
+    width: 600px;
+    max-width: 95%;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .15);
+}
+
+.custom-modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-modal-header h3 {
+    margin: 0;
+    color: #7f1d1d;
+    font-weight: 700;
+}
+
+.custom-modal-header button {
+    border: none;
+    background: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.custom-modal-body {
+    padding: 25px;
+}
+
+.request-details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.request-details-table th,
+.request-details-table td {
+    padding: 14px;
+    border: 1px solid #e5e7eb;
+}
+
+.request-details-table th {
+    width: 180px;
+    background: #fef2f2;
+    color: #7f1d1d;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 768px) {
+
+    .main-content {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 20px;
+    }
+
+    .rq-topbar h4 {
+        font-size: 24px;
+    }
+
+    .rq-topbar small {
+        font-size: 13px;
+    }
+
+    .rq-card {
+        padding: 20px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+    }
+
+    .table-responsive table {
+        min-width: 900px;
+    }
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media (max-width: 550px) {
+
+    .main-content {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 15px;
+    }
+
+    /* TOPBAR */
+
+    .rq-topbar {
+        margin-bottom: 20px;
+    }
+
+    .rq-topbar h4 {
+        font-size: 20px;
+        line-height: 1.2;
+    }
+
+    .rq-topbar small {
+        font-size: 12px;
+    }
+
+    /* STAT CARDS */
+
+    .row.g-3 {
+        --bs-gutter-x: 12px;
+        --bs-gutter-y: 12px;
+    }
+
+    .col-md-3,
+    .col-sm-6 {
+        width: 50%;
+    }
+
+    .rq-stat-card {
+        min-height: 120px;
+        border-radius: 18px;
+        padding: 16px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .rq-stat-card h6 {
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .rq-stat-card h3 {
+        font-size: 32px;
+        line-height: 1;
+        margin: 0;
+    }
+
+    /* FILTER CARD */
+
+    .rq-card {
+        padding: 18px;
+        border-radius: 24px;
+    }
+
+    .form-control,
+    .form-select,
+    .btn-primary {
+        height: 42px;
+        font-size: 12px;
+    }
+
+    /* TABLE CARD */
+
+    .table-responsive {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x;
+    }
+
+    .table-responsive table {
+        min-width: 850px;
+    }
+
+    .table thead th {
+        font-size: 12px;
+        padding: 12px 10px;
+        white-space: nowrap;
+    }
+
+    .table tbody td {
+        font-size: 12px;
+        padding: 12px 10px;
+        white-space: nowrap;
+    }
+
+    /* BADGES */
+
+    .rq-badge {
+        min-width: 70px;
+        height: 26px;
+        font-size: 10px;
+        padding: 0 10px;
+    }
+
+    /* BUTTONS */
+
+    .rq-btn-view,
+    .rq-btn-approve,
+    .rq-btn-reject {
+        font-size: 10px;
+        padding: 6px 10px;
+        white-space: nowrap;
+    }
+}
+
+/* ===========================
+   IPHONE SE
+=========================== */
+
+@media (max-width: 400px) {
+
+    .main-content {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 12px;
+    }
+
+    .rq-topbar h4 {
+        font-size: 18px;
+    }
+
+    .rq-topbar small {
+        font-size: 11px;
+    }
+
+    .row.g-3 {
+        --bs-gutter-x: 10px;
+        --bs-gutter-y: 10px;
+    }
+
+    .rq-stat-card {
+        min-height: 110px;
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    .rq-stat-card h6 {
+        font-size: 11px;
+        margin-bottom: 8px;
+    }
+
+    .rq-stat-card h3 {
+        font-size: 28px;
+    }
+
+    .rq-card {
+        padding: 15px;
+    }
+
+    .table-responsive table {
+        min-width: 850px;
+    }
+
+    .table thead th {
+        font-size: 11px;
+        padding: 10px 8px;
+    }
+
+    .table tbody td {
+        font-size: 11px;
+        padding: 10px 8px;
+    }
+
+    .rq-badge {
+        min-width: 60px;
+        height: 22px;
+        font-size: 9px;
+    }
+
+    .rq-btn-view,
+    .rq-btn-approve,
+    .rq-btn-reject {
+        font-size: 9px;
+        padding: 5px 8px;
+    }
+}

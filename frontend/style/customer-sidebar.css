@@ -410,3 +410,74 @@
         height: 44px;
     }
 }
+
+/* ================= SMALL DEVICES ================= */
+
+@media (max-width: 480px) {
+
+    .sidebar {
+        width: 70px;
+        padding: 15px 6px;
+    }
+
+    .sidebar .logo h2,
+    .sidebar .menu span,
+    .sidebar .profile-info {
+        display: none;
+    }
+
+    .sidebar .logo {
+        justify-content: center;
+        padding-left: 0;
+    }
+
+    .sidebar .logo img {
+        width: 34px;
+        height: 34px;
+    }
+
+    .sidebar .menu {
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sidebar .menu li {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .sidebar .menu li a {
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        justify-content: center;
+        gap: 0;
+        border-radius: 10px;
+    }
+
+    .sidebar .menu li a i {
+        font-size: 16px;
+    }
+
+    .sidebar-footer-row {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .profile-button,
+    .logout button,
+    .logout-btn {
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .main-content {
+        margin-left: 70px !important;
+        width: calc(100% - 70px);
+        padding: 15px;
+    }
+}
