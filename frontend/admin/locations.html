@@ -1,504 +1,214 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResQMate – Locations</title>
 
-<title>ResQMate - Locations</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link href="css/style.css" rel="stylesheet">
-<link href="admin-locations.css" rel="stylesheet">
-
+  <link rel="stylesheet" href="../style/customer-sidebar.css">
+  <link rel="stylesheet" href="../style/admin-shared.css">
+  <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
-<body class="rq-dashboard-body">
+<body>
 
-<div class="d-flex rq-dashboard-wrapper">
+  <div class="dashboard-container">
 
-    <aside class="rq-sidebar">
+    <div id="sidebar-container"></div>
+    <div id="logout-modal-wrapper"></div>
 
-        <div class="rq-sidebar-brand">
+    <main class="main-content">
 
-            <img
-                src="https://img.icons8.com/color/48/hand-holding-heart.png"
-                width="30"
-                height="30"
-                alt="ResQMate logo">
+      <div class="topbar">
+        <h2>Location Management</h2>
+        <p>Add, edit, and manage assistance locations</p>
+      </div>
 
-            <span>ResQMate</span>
-
+      <div class="table-card">
+        <div class="toolbar-row">
+          <h5 style="margin:0; color:#7f1d1d; font-weight:700; flex:1;">Registered Locations</h5>
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="locationSearch" placeholder="Search locations…">
+          </div>
+          <button class="btn-primary" onclick="openAddLocationModal()">
+            <i class="fa-solid fa-plus"></i> Add Location
+          </button>
         </div>
 
-
-        <nav class="rq-sidebar-nav">
-
-            <a href="dashboard.html" class="rq-nav-item">
-                <i class="bi bi-house-door"></i>
-                <span>Dashboard</span>
-            </a>
-
-            <a href="users.html" class="rq-nav-item">
-                <i class="bi bi-people"></i>
-                <span>Users</span>
-            </a>
-
-            <a href="categories.html" class="rq-nav-item">
-                <i class="bi bi-tags"></i>
-                <span>Categories</span>
-            </a>
-
-            <a href="locations.html" class="rq-nav-item active">
-                <i class="bi bi-geo-alt"></i>
-                <span>Locations</span>
-            </a>
-
-            <a href="resources.html" class="rq-nav-item">
-                <i class="bi bi-box-seam"></i>
-                <span>Resources</span>
-            </a>
-
-            <a href="reports.html" class="rq-nav-item">
-                <i class="bi bi-bar-chart"></i>
-                <span>Reports</span>
-            </a>
-
-            <a href="profile.html" class="rq-nav-item">
-                <i class="bi bi-person"></i>
-                <span>Profile</span>
-            </a>
-
-        </nav>
-
-
-        <div class="rq-sidebar-footer">
-
-            <a href="../index.html" class="rq-nav-item text-danger">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>Logout</span>
-            </a>
-
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Location Name</th>
+                <th>Barangay</th>
+                <th>City</th>
+                <th>Province</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="locationsTableBody"></tbody>
+          </table>
         </div>
 
-    </aside>
-
-    <main class="rq-main flex-grow-1">
-
-        <div class="rq-topbar">
-
-            <div>
-
-                <h5 class="mb-0 fw-bold">
-                    Locations
-                </h5>
-
-                <small class="text-muted">
-                    Manage registered locations in the system
-                </small>
-
-            </div>
-
-
-            <div class="d-flex align-items-center gap-3">
-
-                <div class="text-end">
-
-                    <div class="fw-semibold small">
-                        Administrator
-                    </div>
-
-                    <div class="text-muted" style="font-size: .75rem;">
-                        Admin
-                    </div>
-
-                </div>
-
-
-                <img
-                    src="https://img.icons8.com/color/48/user-male-circle.png"
-                    width="40"
-                    height="40"
-                    alt="Admin avatar"
-                    class="rounded-circle">
-
-            </div>
-
+        <div id="locationMessage" class="empty-state" style="display:none;">
+          <i class="fa-solid fa-location-dot"></i>
+          <p>No locations found. Add one to get started.</p>
         </div>
-
-        <div class="admin-locations-content">
-
-            <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
-
-                <div class="me-auto">
-
-                    <h4 class="fw-bold mb-1">
-                        Location Management
-                    </h4>
-
-                    <p class="text-muted mb-0">
-                        Add, edit, search, and manage assistance locations.
-                    </p>
-
-                </div>
-
-
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    onclick="openAddLocationModal()">
-
-                    <i class="bi bi-plus-lg me-1"></i>
-                    Add Location
-
-                </button>
-
-            </div>
-
-            <div class="rq-card">
-
-
-                <!-- Search -->
-                <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
-
-                    <div class="me-auto">
-
-                        <h6 class="fw-bold mb-1">
-                            Registered Locations
-                        </h6>
-
-                        <small class="text-muted">
-                            Locations available for assistance requests
-                        </small>
-
-                    </div>
-
-
-                    <div class="location-search">
-
-                        <i class="bi bi-search"></i>
-
-                        <input
-                            type="text"
-                            id="locationSearch"
-                            class="form-control"
-                            placeholder="Search locations..."
-                            autocomplete="off">
-
-                    </div>
-
-                </div>
-
-                <div class="table-responsive">
-
-                    <table class="table rq-table align-middle mb-0">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>ID</th>
-
-                                <th>Location Name</th>
-
-                                <th>Barangay</th>
-
-                                <th>City</th>
-
-                                <th>Province</th>
-
-                                <th class="text-end">
-                                    Actions
-                                </th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody id="locationsTableBody">
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-                <div
-                    id="locationMessage"
-                    class="location-message text-center py-5">
-
-                    <i class="bi bi-geo-alt fs-1 text-muted d-block mb-2"></i>
-
-                    <div class="fw-semibold">
-                        No locations to display
-                    </div>
-
-                    <small class="text-muted">
-                        Add a location to get started.
-                    </small>
-
-                </div>
-
-            </div>
-
-        </div>
-
+      </div>
     </main>
+  </div>
 
-</div>
-
-<div
-    class="modal fade"
-    id="locationModal"
-    tabindex="-1"
-    aria-hidden="true">
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-
-
-            <div class="modal-header">
-
-                <div>
-
-                    <h5
-                        class="modal-title fw-bold"
-                        id="locationModalTitle">
-
-                        Add Location
-
-                    </h5>
-
-                    <small class="text-muted">
-                        Enter the location information below.
-                    </small>
-
-                </div>
-
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
-
-            </div>
-
-
-            <div class="modal-body">
-
-
-                <form id="locationForm">
-
-                    <div class="mb-3">
-
-                        <label
-                            for="locationName"
-                            class="form-label fw-semibold">
-
-                            Location Name
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="locationName"
-                            class="form-control"
-                            placeholder="e.g. Barangay Hall"
-                            maxlength="100"
-                            required>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label
-                            for="barangay"
-                            class="form-label fw-semibold">
-
-                            Barangay
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="barangay"
-                            class="form-control"
-                            placeholder="Enter barangay"
-                            maxlength="100"
-                            required>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label
-                            for="city"
-                            class="form-label fw-semibold">
-
-                            City
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="city"
-                            class="form-control"
-                            placeholder="Enter city"
-                            maxlength="100"
-                            required>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label
-                            for="province"
-                            class="form-label fw-semibold">
-
-                            Province
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="province"
-                            class="form-control"
-                            placeholder="Enter province"
-                            maxlength="100"
-                            required>
-
-                    </div>
-
-
-                    <input
-                        type="hidden"
-                        id="locationId">
-
-
-                </form>
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cancel
-
-                </button>
-
-
-                <button
-                    type="submit"
-                    form="locationForm"
-                    class="btn btn-primary">
-
-                    <i class="bi bi-check-lg me-1"></i>
-
-                    Save Location
-
-                </button>
-
-            </div>
-
+  <!-- Add / Edit Modal -->
+  <div class="modal-overlay" id="locationModal">
+    <div class="modal-box">
+      <div class="modal-header-row">
+        <h4 id="locationModalTitle">Add Location</h4>
+        <button class="modal-close-btn" id="closeLocationModal"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <form id="locationForm">
+        <input type="hidden" id="locationId">
+        <div class="form-group"><label>Location Name</label><input type="text" id="locationName" placeholder="e.g. Barangay Hall" required></div>
+        <div class="form-group"><label>Barangay</label><input type="text" id="barangay" placeholder="Enter barangay" required></div>
+        <div class="form-group"><label>City</label><input type="text" id="city" placeholder="Enter city" required></div>
+        <div class="form-group"><label>Province</label><input type="text" id="province" placeholder="Enter province" required></div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelLocationModal">Cancel</button>
+          <button type="submit" class="btn-primary">Save Location</button>
         </div>
-
+      </form>
     </div>
+  </div>
 
-</div>
-
-<div
-    class="modal fade"
-    id="deleteLocationModal"
-    tabindex="-1"
-    aria-hidden="true">
-
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-
-
-            <div class="modal-header">
-
-                <h5 class="modal-title fw-bold">
-                    Delete Location
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal"
-                    aria-label="Close">
-                </button>
-
-            </div>
-
-
-            <div class="modal-body text-center py-4">
-
-                <i class="bi bi-exclamation-triangle-fill text-warning fs-1 mb-3"></i>
-
-                <h6 class="fw-bold">
-                    Are you sure you want to delete this location?
-                </h6>
-
-                <p
-                    class="text-muted mb-0"
-                    id="deleteLocationText">
-
-                    This action cannot be undone.
-
-                </p>
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="btn btn-outline-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cancel
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="btn btn-danger"
-                    id="confirmDeleteButton">
-
-                    <i class="bi bi-trash me-1"></i>
-
-                    Delete
-
-                </button>
-
-            </div>
-
-        </div>
-
+  <!-- Delete Modal -->
+  <div class="modal-overlay" id="deleteLocationModal">
+    <div class="modal-box" style="max-width:400px; text-align:center;">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem; color:#dc2626; margin-bottom:16px;"></i>
+      <h4 style="color:#7f1d1d; margin-bottom:8px;">Delete Location?</h4>
+      <p id="deleteLocationText" style="color:#6b7280; margin-bottom:24px;">This action cannot be undone.</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelDeleteLocation">Cancel</button>
+        <button class="btn-primary" id="confirmDeleteLocation" style="background:#dc2626;">Delete</button>
+      </div>
     </div>
+  </div>
 
-</div>
+  <script src="../components/loadAdminSidebar.js"></script>
+  <script src="../components/logout-modal.js"></script>
+  <script src="../js/admin-locations.js"></script>
+  <script>
+    // Override the Bootstrap-dependent modal calls with our custom modals
+    const locationModal  = document.getElementById('locationModal');
+    const deleteModal    = document.getElementById('deleteLocationModal');
 
+    function openAddLocationModal() {
+      window.editingLocationId = null;
+      document.getElementById('locationModalTitle').textContent = 'Add Location';
+      ['locationId','locationName','barangay','city','province'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      locationModal.classList.add('active');
+    }
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    function openEditLocation(locationId) {
+      const location = locations.find(l => l.location_id === locationId);
+      if (!location) return;
+      window.editingLocationId = locationId;
+      document.getElementById('locationModalTitle').textContent = 'Edit Location';
+      document.getElementById('locationId').value    = location.location_id;
+      document.getElementById('locationName').value  = location.location_name;
+      document.getElementById('barangay').value      = location.barangay;
+      document.getElementById('city').value          = location.city;
+      document.getElementById('province').value      = location.province;
+      locationModal.classList.add('active');
+    }
 
-<script src="admin-locations.js"></script>
+    function openDeleteLocation(locationId) {
+      const location = locations.find(l => l.location_id === locationId);
+      if (!location) return;
+      window.deletingLocationId = locationId;
+      document.getElementById('deleteLocationText').textContent =
+        `Delete "${location.location_name}"? This action cannot be undone.`;
+      deleteModal.classList.add('active');
+    }
 
+    document.getElementById('closeLocationModal').addEventListener('click',  () => locationModal.classList.remove('active'));
+    document.getElementById('cancelLocationModal').addEventListener('click', () => locationModal.classList.remove('active'));
+    document.getElementById('cancelDeleteLocation').addEventListener('click', () => deleteModal.classList.remove('active'));
+    locationModal.addEventListener('click', e => { if (e.target === locationModal) locationModal.classList.remove('active'); });
+    deleteModal.addEventListener('click',   e => { if (e.target === deleteModal)   deleteModal.classList.remove('active'); });
+
+    document.getElementById('locationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name     = document.getElementById('locationName').value.trim();
+      const barangay = document.getElementById('barangay').value.trim();
+      const city     = document.getElementById('city').value.trim();
+      const province = document.getElementById('province').value.trim();
+      if (!name || !barangay || !city || !province) return;
+
+      if (window.editingLocationId !== null) {
+        const loc = locations.find(l => l.location_id === window.editingLocationId);
+        if (loc) { loc.location_name = name; loc.barangay = barangay; loc.city = city; loc.province = province; }
+      } else {
+        const newId = locations.length > 0 ? Math.max(...locations.map(l => l.location_id)) + 1 : 1;
+        locations.push({ location_id: newId, location_name: name, barangay, city, province });
+      }
+      locationModal.classList.remove('active');
+      displayLocations();
+    });
+
+    document.getElementById('confirmDeleteLocation').addEventListener('click', () => {
+      if (window.deletingLocationId == null) return;
+      locations = locations.filter(l => l.location_id !== window.deletingLocationId);
+      window.deletingLocationId = null;
+      deleteModal.classList.remove('active');
+      displayLocations();
+    });
+
+    // Override renderButtons to use custom classes
+    const _orig_displayLocations = displayLocations;
+    // Patch the JS so its button markup matches our theme
+    document.addEventListener('DOMContentLoaded', () => {
+      const origBody = document.getElementById('locationsTableBody');
+      const origMsg  = document.getElementById('locationMessage');
+
+      // Monkey-patch the display function to use our button style
+      window.displayLocations = function() {
+        const searchTerm = document.getElementById('locationSearch').value.trim().toLowerCase();
+        const filtered = locations.filter(l => {
+          const t = [l.location_id, l.location_name, l.barangay, l.city, l.province].join(' ').toLowerCase();
+          return t.includes(searchTerm);
+        });
+        origBody.innerHTML = '';
+        if (filtered.length === 0) {
+          origMsg.style.display = 'block';
+          return;
+        }
+        origMsg.style.display = 'none';
+        filtered.forEach(loc => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>#${loc.location_id}</strong></td>
+            <td>${escapeHtml(loc.location_name)}</td>
+            <td>${escapeHtml(loc.barangay)}</td>
+            <td>${escapeHtml(loc.city)}</td>
+            <td>${escapeHtml(loc.province)}</td>
+            <td>
+              <button class="rq-btn-edit" onclick="openEditLocation(${loc.location_id})"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="rq-btn-delete" onclick="openDeleteLocation(${loc.location_id})"><i class="fa-solid fa-trash"></i> Delete</button>
+            </td>
+          `;
+          origBody.appendChild(tr);
+        });
+      };
+      displayLocations();
+
+      document.getElementById('locationSearch').addEventListener('input', displayLocations);
+    });
+  </script>
 </body>
-
 </html>

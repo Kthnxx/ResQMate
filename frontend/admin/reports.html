@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResQMate – Reports</title>
+  <link rel="stylesheet" href="../style/customer-sidebar.css">
+  <link rel="stylesheet" href="../style/admin-shared.css">
+  <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <div id="sidebar-container"></div>
+    <div id="logout-modal-wrapper"></div>
+    <main class="main-content">
+      <div class="topbar">
+        <h2>Reports & Analytics</h2>
+        <p>Summary of relief operations and distributions</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><h3>Total Requests</h3><div class="stat-number">342</div></div>
+        <div class="stat-card"><h3>Completed</h3><div class="stat-number">280</div></div>
+        <div class="stat-card"><h3>Pending</h3><div class="stat-number">38</div></div>
+        <div class="stat-card"><h3>Processing</h3><div class="stat-number">24</div></div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+        <div class="chart-wrap">
+          <h5>Monthly Requests</h5>
+          <div style="display:flex; align-items:flex-end; gap:10px; height:120px;">
+            <div style="flex:1; background:#ef4444; border-radius:6px 6px 0 0; height:40%;"></div>
+            <div style="flex:1; background:#ef4444; border-radius:6px 6px 0 0; height:65%;"></div>
+            <div style="flex:1; background:#ef4444; border-radius:6px 6px 0 0; height:55%;"></div>
+            <div style="flex:1; background:#ef4444; border-radius:6px 6px 0 0; height:80%;"></div>
+            <div style="flex:1; background:#ef4444; border-radius:6px 6px 0 0; height:100%;"></div>
+            <div style="flex:1; background:#fca5a5; border-radius:6px 6px 0 0; height:70%;"></div>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:8px;">
+            <span style="flex:1;text-align:center;font-size:11px;color:#9ca3af;">Apr</span>
+            <span style="flex:1;text-align:center;font-size:11px;color:#9ca3af;">May</span>
+            <span style="flex:1;text-align:center;font-size:11px;color:#9ca3af;">Jun</span>
+            <span style="flex:1;text-align:center;font-size:11px;color:#9ca3af;">Jul</span>
+            <span style="flex:1;text-align:center;font-size:11px;color:#9ca3af;">Aug</span>
+            <span style="flex:1;text-align:center;font-size:11px;color:#9ca3af;">Sep</span>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <h5>Request Status Breakdown</h5>
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>Completed</span><span style="font-weight:600;">82%</span></div>
+              <div style="background:#fee2e2;border-radius:6px;height:10px;"><div style="background:#15803d;width:82%;height:100%;border-radius:6px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>Pending</span><span style="font-weight:600;">11%</span></div>
+              <div style="background:#fee2e2;border-radius:6px;height:10px;"><div style="background:#b45309;width:11%;height:100%;border-radius:6px;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span>Processing</span><span style="font-weight:600;">7%</span></div>
+              <div style="background:#fee2e2;border-radius:6px;height:10px;"><div style="background:#dc2626;width:7%;height:100%;border-radius:6px;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="toolbar-row">
+          <h5 style="margin:0;color:#7f1d1d;font-weight:700;flex:1;">Export Report</h5>
+          <button class="btn-outline" onclick="alert('CSV export will connect to backend API.')">
+            <i class="fa-solid fa-download"></i> Export CSV
+          </button>
+        </div>
+        <p style="color:#6b7280; font-size:13.5px;">Full report export and date-range filtering will connect to the backend API once integrated.</p>
+      </div>
+    </main>
+  </div>
+  <script src="../components/loadAdminSidebar.js"></script>
+  <script src="../components/logout-modal.js"></script>
+</body>
+</html>
