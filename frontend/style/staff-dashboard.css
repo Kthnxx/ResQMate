@@ -60,42 +60,58 @@ STATISTICS CARDS
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
 .stat-card {
   border-radius: 16px;
-  padding: 22px;
-  color: white;
-  box-shadow: 0 4px 10px rgba(127, 29, 29, .08);
+  padding: 20px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+  box-shadow: 0 4px 6px -1px rgba(127, 29, 29, 0.08);
 }
 
+.stat-card.blue,
 .stat-card:nth-child(1) {
-  background: #ef4444;
+  background-color: #ef4444;
 }
 
+.stat-card.green,
 .stat-card:nth-child(2) {
-  background: #dc2626;
+  background-color: #dc2626;
 }
 
+.stat-card.grey,
 .stat-card:nth-child(3) {
-  background: #991b1b;
+  background-color: #991b1b;
 }
 
+.stat-card.purple,
 .stat-card:nth-child(4) {
-  background: #7f1d1d;
+  background-color: #7f1d1d;
 }
 
+.stat-card-icon {
+  font-size: 1.25rem;
+  opacity: 0.9;
+}
+
+.stat-card-info h3,
 .stat-card h3 {
-  font-size: 14px;
+  font-size: 0.95rem;
   font-weight: 500;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
+  opacity: 0.95;
 }
 
-.stat-card div {
-  font-size: 34px;
+.stat-number,
+.stat-card div:not(.stat-card-icon):not(.stat-card-info) {
+  font-size: 1.8rem;
   font-weight: 700;
 }
 

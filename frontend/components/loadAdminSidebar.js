@@ -1,7 +1,7 @@
-fetch("../components/staff-sidebar.html")
+fetch("../components/admin-sidebar.html")
     .then(response => {
         if (!response.ok) {
-            throw new Error("Failed to load staff sidebar.");
+            throw new Error("Failed to load admin sidebar.");
         }
         return response.text();
     })
@@ -45,18 +45,27 @@ fetch("../components/staff-sidebar.html")
             });
     })
     .catch(error => {
-        console.error("Error loading staff sidebar:", error);
+        console.error("Error loading admin sidebar:", error);
     });
 
 function setActiveSidebarLink() {
-    const currentPage = window.location.pathname.split("/").pop().toLowerCase();
+    const currentPage = window.location.pathname
+        .split("/")
+        .pop()
+        .toLowerCase();
+
     const sidebarLinks = document.querySelectorAll(".menu li a");
 
     sidebarLinks.forEach(link => {
         const href = link.getAttribute("href");
         if (!href) return;
 
-        const linkPage = href.split("/").pop().split("?")[0].toLowerCase();
+        const linkPage = href
+            .split("/")
+            .pop()
+            .split("?")[0]
+            .toLowerCase();
+
         link.classList.remove("active");
 
         if (currentPage === linkPage) {
@@ -72,7 +81,6 @@ function toggleSidebar() {
     if (sidebar) {
         sidebar.classList.toggle("collapsed");
     }
-
     if (dashboardContainer) {
         dashboardContainer.classList.toggle("sidebar-collapsed");
     }
@@ -80,28 +88,27 @@ function toggleSidebar() {
 
 function loadUserProfile() {
     const user = JSON.parse(localStorage.getItem("user"));
-    const profileName = document.getElementById("profileName");
-    const profileRole = document.getElementById("profileRole");
-    const profileAvatar = document.getElementById("profileAvatar");
 
     if (!user) {
-        if (profileName) profileName.textContent = "Staff";
-        if (profileRole) profileRole.textContent = "STAFF";
-        if (profileAvatar) profileAvatar.textContent = "S";
+        console.log("No user profile found.");
         return;
     }
 
-    const fullName = user.full_name || "Staff";
-    const firstName = fullName.trim().split(" ")[0];
+    const firstName = user.full_name.trim().split(" ")[0];
 
+    const profileName = document.getElementById("profileName");
     if (profileName) {
-        profileName.textContent = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+        profileName.textContent = firstName.toUpperCase();
     }
 
+    const profileRole = document.getElementById("profileRole");
     if (profileRole) {
-        profileRole.textContent = "STAFF";
+        profileRole.textContent = user.role === "admin"
+            ? "ADMIN"
+            : user.role.toUpperCase();
     }
 
+    const profileAvatar = document.getElementById("profileAvatar");
     if (profileAvatar) {
         profileAvatar.textContent = firstName.charAt(0).toUpperCase();
     }

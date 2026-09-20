@@ -10,6 +10,7 @@
     margin: 0 0 6px;
     font-size: 1.7rem;
     font-weight: 700;
+    color: #7f1d1d;
 }
 
 .admin-users-header p {
@@ -48,25 +49,30 @@
     width: 100%;
     min-height: 42px;
     padding: 8px 14px 8px 40px;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
+    border: 1.5px solid #fecaca;
+    border-radius: 10px;
     outline: none;
+    transition: all 0.2s ease;
 }
 
 .admin-users-search input:focus {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
 }
 
 .admin-users-toolbar .form-select {
     width: 180px;
     min-height: 42px;
+    border: 1.5px solid #fecaca;
+    border-radius: 10px;
 }
 
 .admin-users-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(254, 226, 226, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(127, 29, 29, 0.05);
+    background: #ffffff;
+    overflow: hidden;
 }
 
 .admin-users-card .card-body {
@@ -75,30 +81,38 @@
 
 .admin-users-table {
     margin-bottom: 0;
+    width: 100%;
 }
 
 .admin-users-table thead th {
     padding: 16px;
-    background: #f8f9fa;
-    color: #495057;
+    background: #ffffff;
+    color: #6b7280;
     font-size: 0.85rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
     white-space: nowrap;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid #fee2e2;
 }
 
 .admin-users-table tbody td {
     padding: 15px 16px;
-    color: #343a40;
-    border-bottom: 1px solid #f0f0f0;
+    color: #374151;
+    border-bottom: 1px solid #fef2f2;
 }
 
 .admin-users-table tbody tr:last-child td {
     border-bottom: none;
 }
 
+.admin-users-table tbody tr:hover {
+    background-color: #fff8f8;
+}
+
 .user-id {
     font-weight: 600;
+    color: #7f1d1d;
 }
 
 .user-name {
@@ -109,41 +123,40 @@
     color: #6c757d;
 }
 
-
 .user-role-badge,
 .user-status-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
+    padding: 5px 12px;
     border-radius: 20px;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
 }
 
 .role-admin {
-    background: #e9d8fd;
-    color: #6f42c1;
+    background: #fee2e2;
+    color: #7f1d1d;
 }
 
 .role-staff {
-    background: #cff4fc;
-    color: #087990;
+    background: #fef3c7;
+    color: #b45309;
 }
 
 .role-user {
-    background: #e2e3e5;
-    color: #41464b;
+    background: #f3f4f6;
+    color: #374151;
 }
 
 .status-active {
-    background: #d1e7dd;
-    color: #146c43;
+    background: #dcfce7;
+    color: #15803d;
 }
 
 .status-inactive {
-    background: #f8d7da;
-    color: #b02a37;
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
 .user-actions {
@@ -156,29 +169,30 @@
     width: 34px;
     height: 34px;
     border: none;
-    border-radius: 7px;
+    border-radius: 8px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: background 0.15s ease;
 }
 
 .user-edit-btn {
-    background: #e7f1ff;
-    color: #0d6efd;
+    background: #fee2e2;
+    color: #7f1d1d;
 }
 
 .user-edit-btn:hover {
-    background: #cfe2ff;
+    background: #fecaca;
 }
 
 .user-delete-btn {
-    background: #f8d7da;
-    color: #b02a37;
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
 .user-delete-btn:hover {
-    background: #f1bfc4;
+    background: #fecaca;
 }
 
 .empty-users-message {
@@ -192,23 +206,23 @@
     display: block;
     margin-bottom: 12px;
     font-size: 2.5rem;
+    color: #ef4444;
 }
 
 .empty-users-message h5 {
     margin-bottom: 6px;
-    color: #495057;
+    color: #7f1d1d;
 }
 
 .empty-users-message p {
     margin: 0;
 }
 
-
 .delete-user-icon {
     text-align: center;
     margin-bottom: 16px;
     font-size: 3rem;
-    color: #dc3545;
+    color: #ef4444;
 }
 
 #deleteUserMessage {
