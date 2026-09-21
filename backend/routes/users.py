@@ -21,6 +21,11 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+class UpdateUserRequest(BaseModel):
+    full_name: str
+    email: str
+    role: str
+
 
 # =========================
 # GET ALL USERS
@@ -152,4 +157,71 @@ def login_user(data: LoginRequest):
         "full_name": result.full_name,
         "email": result.email,
         "role": result.role
+    }
+
+    # =========================
+# UPDATE USER
+# =========================
+
+
+
+
+@router.put("/{user_id}")
+def update_user(
+    user_id: int,
+    data: UpdateUserRequest
+):
+
+    with engine.begin() as conn:
+
+        result = conn.execute(
+            text("""
+                UPDATE users
+                SET
+                    full_name = :full_name,
+                    email = :email,
+                    role = :role
+                WHERE user_id = :user_id
+            """),
+            {
+                "user_id": user_id,
+                "full_name": data.full_name,
+                "email": data.email,
+                "role": data.role
+            }
+        )
+
+        if result.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+    return {
+        "message": "User updated successfully"
+    }
+
+@router.delete("/{user_id}")
+def delete_user(user_id: int):
+
+    with engine.begin() as conn:
+
+        result = conn.execute(
+            text("""
+                DELETE FROM users
+                WHERE user_id = :user_id
+            """),
+            {
+                "user_id": user_id
+            }
+        )
+
+        if result.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="User not found"
+            )
+
+    return {
+        "message": "User deleted successfully"
     }

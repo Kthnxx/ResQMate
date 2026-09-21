@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,15 @@
   <link rel="stylesheet" href="../style/customer-sidebar.css">
   <link rel="stylesheet" href="../style/admin-shared.css">
   <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="../style/profile-modal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <div class="dashboard-container">
     <div id="sidebar-container"></div>
     <div id="logout-modal-wrapper"></div>
+    <div id="profile-modal-wrapper"></div>
     <main class="main-content">
       <div class="topbar">
         <h2>Resources</h2>
@@ -20,66 +24,154 @@
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card"><h3>Total Resources</h3><div class="stat-number">5</div></div>
-        <div class="stat-card"><h3>Available</h3><div class="stat-number">3</div></div>
-        <div class="stat-card"><h3>Low Stock</h3><div class="stat-number">1</div></div>
-        <div class="stat-card"><h3>Depleted</h3><div class="stat-number">1</div></div>
+        <div class="stat-card">
+          <h3>Total Resources</h3>
+          <div class="stat-number" id="totalResources">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Available</h3>
+          <div class="stat-number" id="availableResources">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Low Stock</h3>
+          <div class="stat-number" id="lowStockResources">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Depleted</h3>
+          <div class="stat-number" id="depletedResources">0</div>
+        </div>
+
       </div>
 
       <div class="table-card">
         <div class="toolbar-row">
-          <h5 style="margin:0;color:#7f1d1d;font-weight:700;flex:1;">Resource Inventory</h5>
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="resourceSearch" placeholder="Search resources…">
+          <h5 class="section-title">Resource Inventory</h5>
+
+          <div class="toolbar-actions">
+
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="resourceSearch" placeholder="Search resources...">
+            </div>
+
+            <select id="categoryFilter" class="rq-input">
+              <option value="all">All Categories</option>
+              <option value="food">Food</option>
+              <option value="water">Water</option>
+              <option value="shelter">Shelter</option>
+              <option value="medicine">Medicine</option>
+              <option value="general">General</option>
+            </select>
+
+            <button class="btn-primary" id="addResourceBtn">
+              <i class="fa-solid fa-plus"></i>
+              Add Resource
+            </button>
+
           </div>
-          <select id="categoryFilter" class="rq-input" style="max-width:160px;">
-            <option value="all">All Categories</option>
-            <option value="food">Food</option>
-            <option value="water">Water</option>
-            <option value="shelter">Shelter</option>
-            <option value="medicine">Medicine</option>
-          </select>
-          <button class="btn-primary" id="addResourceBtn"><i class="fa-solid fa-plus"></i> Add Resource</button>
         </div>
 
         <div class="table-responsive">
           <table id="resourcesTable">
             <thead>
               <tr>
-                <th>ID</th><th>Resource</th><th>Category</th><th>Quantity</th><th>Location</th><th>Status</th><th>Actions</th>
+                <th>ID</th>
+                <th>Resource</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr data-cat="food">
-                <td>001</td><td>Relief Food Packs</td><td>Food</td>
-                <td style="color:#15803d;font-weight:600;">240 units</td><td>QC Warehouse</td>
+                <td>001</td>
+                <td>Relief Food Packs</td>
+                <td>Food</td>
+                <td style="color:#15803d;font-weight:600;">240 units</td>
+                <td>QC Warehouse</td>
                 <td><span class="rq-badge rq-badge-active">Available</span></td>
-                <td><button class="rq-btn-edit">Edit</button><button class="rq-btn-delete">Delete</button></td>
+                <td>
+                  <button class="action-btn edit-btn">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+
+                  <button class="action-btn delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
               </tr>
               <tr data-cat="water">
-                <td>002</td><td>Bottled Water (500ml)</td><td>Water</td>
-                <td style="color:#b45309;font-weight:600;">80 cases</td><td>Pasig Hub</td>
+                <td>002</td>
+                <td>Bottled Water (500ml)</td>
+                <td>Water</td>
+                <td style="color:#b45309;font-weight:600;">80 cases</td>
+                <td>Pasig Hub</td>
                 <td><span class="rq-badge rq-badge-medium">Low Stock</span></td>
-                <td><button class="rq-btn-edit">Edit</button><button class="rq-btn-delete">Delete</button></td>
+                <td>
+                  <button class="action-btn edit-btn">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+
+                  <button class="action-btn delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
               </tr>
               <tr data-cat="shelter">
-                <td>003</td><td>Emergency Tents</td><td>Shelter</td>
-                <td style="color:#dc2626;font-weight:600;">0 units</td><td>Marikina Depot</td>
+                <td>003</td>
+                <td>Emergency Tents</td>
+                <td>Shelter</td>
+                <td style="color:#dc2626;font-weight:600;">0 units</td>
+                <td>Marikina Depot</td>
                 <td><span class="rq-badge rq-badge-inactive">Depleted</span></td>
-                <td><button class="rq-btn-edit">Edit</button><button class="rq-btn-delete">Delete</button></td>
+                <td>
+                  <button class="action-btn edit-btn">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+
+                  <button class="action-btn delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
               </tr>
               <tr data-cat="medicine">
-                <td>004</td><td>First Aid Kits</td><td>Medicine</td>
-                <td style="color:#15803d;font-weight:600;">150 kits</td><td>QC Warehouse</td>
+                <td>004</td>
+                <td>First Aid Kits</td>
+                <td>Medicine</td>
+                <td style="color:#15803d;font-weight:600;">150 kits</td>
+                <td>QC Warehouse</td>
                 <td><span class="rq-badge rq-badge-active">Available</span></td>
-                <td><button class="rq-btn-edit">Edit</button><button class="rq-btn-delete">Delete</button></td>
+                <td>
+                  <button class="action-btn edit-btn">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+
+                  <button class="action-btn delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
               </tr>
               <tr data-cat="shelter">
-                <td>005</td><td>Blankets</td><td>Shelter</td>
-                <td style="color:#15803d;font-weight:600;">320 pcs</td><td>QC Warehouse</td>
+                <td>005</td>
+                <td>Blankets</td>
+                <td>Shelter</td>
+                <td style="color:#15803d;font-weight:600;">320 pcs</td>
+                <td>QC Warehouse</td>
                 <td><span class="rq-badge rq-badge-active">Available</span></td>
-                <td><button class="rq-btn-edit">Edit</button><button class="rq-btn-delete">Delete</button></td>
+                <td>
+                  <button class="action-btn edit-btn">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+
+                  <button class="action-btn delete-btn">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -88,25 +180,105 @@
     </main>
   </div>
 
+  <div class="modal" id="resourceModal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Resource</h3>
+        <button id="closeModal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="resourceForm">
+
+        <div class="form-group">
+          <label>Resource Name</label>
+          <input type="text" id="resourceName" required>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="resourceCategory">
+            <option>Food</option>
+            <option>Water</option>
+            <option>Shelter</option>
+            <option>Medicine</option>
+            <option>General</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <input type="number" id="resourceQty" required>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+
+          <select id="resourceLocation">
+            <option value="QC Warehouse">QC Warehouse</option>
+            <option value="Pasig Hub">Pasig Hub</option>
+            <option value="Marikina Depot">Marikina Depot</option>
+            <option value="other">Other</option>
+          </select>
+
+          <input type="text" id="customLocation" placeholder="Enter location" style="display:none; margin-top:10px;">
+        </div>
+
+        <div class="modal-footer">
+
+          <button type="button" class="btn-secondary" id="cancelModal">
+            Cancel
+          </button>
+
+          <button type="submit" class="btn-primary">
+            Save Resource
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal" id="deleteModal">
+    <div class="modal-content small">
+
+      <div class="delete-icon">
+        <i class="fa-solid fa-trash"></i>
+      </div>
+
+      <h3>Delete Resource</h3>
+
+      <p>
+        Are you sure you want to delete this resource?
+        This action cannot be undone.
+      </p>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn-secondary" id="cancelDelete">
+          Cancel
+        </button>
+
+        <button type="button" class="btn-danger" id="confirmDelete">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
   <script src="../components/loadAdminSidebar.js"></script>
   <script src="../components/logout-modal.js"></script>
-  <script>
-    document.getElementById('resourceSearch').addEventListener('input', filterResources);
-    document.getElementById('categoryFilter').addEventListener('change', filterResources);
-
-    function filterResources() {
-      const s = document.getElementById('resourceSearch').value.toLowerCase();
-      const c = document.getElementById('categoryFilter').value;
-      document.querySelectorAll('#resourcesTable tbody tr').forEach(row => {
-        const txt = row.textContent.toLowerCase();
-        const cat = row.dataset.cat || '';
-        row.style.display = (txt.includes(s) && (c === 'all' || cat === c)) ? '' : 'none';
-      });
-    }
-
-    document.querySelectorAll('.rq-btn-delete').forEach(btn => {
-      btn.addEventListener('click', () => { if (confirm('Delete this resource?')) btn.closest('tr').remove(); });
-    });
-  </script>
+  <script src="../js/admin-resources.js"></script>
+  <script src="../components/profile-modal.js"></script>
 </body>
+
 </html>

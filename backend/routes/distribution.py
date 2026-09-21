@@ -10,9 +10,19 @@ router = APIRouter()
 def get_distributions():
 
     query = text("""
-        SELECT *
-        FROM distributions
-        ORDER BY distribution_id DESC
+        SELECT
+            d.distribution_id,
+            d.request_id,
+            d.resource_id,
+            r.resource_name,
+            d.staff_id,
+            d.quantity_given,
+            d.recipient_name,
+            d.status
+        FROM distributions d
+        LEFT JOIN resources r
+            ON d.resource_id = r.resource_id
+        ORDER BY d.distribution_id DESC
     """)
 
     with engine.connect() as conn:
@@ -27,9 +37,11 @@ def get_distributions():
                 "distribution_id": row.distribution_id,
                 "request_id": row.request_id,
                 "resource_id": row.resource_id,
+                "resource_name": row.resource_name,
                 "staff_id": row.staff_id,
                 "quantity_given": row.quantity_given,
-                "distribution_date": str(row.distribution_date)
+                "recipient_name": row.recipient_name,
+                "status": row.status
             })
 
         return distributions
@@ -41,7 +53,9 @@ def create_distribution(
     request_id: int,
     resource_id: int,
     staff_id: int,
-    quantity_given: int
+    quantity_given: int,
+    recipient_name: str,
+    status: str
 ):
 
     # Prevent zero or negative distributions
@@ -80,27 +94,33 @@ def create_distribution(
 
         # Insert distribution
         conn.execute(
-            text("""
+           text("""
                 INSERT INTO distributions
                 (
                     request_id,
                     resource_id,
                     staff_id,
-                    quantity_given
+                    quantity_given,
+                    recipient_name,
+                    status
                 )
                 VALUES
                 (
                     :request_id,
                     :resource_id,
                     :staff_id,
-                    :quantity_given
+                    :quantity_given,
+                    :recipient_name,
+                    :status
                 )
             """),
             {
                 "request_id": request_id,
                 "resource_id": resource_id,
                 "staff_id": staff_id,
-                "quantity_given": quantity_given
+                "quantity_given": quantity_given,
+                "recipient_name": recipient_name,
+                "status": status
             }
         )
 
@@ -122,6 +142,47 @@ def create_distribution(
         "message": "Distribution Recorded Successfully"
     }
 
+@router.put("/{distribution_id}")
+def update_distribution(
+    distribution_id: int,
+    request_id: int,
+    resource_id: int,
+    staff_id: int,
+    quantity_given: int,
+    recipient_name: str,
+    status: str
+):
+
+    query = text("""
+        UPDATE distributions
+        SET
+            request_id = :request_id,
+            resource_id = :resource_id,
+            staff_id = :staff_id,
+            quantity_given = :quantity_given,
+            recipient_name = :recipient_name,
+            status = :status
+        WHERE distribution_id = :distribution_id
+    """)
+
+    with engine.begin() as conn:
+
+        conn.execute(
+            query,
+            {
+                "distribution_id": distribution_id,
+                "request_id": request_id,
+                "resource_id": resource_id,
+                "staff_id": staff_id,
+                "quantity_given": quantity_given,
+                "recipient_name": recipient_name,
+                "status": status
+            }
+        )
+
+    return {
+        "message": "Distribution Updated Successfully"
+    }
 
 # DELETE DISTRIBUTION
 @router.delete("/{distribution_id}")

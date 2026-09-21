@@ -21,6 +21,7 @@ from routes.request import router as request_router
 from routes.resource import router as resource_router
 from routes.distribution import router as distribution_router
 from routes.dashboard import router as dashboard_router
+from routes import reports
 
 # Create Tables
 Base.metadata.create_all(bind=engine)
@@ -85,6 +86,12 @@ app.include_router(
     dashboard_router,
     prefix="/dashboard",
     tags=["Dashboard"]
+)
+
+app.include_router(
+    reports.router,
+    prefix="/reports",
+    tags=["Reports"]
 )
 
 # Root Endpoint

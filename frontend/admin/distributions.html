@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResQMate – Distributions</title>
+
+    <link rel="stylesheet" href="../style/customer-sidebar.css">
+    <link rel="stylesheet" href="../style/admin-shared.css">
+    <link rel="stylesheet" href="../style/logout-modal.css">
+    <link rel="stylesheet" href="../style/profile-modal.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <div id="sidebar-container"></div>
+        <div id="logout-modal-wrapper"></div>
+        <div id="profile-modal-wrapper"></div>
+
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+
+            <div class="topbar">
+                <h2>Distributions</h2>
+                <p>Manage relief aid deliveries and resource distribution</p>
+            </div>
+
+            <!-- STATS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Distributions</h3>
+                    <div class="stat-number" id="totalDistributions">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total Quantity</h3>
+                    <div class="stat-number" id="totalQuantity">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Unique Resources</h3>
+                    <div class="stat-number" id="resourceCount">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Assigned Staff</h3>
+                    <div class="stat-number" id="staffCount">0</div>
+                </div>
+
+            </div>
+
+            <!-- TABLE -->
+
+            <div class="table-card">
+
+                <div class="toolbar-row">
+
+                    <h5 class="section-title">
+                        Distribution Records
+                    </h5>
+
+                    <div class="toolbar-actions">
+
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="distributionSearch" placeholder="Search distributions...">
+                        </div>
+
+                        <select id="statusFilter" class="rq-input">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="Preparing">
+                                Preparing
+                            </option>
+
+                            <option value="In Transit">
+                                In Transit
+                            </option>
+
+                            <option value="Delivered">
+                                Delivered
+                            </option>
+
+                            <option value="Cancelled">
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                        <button class="btn-primary" id="addDistributionBtn">
+
+                            <i class="fa-solid fa-plus"></i>
+                            Create Distribution
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table id="distributionTable">
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Request ID</th>
+                                <th>Recipient</th>
+                                <th>Resource</th>
+                                <th>Quantity</th>
+                                <th>Staff ID</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <!-- Loaded by JS -->
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- CREATE / EDIT MODAL -->
+
+    <div class="modal" id="distributionModal">
+
+        <div class="modal-content">
+
+            <div class="modal-header-row">
+
+                <h4 id="distributionModalTitle">
+                    Create Distribution
+                </h4>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Request ID</label>
+
+                <input type="number" id="requestId" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Recipient Name</label>
+
+                <input type="text" id="recipient" required>
+
+            </div>
+
+            <div class="form-group">
+                <label>Resource</label>
+                <select id="resource" required>
+                    <option value="">Select Resource</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+
+                <label>Quantity Given</label>
+
+                <input type="number" id="quantity" required>
+
+            </div>
+
+            <div class="form-group">
+                <label>Staff</label>
+                <select id="staff" required>
+                    <option value="">Select Staff</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+
+                <label>Status</label>
+
+                <select id="distributionStatus">
+
+                    <option value="Preparing">
+                        Preparing
+                    </option>
+
+                    <option value="In Transit">
+                        In Transit
+                    </option>
+
+                    <option value="Delivered">
+                        Delivered
+                    </option>
+
+                    <option value="Cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn-secondary" id="cancelDistribution">
+
+                    Cancel
+
+                </button>
+
+                <button type="button" class="btn-primary" id="saveDistribution">
+
+                    Save
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DELETE MODAL -->
+
+    <div class="modal" id="deleteDistributionModal">
+
+        <div class="modal-content small">
+
+            <div class="delete-icon">
+
+                <i class="fa-solid fa-trash"></i>
+
+            </div>
+
+            <h3>
+                Delete Distribution?
+            </h3>
+
+            <p>
+                This action cannot be undone.
+            </p>
+
+            <div class="modal-footer">
+
+                <button class="btn-secondary" id="cancelDeleteDistribution">
+
+                    Cancel
+
+                </button>
+
+                <button class="btn-danger" id="confirmDeleteDistribution">
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="../components/profile-modal.js"></script>
+    <script src="../components/loadAdminSidebar.js"></script>
+    <script src="../components/logout-modal.js"></script>
+    <script src="../js/admin-distributions.js"></script>
+
+</body>
+
+</html>

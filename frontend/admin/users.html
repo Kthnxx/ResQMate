@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="../style/customer-sidebar.css">
   <link rel="stylesheet" href="../style/admin-shared.css">
   <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="../style/profile-modal.css">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -18,6 +20,7 @@
 
     <div id="sidebar-container"></div>
     <div id="logout-modal-wrapper"></div>
+    <div id="profile-modal-wrapper"></div>
 
     <main class="main-content">
 
@@ -29,207 +32,189 @@
       <div class="table-card">
 
         <div class="toolbar-row">
-          <h5 style="margin:0; color:#7f1d1d; font-weight:700; flex:1;">All Users</h5>
+
+          <h5 style="margin:0;color:#7f1d1d;font-weight:700;flex:1;">
+            All Users
+          </h5>
 
           <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="userSearch" placeholder="Search by name or email…">
+
+            <input type="text" id="userSearch" placeholder="Search users...">
           </div>
 
           <select id="roleFilter" class="rq-input" style="max-width:150px;">
-            <option value="all">All Roles</option>
-            <option value="admin">Admin</option>
-            <option value="staff">Staff</option>
-            <option value="community">Community</option>
-          </select>
 
-          <select id="statusFilter" class="rq-input" style="max-width:150px;">
-            <option value="all">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
+            <option value="all">
+              All Roles
+            </option>
+
+            <option value="admin">
+              Admin
+            </option>
+
+            <option value="staff">
+              Staff
+            </option>
+
+            <option value="community">
+              Community
+            </option>
+
           </select>
 
           <button class="btn-primary" id="addUserBtn">
-            <i class="fa-solid fa-user-plus"></i> Add User
+
+            <i class="fa-solid fa-user-plus"></i>
+            Add User
+
           </button>
+
         </div>
 
         <div class="table-responsive">
+
           <table id="usersTable">
+
             <thead>
+
               <tr>
                 <th>User ID</th>
                 <th>Full Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Status</th>
                 <th>Actions</th>
               </tr>
+
             </thead>
+
             <tbody id="usersTableBody">
-              <tr data-role="community" data-status="active">
-                <td>001</td><td>Stephanie Sison</td><td>stephanie@example.com</td>
-                <td><span class="rq-badge rq-badge-community">Community</span></td>
-                <td><span class="rq-badge rq-badge-active">Active</span></td>
-                <td>
-                  <button class="rq-btn-edit">Edit</button>
-                  <button class="rq-btn-delete">Delete</button>
-                </td>
-              </tr>
-              <tr data-role="staff" data-status="active">
-                <td>002</td><td>Mark Santos</td><td>mark@example.com</td>
-                <td><span class="rq-badge rq-badge-staff">Staff</span></td>
-                <td><span class="rq-badge rq-badge-active">Active</span></td>
-                <td>
-                  <button class="rq-btn-edit">Edit</button>
-                  <button class="rq-btn-delete">Delete</button>
-                </td>
-              </tr>
-              <tr data-role="community" data-status="active">
-                <td>003</td><td>Juan Dela Cruz</td><td>juan@example.com</td>
-                <td><span class="rq-badge rq-badge-community">Community</span></td>
-                <td><span class="rq-badge rq-badge-active">Active</span></td>
-                <td>
-                  <button class="rq-btn-edit">Edit</button>
-                  <button class="rq-btn-delete">Delete</button>
-                </td>
-              </tr>
-              <tr data-role="staff" data-status="inactive">
-                <td>004</td><td>Carla Mercado</td><td>carla@example.com</td>
-                <td><span class="rq-badge rq-badge-staff">Staff</span></td>
-                <td><span class="rq-badge rq-badge-inactive">Inactive</span></td>
-                <td>
-                  <button class="rq-btn-edit">Edit</button>
-                  <button class="rq-btn-delete">Delete</button>
-                </td>
-              </tr>
-              <tr data-role="admin" data-status="active">
-                <td>005</td><td>Admin User</td><td>admin@resqmate.com</td>
-                <td><span class="rq-badge rq-badge-admin">Admin</span></td>
-                <td><span class="rq-badge rq-badge-active">Active</span></td>
-                <td>
-                  <button class="rq-btn-edit">Edit</button>
-                  <button class="rq-btn-delete" disabled style="opacity:0.4;cursor:not-allowed;">Delete</button>
-                </td>
-              </tr>
+
+              <!-- Loaded by admin-users.js -->
+
             </tbody>
+
           </table>
+
         </div>
 
         <div id="emptyUsersMessage" class="empty-state" style="display:none;">
+
           <i class="fa-solid fa-users-slash"></i>
-          <p>No users found. Try changing your search or filter.</p>
+
+          <p>
+            No users found.
+          </p>
+
         </div>
 
       </div>
+
     </main>
+
   </div>
 
-  <!-- Add / Edit User Modal -->
+  <!-- ADD / EDIT USER MODAL -->
+
   <div class="modal-overlay" id="userModal">
+
     <div class="modal-box">
+
       <div class="modal-header-row">
-        <h4 id="userModalTitle">Add New User</h4>
-        <button class="modal-close-btn" id="closeUserModal"><i class="fa-solid fa-times"></i></button>
+
+        <h4 id="userModalTitle">
+          Add User
+        </h4>
+
+        <button class="modal-close-btn" id="closeUserModal">
+
+          <i class="fa-solid fa-times"></i>
+
+        </button>
+
       </div>
 
       <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="userName" placeholder="Juan Dela Cruz">
+
+        <label>
+          Full Name
+        </label>
+
+        <input type="text" id="userName" placeholder="Enter full name">
+
       </div>
+
       <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="userEmail" placeholder="you@example.com">
+
+        <label>
+          Email
+        </label>
+
+        <input type="email" id="userEmail" placeholder="Enter email">
+
       </div>
+
       <div class="form-group">
-        <label>Role</label>
+
+        <label>
+          Role
+        </label>
+
         <select id="userRole">
-          <option value="community">Community User</option>
-          <option value="staff">Staff</option>
-          <option value="admin">Admin</option>
+
+          <option value="community">
+            Community User
+          </option>
+
+          <option value="staff">
+            Staff
+          </option>
+
+          <option value="admin">
+            Admin
+          </option>
+
         </select>
+
       </div>
+
       <div class="form-group" id="passwordGroup">
-        <label>Temporary Password</label>
-        <input type="password" id="userPassword" placeholder="••••••••">
-      </div>
-      <div class="form-group">
-        <label>Account Status</label>
-        <select id="userStatus">
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
+
+        <label>
+          Password
+        </label>
+
+        <input type="password" id="userPassword" placeholder="Enter password">
+
       </div>
 
       <div class="modal-footer">
-        <button class="btn-secondary" id="cancelUserModal">Cancel</button>
-        <button class="btn-primary" id="saveUserBtn">Save User</button>
+
+        <button class="btn-secondary" id="cancelUserModal">
+
+          Cancel
+
+        </button>
+
+        <button class="btn-primary" id="saveUserBtn">
+
+          Save User
+
+        </button>
+
       </div>
+
     </div>
+
   </div>
 
   <script src="../components/loadAdminSidebar.js"></script>
   <script src="../components/logout-modal.js"></script>
-  <script>
-    // Filter logic
-    function applyFilters() {
-      const search = document.getElementById('userSearch').value.toLowerCase();
-      const role   = document.getElementById('roleFilter').value;
-      const status = document.getElementById('statusFilter').value;
-      let visible  = 0;
+  <script src="../components/profile-modal.js"></script>
 
-      document.querySelectorAll('#usersTable tbody tr').forEach(row => {
-        const text      = row.textContent.toLowerCase();
-        const rowRole   = row.dataset.role   || '';
-        const rowStatus = row.dataset.status || '';
-
-        const matchSearch = text.includes(search);
-        const matchRole   = role   === 'all' || rowRole   === role;
-        const matchStatus = status === 'all' || rowStatus === status;
-
-        const show = matchSearch && matchRole && matchStatus;
-        row.style.display = show ? '' : 'none';
-        if (show) visible++;
-      });
-
-      document.getElementById('emptyUsersMessage').style.display = visible === 0 ? 'block' : 'none';
-    }
-
-    document.getElementById('userSearch').addEventListener('input', applyFilters);
-    document.getElementById('roleFilter').addEventListener('change', applyFilters);
-    document.getElementById('statusFilter').addEventListener('change', applyFilters);
-
-    // Modal
-    const modal  = document.getElementById('userModal');
-    document.getElementById('addUserBtn').addEventListener('click', () => {
-      document.getElementById('userModalTitle').textContent = 'Add New User';
-      modal.classList.add('active');
-    });
-    document.getElementById('closeUserModal').addEventListener('click',  () => modal.classList.remove('active'));
-    document.getElementById('cancelUserModal').addEventListener('click', () => modal.classList.remove('active'));
-    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('active'); });
-
-    document.getElementById('saveUserBtn').addEventListener('click', () => {
-      alert('User saved! (Connect to backend API to persist.)');
-      modal.classList.remove('active');
-    });
-
-    // Edit / Delete button wiring for existing rows
-    document.querySelectorAll('.rq-btn-edit').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('userModalTitle').textContent = 'Edit User';
-        modal.classList.add('active');
-      });
-    });
-
-    document.querySelectorAll('.rq-btn-delete:not([disabled])').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (confirm('Delete this user? This cannot be undone.')) {
-          btn.closest('tr').remove();
-        }
-      });
-    });
-  </script>
+  <!-- USERS CRUD -->
+  <script src="../js/admin-users.js"></script>
 
 </body>
+
 </html>

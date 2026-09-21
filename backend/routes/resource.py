@@ -26,8 +26,11 @@ def get_resources():
             resources.append({
                 "resource_id": row.resource_id,
                 "resource_name": row.resource_name,
+                "category": row.category,
                 "quantity_available": row.quantity_available,
                 "unit": row.unit,
+                "location": row.location,
+                "status": row.status,
                 "last_updated": str(row.last_updated)
             })
 
@@ -38,33 +41,45 @@ def get_resources():
 @router.post("/create")
 def create_resource(
     resource_name: str,
+    category: str,
     quantity_available: int,
-    unit: str
+    unit: str,
+    location: str,
+    status: str = "Available"
 ):
 
     query = text("""
         INSERT INTO resources
         (
             resource_name,
+            category,
             quantity_available,
-            unit
+            unit,
+            location,
+            status
         )
         VALUES
         (
             :resource_name,
+            :category,
             :quantity_available,
-            :unit
+            :unit,
+            :location,
+            :status
         )
     """)
 
     with engine.begin() as conn:
 
-        conn.execute(
+       conn.execute(
             query,
             {
                 "resource_name": resource_name,
+                "category": category,
                 "quantity_available": quantity_available,
-                "unit": unit
+                "unit": unit,
+                "location": location,
+                "status": status
             }
         )
 
@@ -77,22 +92,38 @@ def create_resource(
 @router.put("/{resource_id}")
 def update_resource(
     resource_id: int,
-    quantity_available: int
+    resource_name: str,
+    category: str,
+    quantity_available: int,
+    unit: str,
+    location: str,
+    status: str
 ):
 
     query = text("""
-        UPDATE resources
-        SET quantity_available = :quantity_available
-        WHERE resource_id = :resource_id
-    """)
+            UPDATE resources
+            SET
+                resource_name = :resource_name,
+                category = :category,
+                quantity_available = :quantity_available,
+                unit = :unit,
+                location = :location,
+                status = :status
+            WHERE resource_id = :resource_id
+        """)
 
     with engine.begin() as conn:
 
         conn.execute(
             query,
             {
+                "resource_id": resource_id,
+                "resource_name": resource_name,
+                "category": category,
                 "quantity_available": quantity_available,
-                "resource_id": resource_id
+                "unit": unit,
+                "location": location,
+                "status": status
             }
         )
 

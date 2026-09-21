@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResQMate – Requests</title>
+
+    <link rel="stylesheet" href="../style/customer-sidebar.css">
+    <link rel="stylesheet" href="../style/admin-shared.css">
+    <link rel="stylesheet" href="../style/logout-modal.css">
+    <link rel="stylesheet" href="../style/profile-modal.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <div id="sidebar-container"></div>
+        <div id="logout-modal-wrapper"></div>
+        <div id="profile-modal-wrapper"></div>
+
+        <main class="main-content">
+
+            <div class="topbar">
+                <h2>Requests</h2>
+                <p>Manage and monitor assistance requests</p>
+            </div>
+
+            <!-- Statistics -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total Requests</h3>
+                    <div class="stat-number" id="totalRequests">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Pending</h3>
+                    <div class="stat-number" id="pendingRequests">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Processing</h3>
+                    <div class="stat-number" id="processingRequests">0</div>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <div class="stat-number" id="completedRequests">0</div>
+                </div>
+
+            </div>
+
+            <!-- Requests Table -->
+
+            <div class="table-card">
+
+                <div class="toolbar-row">
+
+                    <h5 class="section-title">
+                        Assistance Requests
+                    </h5>
+
+                    <div class="toolbar-actions">
+
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+
+                            <input type="text" id="requestSearch" placeholder="Search requests...">
+                        </div>
+
+                        <select id="statusFilter" class="rq-input">
+
+                            <option value="all">
+                                All Status
+                            </option>
+
+                            <option value="pending">
+                                Pending
+                            </option>
+
+                            <option value="processing">
+                                Processing
+                            </option>
+
+                            <option value="completed">
+                                Completed
+                            </option>
+
+                            <option value="rejected">
+                                Rejected
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table id="requestsTable">
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Requester</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Assigned Staff</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="requestsTableBody">
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- VIEW REQUEST MODAL -->
+    <div class="modal" id="viewRequestModal">
+
+        <div class="modal-content request-modal-card">
+
+            <div class="request-modal-header">
+
+                <div>
+                    <h4>Request Details</h4>
+                    <p>View assistance request information</p>
+                </div>
+
+                <button id="closeViewModal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <div class="request-details">
+
+                <div class="detail-row">
+                    <label>Request ID</label>
+                    <span id="modalRequestId"></span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Requester</label>
+                    <span id="modalRequester"></span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Category</label>
+                    <span id="modalCategory"></span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Location</label>
+                    <span id="modalLocation"></span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Priority</label>
+                    <span id="modalPriority"></span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Status</label>
+                    <span id="modalStatus"></span>
+                </div>
+
+                <div class="detail-row">
+                    <label>Description</label>
+
+                    <div class="detail-description" id="modalDescription">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+    <script src="../components/loadAdminSidebar.js"></script>
+    <script src="../components/logout-modal.js"></script>
+    <script src="../js/admin-requests.js"></script>
+    <script src="../components/profile-modal.js"></script>
+
+</body>
+
+</html>

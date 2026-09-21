@@ -48,29 +48,28 @@
             </p>
 
             <div class="hero-buttons">
-                <button class="primary-btn" id="requestAssistanceBtn" onclick="document.getElementById('loginModal').classList.add('show')">
+
+                <button class="primary-btn" id="requestAssistanceBtn"
+                    onclick="document.getElementById('loginModal').classList.add('show')">
                     Request Assistance
                 </button>
 
                 <button class="secondary-btn" id="learnMoreBtn">
                     Learn More
                 </button>
+
             </div>
 
         </div>
 
-        <div class="hero-image">
-            <!-- You can add a relevant illustration or image here -->
-        </div>
-
     </section>
-
     <!-- Features Section -->
     <section class="features" id="featuresSection">
 
         <h2>How It Works</h2>
 
-        <div class="features-grid">
+        <!-- Fix: changed features-grid to feature-grid -->
+        <div class="feature-grid">
 
             <div class="feature-card">
                 <i class="fa-solid fa-hands-holding-child fa-3x" style="color: var(--primary);"></i>
@@ -112,7 +111,8 @@
             Join our community today and help us build a safer tomorrow.
         </p>
 
-        <button class="signup-btn" style="margin-top: 1rem;">
+        <button class="signup-btn" id="ctaSignupBtn"
+            onclick="document.getElementById('registerModal').classList.add('show')">
             Sign Up Now
         </button>
 
