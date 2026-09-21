@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources</title>
+
+  <link rel="stylesheet" href="../style/customer-sidebar.css">
+  <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="../style/staff-resources.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="dashboard-container">
+
+    <div id="sidebar-container"></div>
+
+    <main class="main-content">
+
+      <div class="topbar">
+        <div>
+          <h2>Resources</h2>
+          <p>View and manage available relief resources</p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <h3>Total Resources</h3>
+          <div id="totalResources">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Available</h3>
+          <div id="availableResources">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Low Stock</h3>
+          <div id="lowStockResources">0</div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Depleted</h3>
+          <div id="depletedResources">0</div>
+        </div>
+
+      </div>
+
+      <!-- Table Card -->
+      <div class="table-card">
+
+        <div class="table-header">
+
+          <h3>Resource Inventory</h3>
+
+          <button id="refreshBtn">
+            <i class="fas fa-rotate-right"></i>
+            Refresh
+          </button>
+
+        </div>
+
+        <div class="rq-filter-row">
+
+          <input type="text" id="searchBar" class="rq-input" placeholder="Search resources...">
+
+          <select id="statusFilter" class="rq-input">
+
+            <option value="all">All Categories</option>
+            <option value="food">Food</option>
+            <option value="water">Water</option>
+            <option value="shelter">Shelter</option>
+            <option value="medicine">Medicine</option>
+
+          </select>
+
+        </div>
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Resource</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody id="resourcesTableBody"></tbody>
+
+        </table>
+
+        <div id="emptyState">
+          No resources found.
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <div id="logout-modal-wrapper"></div>
+
+  <script src="../components/logout-modal.js"></script>
+  <script src="../components/loadStaffSidebar.js"></script>
+  <script src="../js/staff-resources.js"></script>
+
+</body>
+
+</html>

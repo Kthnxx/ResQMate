@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResQMate – Locations</title>
+
+  <link rel="stylesheet" href="../style/customer-sidebar.css">
+  <link rel="stylesheet" href="../style/admin-shared.css">
+  <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+  <div class="dashboard-container">
+
+    <div id="sidebar-container"></div>
+    <div id="logout-modal-wrapper"></div>
+
+    <main class="main-content">
+
+      <div class="topbar">
+        <h2>Location Management</h2>
+        <p>Add, edit, and manage assistance locations</p>
+      </div>
+
+      <div class="table-card">
+        <div class="toolbar-row">
+          <h5 style="margin:0; color:#7f1d1d; font-weight:700; flex:1;">Registered Locations</h5>
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="locationSearch" placeholder="Search locations…">
+          </div>
+          <button class="btn-primary" onclick="openAddLocationModal()">
+            <i class="fa-solid fa-plus"></i> Add Location
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Location Name</th>
+                <th>Barangay</th>
+                <th>City</th>
+                <th>Province</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="locationsTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="locationMessage" class="empty-state" style="display:none;">
+          <i class="fa-solid fa-location-dot"></i>
+          <p>No locations found. Add one to get started.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add / Edit Modal -->
+  <div class="modal-overlay" id="locationModal">
+    <div class="modal-box">
+      <div class="modal-header-row">
+        <h4 id="locationModalTitle">Add Location</h4>
+        <button class="modal-close-btn" id="closeLocationModal"><i class="fa-solid fa-times"></i></button>
+      </div>
+      <form id="locationForm">
+        <input type="hidden" id="locationId">
+        <div class="form-group"><label>Location Name</label><input type="text" id="locationName" placeholder="e.g. Barangay Hall" required></div>
+        <div class="form-group"><label>Barangay</label><input type="text" id="barangay" placeholder="Enter barangay" required></div>
+        <div class="form-group"><label>City</label><input type="text" id="city" placeholder="Enter city" required></div>
+        <div class="form-group"><label>Province</label><input type="text" id="province" placeholder="Enter province" required></div>
+        <div class="modal-footer">
+          <button type="button" class="btn-secondary" id="cancelLocationModal">Cancel</button>
+          <button type="submit" class="btn-primary">Save Location</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal-overlay" id="deleteLocationModal">
+    <div class="modal-box" style="max-width:400px; text-align:center;">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem; color:#dc2626; margin-bottom:16px;"></i>
+      <h4 style="color:#7f1d1d; margin-bottom:8px;">Delete Location?</h4>
+      <p id="deleteLocationText" style="color:#6b7280; margin-bottom:24px;">This action cannot be undone.</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelDeleteLocation">Cancel</button>
+        <button class="btn-primary" id="confirmDeleteLocation" style="background:#dc2626;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../components/loadAdminSidebar.js"></script>
+  <script src="../components/logout-modal.js"></script>
+  <script src="../js/admin-locations.js"></script>
+  <script>
+    // Override the Bootstrap-dependent modal calls with our custom modals
+    const locationModal  = document.getElementById('locationModal');
+    const deleteModal    = document.getElementById('deleteLocationModal');
+
+    function openAddLocationModal() {
+      window.editingLocationId = null;
+      document.getElementById('locationModalTitle').textContent = 'Add Location';
+      ['locationId','locationName','barangay','city','province'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      locationModal.classList.add('active');
+    }
+
+    function openEditLocation(locationId) {
+      const location = locations.find(l => l.location_id === locationId);
+      if (!location) return;
+      window.editingLocationId = locationId;
+      document.getElementById('locationModalTitle').textContent = 'Edit Location';
+      document.getElementById('locationId').value    = location.location_id;
+      document.getElementById('locationName').value  = location.location_name;
+      document.getElementById('barangay').value      = location.barangay;
+      document.getElementById('city').value          = location.city;
+      document.getElementById('province').value      = location.province;
+      locationModal.classList.add('active');
+    }
+
+    function openDeleteLocation(locationId) {
+      const location = locations.find(l => l.location_id === locationId);
+      if (!location) return;
+      window.deletingLocationId = locationId;
+      document.getElementById('deleteLocationText').textContent =
+        `Delete "${location.location_name}"? This action cannot be undone.`;
+      deleteModal.classList.add('active');
+    }
+
+    document.getElementById('closeLocationModal').addEventListener('click',  () => locationModal.classList.remove('active'));
+    document.getElementById('cancelLocationModal').addEventListener('click', () => locationModal.classList.remove('active'));
+    document.getElementById('cancelDeleteLocation').addEventListener('click', () => deleteModal.classList.remove('active'));
+    locationModal.addEventListener('click', e => { if (e.target === locationModal) locationModal.classList.remove('active'); });
+    deleteModal.addEventListener('click',   e => { if (e.target === deleteModal)   deleteModal.classList.remove('active'); });
+
+    document.getElementById('locationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name     = document.getElementById('locationName').value.trim();
+      const barangay = document.getElementById('barangay').value.trim();
+      const city     = document.getElementById('city').value.trim();
+      const province = document.getElementById('province').value.trim();
+      if (!name || !barangay || !city || !province) return;
+
+      if (window.editingLocationId !== null) {
+        const loc = locations.find(l => l.location_id === window.editingLocationId);
+        if (loc) { loc.location_name = name; loc.barangay = barangay; loc.city = city; loc.province = province; }
+      } else {
+        const newId = locations.length > 0 ? Math.max(...locations.map(l => l.location_id)) + 1 : 1;
+        locations.push({ location_id: newId, location_name: name, barangay, city, province });
+      }
+      locationModal.classList.remove('active');
+      displayLocations();
+    });
+
+    document.getElementById('confirmDeleteLocation').addEventListener('click', () => {
+      if (window.deletingLocationId == null) return;
+      locations = locations.filter(l => l.location_id !== window.deletingLocationId);
+      window.deletingLocationId = null;
+      deleteModal.classList.remove('active');
+      displayLocations();
+    });
+
+    // Override renderButtons to use custom classes
+    const _orig_displayLocations = displayLocations;
+    // Patch the JS so its button markup matches our theme
+    document.addEventListener('DOMContentLoaded', () => {
+      const origBody = document.getElementById('locationsTableBody');
+      const origMsg  = document.getElementById('locationMessage');
+
+      // Monkey-patch the display function to use our button style
+      window.displayLocations = function() {
+        const searchTerm = document.getElementById('locationSearch').value.trim().toLowerCase();
+        const filtered = locations.filter(l => {
+          const t = [l.location_id, l.location_name, l.barangay, l.city, l.province].join(' ').toLowerCase();
+          return t.includes(searchTerm);
+        });
+        origBody.innerHTML = '';
+        if (filtered.length === 0) {
+          origMsg.style.display = 'block';
+          return;
+        }
+        origMsg.style.display = 'none';
+        filtered.forEach(loc => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>#${loc.location_id}</strong></td>
+            <td>${escapeHtml(loc.location_name)}</td>
+            <td>${escapeHtml(loc.barangay)}</td>
+            <td>${escapeHtml(loc.city)}</td>
+            <td>${escapeHtml(loc.province)}</td>
+            <td>
+              <button class="rq-btn-edit" onclick="openEditLocation(${loc.location_id})"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="rq-btn-delete" onclick="openDeleteLocation(${loc.location_id})"><i class="fa-solid fa-trash"></i> Delete</button>
+            </td>
+          `;
+          origBody.appendChild(tr);
+        });
+      };
+      displayLocations();
+
+      document.getElementById('locationSearch').addEventListener('input', displayLocations);
+    });
+  </script>
+</body>
+</html>

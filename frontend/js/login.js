@@ -37,7 +37,7 @@ loginForm.addEventListener("submit", async (e) => {
 
             return;
         }
-        
+
         loginError.classList.remove("show");
 
         localStorage.setItem(
