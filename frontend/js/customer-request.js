@@ -2,7 +2,9 @@ const API_URL = "http://127.0.0.1:8000";
 
 const requestForm = document.getElementById("requestForm");
 const assistanceTypeInput = document.getElementById("assistanceType");
-const locationInput = document.getElementById("location");
+const barangayInput = document.getElementById("barangay");
+const cityInput = document.getElementById("city");
+const provinceInput = document.getElementById("province");
 const detailsInput = document.getElementById("details");
 const priorityInput = document.getElementById("priority");
 const characterCount = document.getElementById("characterCount");
@@ -49,6 +51,19 @@ if (cancelButton) {
 if (requestForm) {
     requestForm.addEventListener("submit", async function (event) {
         event.preventDefault();
+        console.log("Form submission triggered!");
+
+        const requestError = document.getElementById("requestError");
+
+        if (!requestForm.checkValidity()) {
+            if (requestError) {
+                requestError.textContent = "Please complete all required fields.";
+                requestError.style.display = "block";
+            }
+            return;
+        } else if (requestError) {
+            requestError.style.display = "none";
+        }
 
         const storedUser = localStorage.getItem("user");
 
@@ -72,12 +87,22 @@ if (requestForm) {
         }
 
         const assistanceType = assistanceTypeInput.value.trim();
-        const location = locationInput.value.trim();
+        
+        const barangay = barangayInput ? barangayInput.value.trim() : "";
+        const city = cityInput ? cityInput.value.trim() : "";
+        const province = provinceInput ? provinceInput.value.trim() : "";
+        const location = `${barangay}, ${city}, ${province}`;
+        
         const details = detailsInput.value.trim();
         const priority = priorityInput.value;
 
-        if (!assistanceType || !location || !details || !priority) {
-            alert("Please complete all required fields.");
+        if (!assistanceType || !barangay || !city || !province || !details || !priority) {
+            if (requestError) {
+                requestError.textContent = "Please complete all required fields.";
+                requestError.style.display = "block";
+            } else {
+                alert("Please complete all required fields.");
+            }
             return;
         }
 
@@ -114,6 +139,9 @@ if (requestForm) {
             }
 
             alert("Your assistance request has been submitted successfully.");
+            
+            // Redirect to dashboard to view the new request
+            window.location.href = "dashboard.html";
 
             requestForm.reset();
 

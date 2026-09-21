@@ -144,24 +144,32 @@ function loadRecentRequests(requests) {
                     )
                     : "";
 
-            tableBody.innerHTML += `
-                <tr>
-                    <td>${request.request_id}</td>
+            const tr = document.createElement("tr");
 
-                    <td>
-                        ${type}
-                    </td>
+            const tdId = document.createElement("td");
+            tdId.textContent = request.request_id;
 
-                    <td>
-                        <span class="status-badge ${status}">
-                            ${statusText}
-                        </span>
-                    </td>
+            const tdType = document.createElement("td");
+            tdType.textContent = type;
 
-                    <td>
-                        ${date}
-                    </td>
-                </tr>
-            `;
+            const tdDetails = document.createElement("td");
+            tdDetails.textContent = request.request_details || "No details provided";
+
+            const tdStatus = document.createElement("td");
+            const spanStatus = document.createElement("span");
+            spanStatus.className = `status-badge ${status}`;
+            spanStatus.textContent = statusText;
+            tdStatus.appendChild(spanStatus);
+
+            const tdDate = document.createElement("td");
+            tdDate.textContent = date;
+
+            tr.appendChild(tdId);
+            tr.appendChild(tdType);
+            tr.appendChild(tdDetails);
+            tr.appendChild(tdStatus);
+            tr.appendChild(tdDate);
+
+            tableBody.appendChild(tr);
         });
 }

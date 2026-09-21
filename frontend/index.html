@@ -48,7 +48,7 @@
             </p>
 
             <div class="hero-buttons">
-                <button class="primary-btn" id="requestAssistanceBtn">
+                <button class="primary-btn" id="requestAssistanceBtn" onclick="document.getElementById('loginModal').classList.add('show')">
                     Request Assistance
                 </button>
 
@@ -59,45 +59,43 @@
 
         </div>
 
+        <div class="hero-image">
+            <!-- You can add a relevant illustration or image here -->
+        </div>
+
     </section>
 
-    <!-- Features -->
-
+    <!-- Features Section -->
     <section class="features" id="featuresSection">
 
-        <h2>How ResQMate Helps</h2>
+        <h2>How It Works</h2>
 
-        <div class="feature-grid">
+        <div class="features-grid">
 
             <div class="feature-card">
-                <div class="icon blue">🏠</div>
+                <i class="fa-solid fa-hands-holding-child fa-3x" style="color: var(--primary);"></i>
                 <h3>Request Assistance</h3>
                 <p>
-                    Submit your needs quickly and easily.
+                    Easily submit a request for relief supplies or rescue
+                    operations with specific details and priority levels.
                 </p>
             </div>
 
             <div class="feature-card">
-                <div class="icon green">📦</div>
-                <h3>Resource Management</h3>
+                <i class="fa-solid fa-truck-fast fa-3x" style="color: var(--primary);"></i>
+                <h3>Coordinate Operations</h3>
                 <p>
-                    Track and manage relief resources.
+                    Staff and Volunteers can track and update the status of
+                    relief operations in real-time.
                 </p>
             </div>
 
             <div class="feature-card">
-                <div class="icon orange">🚚</div>
-                <h3>Distribution Tracking</h3>
+                <i class="fa-solid fa-bell fa-3x" style="color: var(--primary);"></i>
+                <h3>Stay Updated</h3>
                 <p>
-                    Monitor the delivery of aid and supplies.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <div class="icon purple">📊</div>
-                <h3>Reports & Analytics</h3>
-                <p>
-                    Get real-time insights and reports.
+                    Receive timely notifications about your requests and
+                    important announcements from the administration.
                 </p>
             </div>
 
@@ -105,38 +103,55 @@
 
     </section>
 
-    <!-- Process -->
+    <!-- Call to Action -->
+    <section class="cta">
 
-    <section class="process">
+        <h2>Ready to make a difference?</h2>
 
-        <h2>How It Works</h2>
+        <p>
+            Join our community today and help us build a safer tomorrow.
+        </p>
 
-        <div class="steps">
+        <button class="signup-btn" style="margin-top: 1rem;">
+            Sign Up Now
+        </button>
 
-            <div class="step">
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 ResQMate. All rights reserved.</p>
+    </footer>
+
+    <!-- Progress Timeline (Reference Example) -->
+    <section class="progress-container" style="display: none;">
+
+        <div class="progress-track">
+
+            <div class="step active">
                 <div class="step-circle">1</div>
-                <p>Submit Request</p>
+                <p>Submitted</p>
             </div>
 
-            <div class="line"></div>
+            <div class="line active"></div>
 
-            <div class="step">
+            <div class="step active">
                 <div class="step-circle">2</div>
-                <p>Staff Verification</p>
+                <p>Reviewing</p>
             </div>
 
             <div class="line"></div>
 
             <div class="step">
                 <div class="step-circle">3</div>
-                <p>Resource Allocation</p>
+                <p>Approved</p>
             </div>
 
             <div class="line"></div>
 
             <div class="step">
                 <div class="step-circle">4</div>
-                <p>Relief Distribution</p>
+                <p>In Transit</p>
             </div>
 
             <div class="line"></div>
@@ -150,7 +165,7 @@
 
     </section>
 
-    <script src="components/loadModal.js"></script>
+    <script src="components/loadmodal.js"></script>
 
 </body>
 

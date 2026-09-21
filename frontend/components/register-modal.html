@@ -42,7 +42,7 @@
 
             <div id="registerError" class="error-alert"></div>
 
-            <form id="registerForm">
+            <form id="registerForm" novalidate>
 
                 <label>Full Name</label>
                 <input type="text" id="fullname" placeholder="Juan Dela Cruz" required>
@@ -52,14 +52,14 @@
 
                 <div class="register-password-group">
                     <label for="password">Password</label>
-                    <input type="password" id="registerPassword" placeholder="••••••••" required>
+                    <input type="password" id="registerPassword" placeholder="••••••••" required minlength="8">
                     <i class="fa-solid fa-eye register-toggle-password toggle-password"
                         data-target="registerPassword"></i>
                 </div>
 
                 <div class="register-password-group">
                     <label for="password">Password</label>
-                    <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required minlength="8">
                     <i class="fa-solid fa-eye register-toggle-password toggle-password"
                         data-target="confirmPassword"></i>
                 </div>

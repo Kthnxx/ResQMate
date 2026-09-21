@@ -166,6 +166,12 @@ function initializeModals() {
                 const registerError =
                     document.getElementById("registerError");
 
+                if (!registerForm.checkValidity()) {
+                    registerError.textContent = "Please ensure all fields are filled, emails are valid, and passwords are at least 8 characters.";
+                    registerError.classList.add("show");
+                    return;
+                }
+
                 if (password !== confirmPassword) {
 
                     registerError.textContent =
@@ -252,6 +258,15 @@ function initializeModals() {
             async (e) => {
 
                 e.preventDefault();
+
+                const loginError =
+                    document.getElementById("loginError");
+
+                if (!loginForm.checkValidity()) {
+                    loginError.textContent = "Please provide a valid email and password (min 8 characters).";
+                    loginError.classList.add("show");
+                    return;
+                }
 
                 const email =
                     document.getElementById("email").value;

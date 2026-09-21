@@ -42,14 +42,14 @@
                 Invalid Credentials
             </div>
 
-            <form id="loginForm">
+            <form id="loginForm" novalidate>
 
                 <label>Email Address</label>
                 <input type="email" id="email" placeholder="you@example.com" required>
 
                 <div class="login-password-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <input type="password" id="password" placeholder="••••••••" required minlength="8">
                     <i class="fa-solid fa-eye login-toggle-password toggle-password" data-target="password"></i>
                 </div>
 
