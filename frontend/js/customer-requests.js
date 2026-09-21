@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tbody.innerHTML = `
         <tr>
-            <td colspan="5" style="text-align: center; color: #718096; padding: 20px;">
+            <td colspan="6" style="text-align: center; color: #718096; padding: 20px;">
                 Loading your requests...
             </td>
         </tr>
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (requests.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #718096; padding: 20px;">
+                    <td colspan="6" style="text-align: center; color: #718096; padding: 20px;">
                         No assistance requests found.
                     </td>
                 </tr>
@@ -98,29 +98,34 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `;
             }
 
-            row.innerHTML = `
-                <td class="req-id">
-                    ${req.request_id}
-                </td>
+            const tdId = document.createElement("td");
+            tdId.className = "req-id";
+            tdId.textContent = req.request_id;
 
-                <td>
-                    ${typeText}
-                </td>
+            const tdType = document.createElement("td");
+            tdType.textContent = typeText;
 
-                <td>
-                    <span class="status-badge ${status}">
-                        ${statusFormatted}
-                    </span>
-                </td>
+            const tdDetails = document.createElement("td");
+            tdDetails.textContent = req.request_details || "No details provided";
 
-                <td>
-                    ${dateFormatted}
-                </td>
+            const tdStatus = document.createElement("td");
+            const statusSpan = document.createElement("span");
+            statusSpan.className = `status-badge ${status}`;
+            statusSpan.textContent = statusFormatted;
+            tdStatus.appendChild(statusSpan);
 
-                <td>
-                    ${actionHTML}
-                </td>
-            `;
+            const tdDate = document.createElement("td");
+            tdDate.textContent = dateFormatted;
+
+            const tdAction = document.createElement("td");
+            tdAction.innerHTML = actionHTML; // actionHTML is hardcoded/safe
+
+            row.appendChild(tdId);
+            row.appendChild(tdType);
+            row.appendChild(tdDetails);
+            row.appendChild(tdStatus);
+            row.appendChild(tdDate);
+            row.appendChild(tdAction);
 
             tbody.appendChild(row);
         });
@@ -140,7 +145,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         tbody.innerHTML = `
             <tr>
-                <td colspan="5" style="text-align: center; color: #ef4444; padding: 20px;">
+                <td colspan="6" style="text-align: center; color: #ef4444; padding: 20px;">
                     Error loading requests. Please try again later.
                 </td>
             </tr>
