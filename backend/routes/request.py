@@ -16,13 +16,37 @@ class CreateRequestData(BaseModel):
 
 @router.get("/")
 def get_requests():
+
     query = text("""
-        SELECT *
-        FROM assistance_requests
-        ORDER BY request_id DESC
+        SELECT
+            ar.*,
+            c.category_name,
+            l.location_name,
+            u.full_name,
+            staff.full_name AS assigned_staff
+
+        FROM assistance_requests ar
+
+        LEFT JOIN categories c
+            ON ar.category_id = c.category_id
+
+        LEFT JOIN locations l
+            ON ar.location_id = l.location_id
+
+        LEFT JOIN users u
+            ON ar.user_id = u.user_id
+
+        LEFT JOIN distributions d
+            ON ar.request_id = d.request_id
+
+        LEFT JOIN users staff
+            ON d.staff_id = staff.user_id
+
+        ORDER BY ar.request_id DESC
     """)
 
     with engine.connect() as conn:
+
         result = conn.execute(query)
 
         requests = []
@@ -31,11 +55,15 @@ def get_requests():
             requests.append({
                 "request_id": row.request_id,
                 "user_id": row.user_id,
+                "full_name": row.full_name,
                 "category_id": row.category_id,
+                "category_name": row.category_name,
                 "location_id": row.location_id,
+                "location_name": row.location_name,
                 "request_details": row.request_details,
                 "priority_level": row.priority_level,
                 "status": row.status,
+                "assigned_staff": row.assigned_staff,
                 "date_requested": str(row.date_requested)
             })
 
@@ -384,9 +412,9 @@ def get_user_requests(user_id: int):
             requests.append({
                 "request_id": row.request_id,
                 "user_id": row.user_id,
+                "full_name": row.full_name,
                 "category_id": row.category_id,
                 "category_name": row.category_name,
-                "location_id": row.location_id,
                 "location": row.location_name,
                 "request_details": row.request_details,
                 "priority_level": row.priority_level,

@@ -4,26 +4,37 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background: #fdf2f2;
-    color: #1e293b;
+:root {
+    --primary: #EF4444;
+    --dark-red: #7f1d1d;
+    --light-bg: #fdf2f2;
+    --text: #1e293b;
+    --muted: #64748b;
 }
 
-/* NAVBAR */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--light-bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+/* ==========================
+   NAVBAR
+========================== */
 
 .navbar {
-    background: #fdf2f2;
-    padding: 20px 8%;
+    padding: 20px 4%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: var(--light-bg);
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .logo img {
@@ -32,18 +43,7 @@ body {
 
 .logo h2 {
     color: #991b1b;
-    /* Deep Red */
-}
-
-nav {
-    display: flex;
-    gap: 35px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #334155;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .nav-buttons {
@@ -53,228 +53,180 @@ nav a {
 
 .login-btn {
     padding: 10px 24px;
-    border: 1px solid #EF4444;
-    /* Primary Red */
+    border: 1px solid var(--primary);
     background: white;
-    color: #EF4444;
+    color: var(--primary);
     border-radius: 10px;
     cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-btn:hover {
+    background: var(--primary);
+    color: white;
 }
 
 .signup-btn {
     padding: 10px 24px;
-    background: #EF4444;
-    /* Primary Red */
+    background: var(--primary);
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-/* HERO */
+.signup-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ==========================
+   HERO
+========================== */
 
 .hero {
-    padding: 70px 8%;
+    min-height: 80vh;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
+    text-align: center;
+    padding: 40px 20px;
 }
 
 .hero-text {
-    max-width: 500px;
+    max-width: 750px;
 }
 
 .hero-text h1 {
-    font-size: 58px;
+    font-size: 70px;
     line-height: 1.1;
-    color: #7f1d1d;
-    /* Dark Red */
+    color: var(--dark-red);
     margin-bottom: 20px;
+    font-weight: 700;
 }
 
 .hero-text p {
-    color: #64748b;
-    margin-bottom: 30px;
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 35px;
 }
 
 .hero-buttons {
     display: flex;
+    justify-content: center;
     gap: 15px;
+    flex-wrap: wrap;
 }
 
 .primary-btn {
-    background: #EF4444;
-    /* Primary Red */
+    background: var(--primary);
     color: white;
     border: none;
-    padding: 14px 28px;
+    padding: 14px 30px;
     border-radius: 30px;
     cursor: pointer;
+    font-weight: 500;
 }
 
 .secondary-btn {
     background: white;
-    border: 2px solid #EF4444;
-    /* Primary Red */
-    color: #EF4444;
-    padding: 14px 28px;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 14px 30px;
     border-radius: 30px;
     cursor: pointer;
+    font-weight: 500;
 }
 
-.hero-image img {
-    width: 550px;
-    max-width: 100%;
-}
-
-/* FEATURES */
+/* ==========================
+   FEATURES
+========================== */
 
 .features {
-    padding: 40px 8%;
-    text-align: center;
+    padding: 80px 8%;
 }
 
 .features h2 {
-    margin-bottom: 40px;
-    color: #7f1d1d;
+    text-align: center;
+    margin-bottom: 50px;
+    color: var(--dark-red);
+    font-size: 36px;
 }
 
 .feature-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
 }
 
 .feature-card {
     background: white;
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, .05);
+    border-radius: 20px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card i {
+    color: var(--primary);
+    margin-bottom: 20px;
 }
 
 .feature-card h3 {
-    margin: 15px 0 10px;
-    font-size: 18px;
+    margin-bottom: 10px;
+    font-size: 22px;
 }
 
 .feature-card p {
-    color: #64748b;
-    font-size: 14px;
-}
-
-.icon {
-    width: 60px;
-    height: 60px;
-    margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 15px;
-    color: white;
-    font-size: 24px;
-}
-
-.blue {
-    background: #EF4444;
-    /* Changed accent color to Red */
-}
-
-.green {
-    background: #f59e0b;
-    /* Changed to amber/orange variant */
-}
-
-.orange {
-    background: #dc2626;
-    /* Deep Red */
-}
-
-.purple {
-    background: #991b1b;
-    /* Dark Maroon */
-}
-
-/* PROCESS */
-
-.process {
-    padding: 60px 8%;
-    text-align: center;
-}
-
-.process h2 {
-    color: #7f1d1d;
-    margin-bottom: 40px;
-}
-
-.steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.step {
-    text-align: center;
-}
-
-.step-circle {
-    width: 45px;
-    height: 45px;
-    background: #EF4444;
-    /* Primary Red */
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: auto;
-    margin-bottom: 12px;
-    font-weight: 600;
-}
-
-.line {
-    width: 80px;
-    height: 2px;
-    background: #cbd5e1;
-    margin: 0 10px;
-}
-
-.step p {
-    font-size: 14px;
+    color: var(--muted);
+    font-size: 15px;
 }
 
 /* ==========================
-   RESPONSIVENESS
+   CTA
 ========================== */
 
-@media (max-width: 1024px) {
-    .hero {
-        gap: 40px;
-    }
-
-    .hero-text h1 {
-        font-size: 48px;
-    }
-
-    .feature-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .steps {
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    .line {
-        display: none;
-    }
+.cta {
+    text-align: center;
+    padding: 90px 20px;
 }
 
+.cta h2 {
+    color: var(--dark-red);
+    margin-bottom: 10px;
+    font-size: 36px;
+}
+
+.cta p {
+    color: var(--muted);
+    margin-bottom: 25px;
+}
+
+/* ==========================
+   FOOTER
+========================== */
+
+footer {
+    text-align: center;
+    padding: 25px;
+    border-top: 1px solid #f1d5d5;
+    color: var(--muted);
+    background: white;
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
 @media (max-width: 768px) {
+
     .navbar {
         padding: 15px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
 
     .logo img {
@@ -285,9 +237,36 @@ nav a {
         font-size: 20px;
     }
 
-    .nav-buttons {
-        display: flex;
-        gap: 8px;
+    .hero {
+        min-height: auto;
+        padding: 60px 20px;
+    }
+
+    .hero-text h1 {
+        font-size: 45px;
+    }
+
+    .hero-text p {
+        font-size: 16px;
+    }
+
+    .features {
+        padding: 60px 20px;
+    }
+
+    .features h2 {
+        font-size: 30px;
+    }
+
+    .cta h2 {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .hero-text h1 {
+        font-size: 36px;
     }
 
     .login-btn,
@@ -296,68 +275,7 @@ nav a {
         font-size: 13px;
     }
 
-    .hero {
-        flex-direction: column-reverse;
-        text-align: center;
-        padding: 40px 20px;
-    }
-
-    .hero-text {
-        max-width: 100%;
-    }
-
-    .hero-text h1 {
-        font-size: 38px;
-    }
-
-    .hero-text p {
-        font-size: 15px;
-    }
-
     .hero-buttons {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .hero-image img {
-        width: 100%;
-        max-width: 350px;
-    }
-
-    .features {
-        padding: 40px 20px;
-    }
-
-    .feature-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .process {
-        padding: 40px 20px;
-    }
-
-    .steps {
         flex-direction: column;
-        gap: 25px;
-    }
-
-    .line {
-        display: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .logo img {
-        width: 40px;
-    }
-
-    .logo h2 {
-        font-size: 18px;
-    }
-
-    .login-btn,
-    .signup-btn {
-        padding: 7px 12px;
-        font-size: 12px;
     }
 }

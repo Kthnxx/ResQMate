@@ -15,8 +15,10 @@ fetch("../components/admin-sidebar.html")
         sidebarContainer.innerHTML = data;
 
         loadUserProfile();
+        loadProfileModal();
 
         const toggleBtn = document.querySelector(".toggle-btn");
+
         if (toggleBtn) {
             toggleBtn.addEventListener("click", toggleSidebar);
         }

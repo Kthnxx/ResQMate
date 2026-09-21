@@ -10,6 +10,7 @@ async function loadModals() {
     const registerHtml = await registerResponse.text();
     document.body.insertAdjacentHTML("beforeend", registerHtml);
 
+
     initializeModals();
 }
 
