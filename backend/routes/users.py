@@ -11,9 +11,12 @@ router = APIRouter()
 # =========================
 
 class RegisterRequest(BaseModel):
-    full_name: str
+    first_name: str
+    last_name: str
     email: str
     password: str
+    phone_number: str
+    dob: str
     role: str = "community"
 
 
@@ -22,7 +25,8 @@ class LoginRequest(BaseModel):
     password: str
 
 class UpdateUserRequest(BaseModel):
-    full_name: str
+    first_name: str
+    last_name: str
     email: str
     role: str
 
@@ -40,7 +44,7 @@ def get_users():
             text("""
                 SELECT
                     user_id,
-                    full_name,
+                    CONCAT_WS(' ', first_name, last_name) AS full_name,
                     email,
                     role
                 FROM users
@@ -91,15 +95,18 @@ def register_user(data: RegisterRequest):
         result = conn.execute(
             text("""
                 INSERT INTO users
-                    (full_name, email, password, role)
+                    (first_name, last_name, email, password, role, phone_number, dob)
                 VALUES
-                    (:full_name, :email, :password, :role)
+                    (:first_name, :last_name, :email, :password, :role, :phone_number, :dob)
             """),
             {
-                "full_name": data.full_name,
+                "first_name": data.first_name,
+                "last_name": data.last_name,
                 "email": data.email,
                 "password": data.password,
-                "role": data.role
+                "role": data.role,
+                "phone_number": data.phone_number,
+                "dob": data.dob
             }
         )
 
@@ -108,9 +115,13 @@ def register_user(data: RegisterRequest):
     return {
         "message": "User registered successfully",
         "user_id": user_id,
-        "full_name": data.full_name,
+        "first_name": data.first_name,
+        "last_name": data.last_name,
+        "full_name": f"{data.first_name} {data.last_name}",
         "email": data.email,
-        "role": data.role
+        "role": data.role,
+        "phone_number": data.phone_number,
+        "dob": data.dob
     }
 
 
@@ -127,7 +138,7 @@ def login_user(data: LoginRequest):
             text("""
                 SELECT
                     user_id,
-                    full_name,
+                    CONCAT_WS(' ', first_name, last_name) AS full_name,
                     email,
                     password,
                     role
@@ -178,14 +189,16 @@ def update_user(
             text("""
                 UPDATE users
                 SET
-                    full_name = :full_name,
+                    first_name = :first_name,
+                    last_name = :last_name,
                     email = :email,
                     role = :role
                 WHERE user_id = :user_id
             """),
             {
                 "user_id": user_id,
-                "full_name": data.full_name,
+                "first_name": data.first_name,
+                "last_name": data.last_name,
                 "email": data.email,
                 "role": data.role
             }
