@@ -9,7 +9,9 @@ router = APIRouter()
 class CreateRequestData(BaseModel):
     user_id: int
     assistance_type: str
-    location: str
+    barangay: str
+    city: str
+    province: str
     request_details: str
     priority: str
 
@@ -22,8 +24,8 @@ def get_requests():
             ar.*,
             c.category_name,
             l.location_name,
-            u.full_name,
-            staff.full_name AS assigned_staff
+            CONCAT_WS(' ', u.first_name, u.last_name) AS full_name,
+            CONCAT_WS(' ', staff.first_name, staff.last_name) AS assigned_staff
 
         FROM assistance_requests ar
 
@@ -63,6 +65,7 @@ def get_requests():
                 "request_details": row.request_details,
                 "priority_level": row.priority_level,
                 "status": row.status,
+                "rejection_reason": row.rejection_reason,
                 "assigned_staff": row.assigned_staff,
                 "date_requested": str(row.date_requested)
             })
@@ -100,6 +103,7 @@ def get_request(request_id: int):
             "request_details": row.request_details,
             "priority_level": row.priority_level,
             "status": row.status,
+            "rejection_reason": row.rejection_reason,
             "date_requested": str(row.date_requested)
         }
 
@@ -107,7 +111,10 @@ def get_request(request_id: int):
 @router.post("/create")
 def create_request(data: CreateRequestData):
     assistance_type = data.assistance_type.strip()
-    location = data.location.strip()
+    barangay = data.barangay.strip()
+    city = data.city.strip()
+    province = data.province.strip()
+    location = f"{barangay}, {city}, {province}"
     request_details = data.request_details.strip()
     priority = data.priority.strip()
 
@@ -224,14 +231,25 @@ def create_request(data: CreateRequestData):
                 text("""
                     INSERT INTO locations
                     (
-                        location_name
+                        location_name,
+                        barangay,
+                        city,
+                        province
                     )
                     VALUES
                     (
-                        :location_name
+                        :location_name,
+                        :barangay,
+                        :city,
+                        :province
                     )
                 """),
-                {"location_name": location}
+                {
+                    "location_name": location,
+                    "barangay": barangay,
+                    "city": city,
+                    "province": province
+                }
             )
 
             location_result = conn.execute(
@@ -293,7 +311,8 @@ def create_request(data: CreateRequestData):
 def update_request_status(
     request_id: int,
     status: str,
-    updated_by: int
+    updated_by: int,
+    rejection_reason: str = None
 ):
     with engine.begin() as conn:
         user_result = conn.execute(
@@ -316,11 +335,13 @@ def update_request_status(
         conn.execute(
             text("""
                 UPDATE assistance_requests
-                SET status = :status
+                SET status = :status,
+                    rejection_reason = :rejection_reason
                 WHERE request_id = :request_id
             """),
             {
                 "status": status,
+                "rejection_reason": rejection_reason,
                 "request_id": request_id
             }
         )
@@ -390,12 +411,15 @@ def get_user_requests(user_id: int):
             ar.status,
             ar.date_requested,
             c.category_name,
-            l.location_name
+            l.location_name,
+            CONCAT_WS(' ', u.first_name, u.last_name) AS full_name
         FROM assistance_requests ar
         LEFT JOIN categories c
             ON ar.category_id = c.category_id
         LEFT JOIN locations l
             ON ar.location_id = l.location_id
+        LEFT JOIN users u
+            ON ar.user_id = u.user_id
         WHERE ar.user_id = :user_id
         ORDER BY ar.request_id DESC
     """)
@@ -419,6 +443,7 @@ def get_user_requests(user_id: int):
                 "request_details": row.request_details,
                 "priority_level": row.priority_level,
                 "status": row.status,
+                "rejection_reason": row.rejection_reason,
                 "date_requested": str(row.date_requested)
             })
 

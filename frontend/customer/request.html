@@ -26,7 +26,7 @@
 
             <div class="request-card">
 
-                <div id="requestError" class="error-alert" style="display: none; color: white; background-color: #ef4444; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: 500; text-align: center;"></div>
+                <div id="requestError" class="error-alert d-none"></div>
 
                 <form id="requestForm" novalidate>
 
@@ -87,13 +87,28 @@
 
                         <div class="location-fields">
 
-                            <input type="text" id="barangay" name="barangay" class="form-input" placeholder="Barangay"
-                                required>
+                            <select id="province" name="province" class="form-select" required aria-label="Select Province">
+                                <option value="" disabled selected>Select Province</option>
+                                <option value="Metro Manila">Metro Manila</option>
+                            </select>
 
-                            <input type="text" id="city" name="city" class="form-input" placeholder="City" required>
+                            <select id="city" name="city" class="form-select" required disabled aria-label="Select City">
+                                <option value="" disabled selected>Select City</option>
+                                <option value="Manila">Manila</option>
+                                <option value="Quezon City">Quezon City</option>
+                                <option value="Makati">Makati</option>
+                                <option value="Taguig">Taguig</option>
+                                <option value="Pasig">Pasig</option>
+                            </select>
 
-                            <input type="text" id="province" name="province" class="form-input" placeholder="Province"
-                                required>
+                            <select id="barangay" name="barangay" class="form-select" required disabled aria-label="Select Barangay">
+                                <option value="" disabled selected>Select Barangay</option>
+                                <option value="Barangay 1">Barangay 1</option>
+                                <option value="Barangay 2">Barangay 2</option>
+                                <option value="Barangay 3">Barangay 3</option>
+                                <option value="Barangay 4">Barangay 4</option>
+                                <option value="Barangay 5">Barangay 5</option>
+                            </select>
 
                         </div>
 
@@ -132,7 +147,7 @@
 
                     <div class="form-buttons">
 
-                        <button type="button" class="cancel-button" id="cancelButton">
+                        <button type="reset" class="cancel-button" id="cancelButton">
                             Clear Form
                         </button>
 

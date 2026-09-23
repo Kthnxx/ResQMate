@@ -52,6 +52,16 @@ document.addEventListener("DOMContentLoaded", () => {
             filterRequests
         );
     }
+    
+    const provinceFilter = document.getElementById("provinceFilter");
+    if (provinceFilter) {
+        provinceFilter.addEventListener("change", filterRequests);
+    }
+    
+    const cityFilter = document.getElementById("cityFilter");
+    if (cityFilter) {
+        cityFilter.addEventListener("change", filterRequests);
+    }
 });
 
 async function loadRequests() {
@@ -191,7 +201,7 @@ function renderTable(requests) {
 
                         <button
                             class="rq-btn-reject"
-                            onclick="updateStatus(${request.request_id}, 'Rejected')">
+                            onclick="openRejectModal(${request.request_id})">
                             Reject
                         </button>
                         `
@@ -291,6 +301,12 @@ function filterRequests() {
         document.getElementById(
             "statusFilter"
         ).value.toLowerCase();
+        
+    const provinceFilterEl = document.getElementById("provinceFilter");
+    const province = provinceFilterEl ? provinceFilterEl.value.toLowerCase() : "all";
+    
+    const cityFilterEl = document.getElementById("cityFilter");
+    const city = cityFilterEl ? cityFilterEl.value.toLowerCase() : "all";
 
     const rows =
         document.querySelectorAll(
@@ -313,10 +329,20 @@ function filterRequests() {
         const matchesStatus =
             status === "all" ||
             rowStatus === status;
+            
+        const matchesProvince =
+            province === "all" ||
+            text.includes(province);
+            
+        const matchesCity =
+            city === "all" ||
+            text.includes(city);
 
         if (
             matchesSearch &&
-            matchesStatus
+            matchesStatus &&
+            matchesProvince &&
+            matchesCity
         ) {
 
             row.style.display = "";
@@ -354,23 +380,26 @@ function filterRequests() {
 
 async function updateStatus(
     requestId,
-    newStatus
+    newStatus,
+    reason = null
 ) {
 
     try {
 
+        let url = `${API_URL}/requests/${requestId}/status?status=${newStatus}&updated_by=1`;
+        if (reason) {
+            url += `&rejection_reason=${encodeURIComponent(reason)}`;
+        }
+
         const response =
             await fetch(
-                `${API_URL}/requests/${requestId}/status`,
+                url,
                 {
                     method: "PUT",
                     headers: {
                         "Content-Type":
                             "application/json"
-                    },
-                    body: JSON.stringify({
-                        status: newStatus
-                    })
+                    }
                 }
             );
 
@@ -444,6 +473,13 @@ async function viewRequest(id) {
                     <td>${request.status}</td>
                 </tr>
 
+                ${request.status.toLowerCase() === 'rejected' && request.rejection_reason ? `
+                <tr>
+                    <th>Rejection Reason</th>
+                    <td style="color: #ef4444; font-weight: 500;">${request.rejection_reason}</td>
+                </tr>
+                ` : ''}
+
             </table>
 
         `;
@@ -489,7 +525,60 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         });
+    }
 
+    const rejectReasonSelect = document.getElementById("rejectionReasonSelect");
+    const otherReasonGroup = document.getElementById("otherReasonGroup");
+    
+    if (rejectReasonSelect) {
+        rejectReasonSelect.addEventListener("change", (e) => {
+            if (e.target.value === "Other") {
+                otherReasonGroup.style.display = "block";
+            } else {
+                otherReasonGroup.style.display = "none";
+            }
+        });
+    }
+
+    const closeRejectModalBtn = document.getElementById("closeRejectModal");
+    const rejectModal = document.getElementById("rejectReasonModal");
+    if (closeRejectModalBtn) {
+        closeRejectModalBtn.addEventListener("click", () => {
+            rejectModal.style.display = "none";
+        });
+    }
+
+    const submitRejectionBtn = document.getElementById("submitRejectionBtn");
+    if (submitRejectionBtn) {
+        submitRejectionBtn.addEventListener("click", () => {
+            const reasonVal = rejectReasonSelect.value;
+            let finalReason = reasonVal;
+            if (reasonVal === "Other") {
+                finalReason = document.getElementById("otherReasonText").value.trim();
+                if (!finalReason) {
+                    alert("Please specify a reason.");
+                    return;
+                }
+            } else if (!reasonVal) {
+                alert("Please select a reason.");
+                return;
+            }
+
+            rejectModal.style.display = "none";
+            updateStatus(currentRejectRequestId, 'Rejected', finalReason);
+        });
     }
 
 });
+
+let currentRejectRequestId = null;
+function openRejectModal(id) {
+    currentRejectRequestId = id;
+    const modal = document.getElementById("rejectReasonModal");
+    if (modal) {
+        modal.style.display = "flex";
+        document.getElementById("rejectionReasonSelect").value = "";
+        document.getElementById("otherReasonGroup").style.display = "none";
+        document.getElementById("otherReasonText").value = "";
+    }
+}

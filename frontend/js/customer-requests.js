@@ -91,10 +91,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                         data-request-id="${req.request_id}">
                         Follow Up
                     </button>
+                    <button 
+                        class="view-request-button"
+                        style="background-color: #6b7280; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer; margin-left: 0.5rem;"
+                        onclick="viewRequest(${req.request_id})">
+                        View
+                    </button>
                 `;
             } else {
                 actionHTML = `
-                    <span class="no-action">—</span>
+                    <button 
+                        class="view-request-button"
+                        style="background-color: #6b7280; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;"
+                        onclick="viewRequest(${req.request_id})">
+                        View
+                    </button>
                 `;
             }
 
@@ -152,4 +163,48 @@ document.addEventListener("DOMContentLoaded", async () => {
         `;
     }
 });
+});
 
+let customerRequestsData = [];
+
+async function viewRequest(id) {
+    try {
+        const response = await fetch(`${API_URL}/requests/${id}`);
+        const request = await response.json();
+        
+        document.getElementById("modalRequestId").textContent = request.request_id;
+        document.getElementById("modalCategory").textContent = request.category_name || "General";
+        document.getElementById("modalDescription").textContent = request.request_details || "No details provided";
+        document.getElementById("modalStatus").textContent = request.status;
+        
+        const rejectionRow = document.getElementById("rejectionReasonRow");
+        if (request.status && request.status.toLowerCase() === 'rejected' && request.rejection_reason) {
+            document.getElementById("modalRejectionReason").textContent = request.rejection_reason;
+            rejectionRow.style.display = "table-row";
+        } else {
+            rejectionRow.style.display = "none";
+        }
+        
+        document.getElementById("viewRequestModal").style.display = "flex";
+        
+    } catch (error) {
+        console.error("Error viewing request:", error);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const closeBtn = document.getElementById("closeViewModal");
+    const modal = document.getElementById("viewRequestModal");
+    
+    if (closeBtn && modal) {
+        closeBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+        
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
+});

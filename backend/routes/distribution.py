@@ -16,12 +16,14 @@ def get_distributions():
             d.resource_id,
             r.resource_name,
             d.staff_id,
+            CONCAT_WS(' ', u.first_name, u.last_name) AS staff_name,
             d.quantity_given,
-            d.recipient_name,
-            d.status
+            d.distribution_date
         FROM distributions d
         LEFT JOIN resources r
             ON d.resource_id = r.resource_id
+        LEFT JOIN users u
+            ON d.staff_id = u.user_id
         ORDER BY d.distribution_id DESC
     """)
 
@@ -39,9 +41,9 @@ def get_distributions():
                 "resource_id": row.resource_id,
                 "resource_name": row.resource_name,
                 "staff_id": row.staff_id,
+                "staff_name": row.staff_name,
                 "quantity_given": row.quantity_given,
-                "recipient_name": row.recipient_name,
-                "status": row.status
+                "distribution_date": str(row.distribution_date) if row.distribution_date else None
             })
 
         return distributions
@@ -53,9 +55,7 @@ def create_distribution(
     request_id: int,
     resource_id: int,
     staff_id: int,
-    quantity_given: int,
-    recipient_name: str,
-    status: str
+    quantity_given: int
 ):
 
     # Prevent zero or negative distributions
@@ -100,27 +100,21 @@ def create_distribution(
                     request_id,
                     resource_id,
                     staff_id,
-                    quantity_given,
-                    recipient_name,
-                    status
+                    quantity_given
                 )
                 VALUES
                 (
                     :request_id,
                     :resource_id,
                     :staff_id,
-                    :quantity_given,
-                    :recipient_name,
-                    :status
+                    :quantity_given
                 )
             """),
             {
                 "request_id": request_id,
                 "resource_id": resource_id,
                 "staff_id": staff_id,
-                "quantity_given": quantity_given,
-                "recipient_name": recipient_name,
-                "status": status
+                "quantity_given": quantity_given
             }
         )
 
@@ -148,9 +142,7 @@ def update_distribution(
     request_id: int,
     resource_id: int,
     staff_id: int,
-    quantity_given: int,
-    recipient_name: str,
-    status: str
+    quantity_given: int
 ):
 
     query = text("""
@@ -159,9 +151,7 @@ def update_distribution(
             request_id = :request_id,
             resource_id = :resource_id,
             staff_id = :staff_id,
-            quantity_given = :quantity_given,
-            recipient_name = :recipient_name,
-            status = :status
+            quantity_given = :quantity_given
         WHERE distribution_id = :distribution_id
     """)
 
@@ -174,9 +164,7 @@ def update_distribution(
                 "request_id": request_id,
                 "resource_id": resource_id,
                 "staff_id": staff_id,
-                "quantity_given": quantity_given,
-                "recipient_name": recipient_name,
-                "status": status
+                "quantity_given": quantity_given
             }
         )
 

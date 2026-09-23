@@ -427,6 +427,24 @@
     margin-bottom: 15px;
 }
 
+.name-group {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.name-group .name-field {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.name-group .name-field input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .register-btn {
     height: 52px;
 
@@ -442,7 +460,29 @@
 
     cursor: pointer;
 
+    flex: 1;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.register-actions {
+    display: flex;
+    gap: 1rem;
     margin-top: 10px;
+}
+
+.register-btn-secondary {
+    height: 52px;
+    background: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 .login-link {
@@ -484,11 +524,7 @@
    RESPONSIVENESS
 ========================== */
 
-.login-right,
-.register-right {
 
-    scrollbar-width: thin;
-}
 
 .login-right::-webkit-scrollbar,
 .register-right::-webkit-scrollbar {
@@ -542,3 +578,5 @@
     }
 
 }
+
+.required-asterisk { color: red; }

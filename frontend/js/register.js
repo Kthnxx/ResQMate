@@ -1,17 +1,46 @@
 const registerForm =
     document.getElementById("registerForm");
 
+document.addEventListener("DOMContentLoaded", () => {
+    const dobInput = document.getElementById("registerDob");
+    if (dobInput) {
+        const today = new Date().toISOString().split('T')[0];
+        dobInput.max = today;
+    }
+    
+    const phoneInput = document.getElementById("registerPhone");
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function (e) {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length < 11) {
+                this.setCustomValidity('Phone number must be exactly 11 digits.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
+});
+
 registerForm.addEventListener(
     "submit",
     async (e) => {
 
         e.preventDefault();
 
-        const full_name =
-            document.getElementById("fullname").value;
+        const first_name =
+            document.getElementById("firstName").value;
+            
+        const last_name =
+            document.getElementById("lastName").value;
 
         const email =
             document.getElementById("registerEmail").value;
+
+        const phone_number = 
+            document.getElementById("registerPhone").value;
+            
+        const dob = 
+            document.getElementById("registerDob").value;
 
         const password =
             document.getElementById("registerPassword").value;
@@ -36,8 +65,11 @@ registerForm.addEventListener(
                             "application/json"
                     },
                     body: JSON.stringify({
-                        full_name,
+                        first_name,
+                        last_name,
                         email,
+                        phone_number,
+                        dob,
                         password
                     })
                 }

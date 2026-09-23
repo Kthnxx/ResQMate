@@ -90,6 +90,29 @@
         </main>
     </div>
 
+    <!-- View Request Details Modal -->
+    <div class="custom-modal-overlay" id="viewRequestModal" style="display: none;">
+        <div class="custom-modal" style="background: white; padding: 2rem; border-radius: 8px; max-width: 600px; width: 100%; position: relative;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0;">Request Details</h3>
+                <button id="closeViewModal" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Request ID</th><td id="modalRequestId" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
+                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Type</th><td id="modalCategory" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
+                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Details</th><td id="modalDescription" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
+                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Status</th><td id="modalStatus" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
+                <tr id="rejectionReasonRow" style="display: none;">
+                    <th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #ef4444;">Rejection Reason</th>
+                    <td id="modalRejectionReason" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #ef4444; font-weight: 500;"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
     <script src="../components/loadSidebar.js"></script>
     <script src="../components/logout-modal.js"></script>
     <script src="../js/customer-requests.js"></script>

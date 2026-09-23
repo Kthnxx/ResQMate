@@ -57,7 +57,7 @@
               <input type="text" id="resourceSearch" placeholder="Search resources...">
             </div>
 
-            <select id="categoryFilter" class="rq-input">
+            <select id="categoryFilter" class="rq-input" aria-label="Filter by Category">
               <option value="all">All Categories</option>
               <option value="food">Food</option>
               <option value="water">Water</option>
@@ -92,15 +92,15 @@
                 <td>001</td>
                 <td>Relief Food Packs</td>
                 <td>Food</td>
-                <td style="color:#15803d;font-weight:600;">240 units</td>
+                <td class="text-success">240 units</td>
                 <td>QC Warehouse</td>
                 <td><span class="rq-badge rq-badge-active">Available</span></td>
                 <td>
-                  <button class="action-btn edit-btn">
+                  <button class="action-btn edit-btn" aria-label="Edit Resource">
                     <i class="fa-solid fa-pen"></i>
                   </button>
 
-                  <button class="action-btn delete-btn">
+                  <button class="action-btn delete-btn" aria-label="Delete Resource">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </td>
@@ -109,15 +109,15 @@
                 <td>002</td>
                 <td>Bottled Water (500ml)</td>
                 <td>Water</td>
-                <td style="color:#b45309;font-weight:600;">80 cases</td>
+                <td class="text-warning">80 cases</td>
                 <td>Pasig Hub</td>
                 <td><span class="rq-badge rq-badge-medium">Low Stock</span></td>
                 <td>
-                  <button class="action-btn edit-btn">
+                  <button class="action-btn edit-btn" aria-label="Edit Resource">
                     <i class="fa-solid fa-pen"></i>
                   </button>
 
-                  <button class="action-btn delete-btn">
+                  <button class="action-btn delete-btn" aria-label="Delete Resource">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </td>
@@ -126,15 +126,15 @@
                 <td>003</td>
                 <td>Emergency Tents</td>
                 <td>Shelter</td>
-                <td style="color:#dc2626;font-weight:600;">0 units</td>
+                <td class="text-danger">0 units</td>
                 <td>Marikina Depot</td>
                 <td><span class="rq-badge rq-badge-inactive">Depleted</span></td>
                 <td>
-                  <button class="action-btn edit-btn">
+                  <button class="action-btn edit-btn" aria-label="Edit Resource">
                     <i class="fa-solid fa-pen"></i>
                   </button>
 
-                  <button class="action-btn delete-btn">
+                  <button class="action-btn delete-btn" aria-label="Delete Resource">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </td>
@@ -143,15 +143,15 @@
                 <td>004</td>
                 <td>First Aid Kits</td>
                 <td>Medicine</td>
-                <td style="color:#15803d;font-weight:600;">150 kits</td>
+                <td class="text-success">150 kits</td>
                 <td>QC Warehouse</td>
                 <td><span class="rq-badge rq-badge-active">Available</span></td>
                 <td>
-                  <button class="action-btn edit-btn">
+                  <button class="action-btn edit-btn" aria-label="Edit Resource">
                     <i class="fa-solid fa-pen"></i>
                   </button>
 
-                  <button class="action-btn delete-btn">
+                  <button class="action-btn delete-btn" aria-label="Delete Resource">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </td>
@@ -160,15 +160,15 @@
                 <td>005</td>
                 <td>Blankets</td>
                 <td>Shelter</td>
-                <td style="color:#15803d;font-weight:600;">320 pcs</td>
+                <td class="text-success">320 pcs</td>
                 <td>QC Warehouse</td>
                 <td><span class="rq-badge rq-badge-active">Available</span></td>
                 <td>
-                  <button class="action-btn edit-btn">
+                  <button class="action-btn edit-btn" aria-label="Edit Resource">
                     <i class="fa-solid fa-pen"></i>
                   </button>
 
-                  <button class="action-btn delete-btn">
+                  <button class="action-btn delete-btn" aria-label="Delete Resource">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </td>
@@ -186,7 +186,7 @@
 
       <div class="modal-header">
         <h3 id="modalTitle">Add Resource</h3>
-        <button id="closeModal">
+        <button id="closeModal" aria-label="Close Modal">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -194,12 +194,12 @@
       <form id="resourceForm">
 
         <div class="form-group">
-          <label>Resource Name</label>
+          <label for="resourceName">Resource Name <span class="required-asterisk">*</span></label>
           <input type="text" id="resourceName" required>
         </div>
 
         <div class="form-group">
-          <label>Category</label>
+          <label for="resourceCategory">Category</label>
           <select id="resourceCategory">
             <option>Food</option>
             <option>Water</option>
@@ -210,12 +210,12 @@
         </div>
 
         <div class="form-group">
-          <label>Quantity</label>
+          <label for="resourceQty">Quantity <span class="required-asterisk">*</span></label>
           <input type="number" id="resourceQty" required>
         </div>
 
         <div class="form-group">
-          <label>Location</label>
+          <label for="resourceLocation">Location</label>
 
           <select id="resourceLocation">
             <option value="QC Warehouse">QC Warehouse</option>
@@ -224,7 +224,7 @@
             <option value="other">Other</option>
           </select>
 
-          <input type="text" id="customLocation" placeholder="Enter location" style="display:none; margin-top:10px;">
+          <input type="text" id="customLocation" placeholder="Enter location" class="custom-location-input">
         </div>
 
         <div class="modal-footer">
