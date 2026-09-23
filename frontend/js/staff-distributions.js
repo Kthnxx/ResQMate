@@ -81,23 +81,21 @@ document.addEventListener(
 
         loadDistributions();
 
-        document
-            .getElementById(
-                "distributionForm"
-            )
-            .addEventListener(
+        const distributionForm = document.getElementById("distributionForm");
+        if (distributionForm) {
+            distributionForm.addEventListener(
                 "submit",
                 createDistribution
             );
+        }
 
-        document
-            .getElementById(
-                "searchInput"
-            )
-            .addEventListener(
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.addEventListener(
                 "keyup",
                 filterDistributions
             );
+        }
 
     }
 );

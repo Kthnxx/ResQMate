@@ -81,12 +81,30 @@
 
         <div class="row g-3">
 
-          <div class="col-md-5">
+          <div class="col-md-3">
             <input type="text" id="searchBar" class="form-control" placeholder="Search request...">
+          </div>
+          
+          <div class="col-md-2">
+            <select id="provinceFilter" class="form-select" aria-label="Filter by Province">
+              <option value="all">All Provinces</option>
+              <option value="Metro Manila">Metro Manila</option>
+            </select>
+          </div>
+          
+          <div class="col-md-2">
+            <select id="cityFilter" class="form-select" aria-label="Filter by City">
+              <option value="all">All Cities</option>
+              <option value="Manila">Manila</option>
+              <option value="Quezon City">Quezon City</option>
+              <option value="Makati">Makati</option>
+              <option value="Taguig">Taguig</option>
+              <option value="Pasig">Pasig</option>
+            </select>
           </div>
 
           <div class="col-md-3">
-            <select id="statusFilter" class="form-select">
+            <select id="statusFilter" class="form-select" aria-label="Filter selection" title="Filter selection">
               <option value="all">All</option>
               <option value="pending">Pending</option>
               <option value="approved">Approved</option>
@@ -167,7 +185,7 @@
             Request Details
           </h5>
 
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body" id="requestDetailBody">
@@ -188,7 +206,7 @@
 
         <h3>Request Details</h3>
 
-        <button id="closeRequestModal">
+        <button id="closeRequestModal" aria-label="Close Request Details">
           <i class="fas fa-times"></i>
         </button>
 
@@ -200,6 +218,37 @@
 
   </div>
 
+  </div>
+
+  <!-- Reject Reason Modal -->
+  <div class="custom-modal-overlay" id="rejectReasonModal" style="display: none;">
+    <div class="custom-modal" style="max-width: 400px;">
+      <div class="custom-modal-header">
+        <h3 style="margin: 0; font-size: 1.1rem; color: #111827;">Reason for Rejection</h3>
+        <button id="closeRejectModal" aria-label="Close Reject Modal" style="background: none; border: none; cursor: pointer;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="custom-modal-body" style="padding: 1.5rem;">
+        <div style="margin-bottom: 1rem;">
+            <label for="rejectionReasonSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Select Reason</label>
+            <select id="rejectionReasonSelect" style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                <option value="" disabled selected>-- Select a Reason --</option>
+                <option value="Duplicate Request">Duplicate Request</option>
+                <option value="Resource Unavailable">Resource Unavailable</option>
+                <option value="Outside Jurisdiction">Outside Jurisdiction</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div id="otherReasonGroup" style="margin-bottom: 1.5rem; display: none;">
+            <label for="otherReasonText" style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem;">Specify Reason <span style="color: red;">*</span></label>
+            <textarea id="otherReasonText" rows="3" style="width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;"></textarea>
+        </div>
+        <button id="submitRejectionBtn" style="width: 100%; padding: 0.75rem; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+            Confirm Rejection
+        </button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

@@ -103,6 +103,7 @@ function renderRequestsTable(filteredData = requestsData) {
                <td>
                     <button
                         class="rq-btn-view"
+                        aria-label="View Request Details"
                         onclick="viewRequest(${request.request_id})">
                         <i class="fa-solid fa-eye"></i>
                     </button>
@@ -132,9 +133,14 @@ function setupFilters() {
 
     const statusFilter =
         document.getElementById("statusFilter");
+        
+    const provinceFilter = document.getElementById("provinceFilter");
+    const cityFilter = document.getElementById("cityFilter");
 
     searchInput.addEventListener("input", filterRequests);
     statusFilter.addEventListener("change", filterRequests);
+    if (provinceFilter) provinceFilter.addEventListener("change", filterRequests);
+    if (cityFilter) cityFilter.addEventListener("change", filterRequests);
 }
 
 function filterRequests() {
@@ -148,6 +154,12 @@ function filterRequests() {
         document.getElementById("statusFilter")
             .value
             .toLowerCase();
+            
+    const provinceFilterEl = document.getElementById("provinceFilter");
+    const province = provinceFilterEl ? provinceFilterEl.value.toLowerCase() : "all";
+    
+    const cityFilterEl = document.getElementById("cityFilter");
+    const city = cityFilterEl ? cityFilterEl.value.toLowerCase() : "all";
 
     const filtered =
         requestsData.filter(request => {
@@ -167,8 +179,12 @@ function filterRequests() {
             const matchesStatus =
                 status === "all" ||
                 request.status.toLowerCase() === status;
+                
+            const locationStr = (request.location_name || "").toLowerCase();
+            const matchesProvince = province === "all" || locationStr.includes(province);
+            const matchesCity = city === "all" || locationStr.includes(city);
 
-            return matchesSearch && matchesStatus;
+            return matchesSearch && matchesStatus && matchesProvince && matchesCity;
         });
 
     renderRequestsTable(filtered);
@@ -204,6 +220,14 @@ function viewRequest(requestId) {
 
     document.getElementById("modalStatus").textContent =
         request.status;
+        
+    const rejectionRow = document.getElementById("rejectionReasonRow");
+    if (request.status && request.status.toLowerCase() === 'rejected' && request.rejection_reason) {
+        document.getElementById("modalRejectionReason").textContent = request.rejection_reason;
+        rejectionRow.style.display = "flex";
+    } else {
+        rejectionRow.style.display = "none";
+    }
 
     document.getElementById("modalDescription").textContent =
         request.request_details;

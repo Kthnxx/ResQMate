@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/distributions";
+const API_URL = "http://127.0.0.1:8000/distributions/";
 
 const distributionModal =
     document.getElementById("distributionModal");
@@ -160,9 +160,11 @@ function updateStats(data) {
    OPEN CREATE MODAL
 =========================== */
 
-addDistributionBtn.addEventListener(
-    "click",
-    () => {
+if (addDistributionBtn) {
+    addDistributionBtn.addEventListener(
+        "click",
+        () => {
+
 
         editingDistributionId = null;
 
@@ -199,16 +201,18 @@ addDistributionBtn.addEventListener(
             "show"
         );
 
-    }
-);
+        }
+    );
+}
 
 /* ===========================
    SAVE
 =========================== */
 
-saveDistribution.addEventListener(
-    "click",
-    async () => {
+if (saveDistribution) {
+    saveDistribution.addEventListener(
+        "click",
+        async () => {
 
         const requestId =
             document.getElementById(
@@ -355,9 +359,11 @@ window.deleteDistribution =
         );
     };
 
-confirmDeleteDistribution.addEventListener(
-    "click",
-    async () => {
+if (confirmDeleteDistribution) {
+    confirmDeleteDistribution.addEventListener(
+        "click",
+        async () => {
+
 
         try {
 
@@ -380,34 +386,41 @@ confirmDeleteDistribution.addEventListener(
 
         }
 
-    }
-);
+        }
+    );
+}
 
 /* ===========================
    CLOSE MODALS
 =========================== */
 
-cancelDistribution.addEventListener(
-    "click",
-    () => {
+if (cancelDistribution) {
+    cancelDistribution.addEventListener(
+        "click",
+        () => {
+
 
         distributionModal.classList.remove(
             "show"
         );
 
-    }
-);
+        }
+    );
+}
 
-cancelDeleteDistribution.addEventListener(
-    "click",
-    () => {
+if (cancelDeleteDistribution) {
+    cancelDeleteDistribution.addEventListener(
+        "click",
+        () => {
+
 
         deleteDistributionModal.classList.remove(
             "show"
         );
 
-    }
-);
+        }
+    );
+}
 
 /* ===========================
    SEARCH

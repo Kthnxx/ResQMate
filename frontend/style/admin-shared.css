@@ -390,7 +390,6 @@ body {
 .table-responsive {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .table-responsive::-webkit-scrollbar {
@@ -1035,3 +1034,5 @@ tbody tr:hover {
 #usersTable td {
   text-align: center;
 }
+
+.required-asterisk { color: red; } .text-success { color: #15803d; font-weight: 600; } .text-warning { color: #b45309; font-weight: 600; } .text-danger { color: #dc2626; font-weight: 600; }

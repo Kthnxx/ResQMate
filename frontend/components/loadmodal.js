@@ -71,6 +71,10 @@ function initializeModals() {
 
     // Open Register
     signupBtn.addEventListener("click", () => {
+        const dobInput = document.getElementById("registerDob");
+        if (dobInput) {
+            dobInput.max = new Date().toISOString().split('T')[0];
+        }
         registerModal.classList.add("show");
     });
 
@@ -130,6 +134,12 @@ function initializeModals() {
                 e.preventDefault();
 
                 loginModal.classList.remove("show");
+                
+                const dobInput = document.getElementById("registerDob");
+                if (dobInput) {
+                    dobInput.max = new Date().toISOString().split('T')[0];
+                }
+                
                 registerModal.classList.add("show");
 
             }
@@ -140,6 +150,18 @@ function initializeModals() {
     // ==========================
     // REGISTER
     // ==========================
+    
+    const phoneInput = document.getElementById("registerPhone");
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function (e) {
+            this.value = this.value.replace(/\D/g, '');
+            if (this.value.length < 11) {
+                this.setCustomValidity('Phone number must be exactly 11 digits.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    }
 
     const registerForm =
         document.getElementById("registerForm");
@@ -152,14 +174,23 @@ function initializeModals() {
 
                 e.preventDefault();
 
-                const full_name =
-                    document.getElementById("fullname").value;
+                const first_name =
+                    document.getElementById("firstName").value;
+                    
+                const last_name =
+                    document.getElementById("lastName").value;
 
                 const email =
                     document.getElementById("registerEmail").value;
 
                 const password =
                     document.getElementById("registerPassword").value;
+                    
+                const phone_number =
+                    document.getElementById("registerPhone").value;
+                    
+                const dob =
+                    document.getElementById("registerDob").value;
 
                 const confirmPassword =
                     document.getElementById("confirmPassword").value;
@@ -194,9 +225,12 @@ function initializeModals() {
                                     "application/json"
                             },
                             body: JSON.stringify({
-                                full_name,
+                                first_name,
+                                last_name,
                                 email,
-                                password
+                                password,
+                                phone_number,
+                                dob
                             })
                         }
                     );

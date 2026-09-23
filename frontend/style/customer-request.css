@@ -384,3 +384,6 @@ body {
         width: 100%;
     }
 }
+
+.error-alert { color: white; background-color: #ef4444; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-weight: 500; text-align: center; }
+.d-none { display: none !important; }

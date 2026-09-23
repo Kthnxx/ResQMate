@@ -10,6 +10,59 @@ const priorityInput = document.getElementById("priority");
 const characterCount = document.getElementById("characterCount");
 const cancelButton = document.getElementById("cancelButton");
 const assistanceOptions = document.querySelectorAll(".assistance-option");
+const submitButton = document.querySelector(".submit-button");
+
+if (submitButton) {
+    submitButton.disabled = true;
+}
+
+if (provinceInput) {
+    provinceInput.addEventListener("change", function () {
+        if (this.value) {
+            cityInput.disabled = false;
+        } else {
+            cityInput.disabled = true;
+            cityInput.value = "";
+            barangayInput.disabled = true;
+            barangayInput.value = "";
+        }
+        checkFormValidity();
+    });
+}
+
+if (cityInput) {
+    cityInput.addEventListener("change", function () {
+        if (this.value) {
+            barangayInput.disabled = false;
+        } else {
+            barangayInput.disabled = true;
+            barangayInput.value = "";
+        }
+        checkFormValidity();
+    });
+}
+
+if (barangayInput) {
+    barangayInput.addEventListener("change", checkFormValidity);
+}
+
+if (detailsInput) {
+    detailsInput.addEventListener("input", checkFormValidity);
+}
+
+if (priorityInput) {
+    priorityInput.addEventListener("change", checkFormValidity);
+}
+
+function checkFormValidity() {
+    if (requestForm && submitButton) {
+        if (requestForm.checkValidity()) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+}
 
 assistanceOptions.forEach(option => {
     option.addEventListener("click", function () {
@@ -122,7 +175,9 @@ if (requestForm) {
                 body: JSON.stringify({
                     user_id: user.user_id,
                     assistance_type: assistanceType,
-                    location: location,
+                    barangay: barangay,
+                    city: city,
+                    province: province,
                     request_details: details,
                     priority: priority
                 })

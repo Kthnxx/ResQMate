@@ -69,11 +69,24 @@
 
                         <div class="search-box">
                             <i class="fa-solid fa-magnifying-glass"></i>
-
                             <input type="text" id="requestSearch" placeholder="Search requests...">
                         </div>
+                        
+                        <select id="provinceFilter" class="rq-input" aria-label="Filter by Province">
+                            <option value="all">All Provinces</option>
+                            <option value="Metro Manila">Metro Manila</option>
+                        </select>
+                        
+                        <select id="cityFilter" class="rq-input" aria-label="Filter by City">
+                            <option value="all">All Cities</option>
+                            <option value="Manila">Manila</option>
+                            <option value="Quezon City">Quezon City</option>
+                            <option value="Makati">Makati</option>
+                            <option value="Taguig">Taguig</option>
+                            <option value="Pasig">Pasig</option>
+                        </select>
 
-                        <select id="statusFilter" class="rq-input">
+                        <select id="statusFilter" class="rq-input" aria-label="Filter selection" title="Filter selection">
 
                             <option value="all">
                                 All Status
@@ -145,7 +158,7 @@
                     <p>View assistance request information</p>
                 </div>
 
-                <button id="closeViewModal">
+                <button id="closeViewModal" aria-label="Close Request Details">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
 
@@ -181,6 +194,11 @@
                 <div class="detail-row">
                     <label>Status</label>
                     <span id="modalStatus"></span>
+                </div>
+
+                <div class="detail-row" id="rejectionReasonRow" style="display: none;">
+                    <label>Rejection Reason</label>
+                    <span id="modalRejectionReason" style="color: #ef4444; font-weight: 500;"></span>
                 </div>
 
                 <div class="detail-row">
