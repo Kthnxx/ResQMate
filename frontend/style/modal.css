@@ -103,7 +103,7 @@
 /* RIGHT SIDE */
 .login-right {
     width: 55%;
-    padding: 50px;
+    padding: 35px 50px;
     position: relative;
 }
 
@@ -139,7 +139,7 @@
 
 .subtitle {
     color: #777;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 #loginForm {
@@ -160,7 +160,7 @@
     border: 1px solid #d6d6d6;
     border-radius: 10px;
 
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .login-options {
@@ -169,7 +169,7 @@
 
     font-size: 13px;
 
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 .login-options a {
@@ -190,11 +190,18 @@
     cursor: pointer;
 
     font-weight: 600;
+    transition: background-color 0.3s ease, opacity 0.3s ease, color 0.3s ease;
+}
+
+.login-submit:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
 }
 
 .divider {
     text-align: center;
-    margin: 25px 0;
+    margin: 15px 0;
     color: #888;
 }
 
@@ -227,6 +234,19 @@
 
 .error-alert.show {
     display: block;
+}
+
+input.input-error {
+    border-color: #EF4444 !important;
+    outline-color: #EF4444 !important;
+}
+
+.field-error-msg {
+    color: #EF4444;
+    font-size: 12px;
+    margin-top: -5px;
+    margin-bottom: 10px;
+    display: none;
 }
 
 .login-password-group {
@@ -388,6 +408,7 @@
 .register-right {
     width: 55%;
     padding: 40px 50px;
+    overflow-y: auto;
 
     position: relative;
 }
@@ -463,6 +484,13 @@
     flex: 1;
     padding: 0;
     box-sizing: border-box;
+    transition: background-color 0.3s ease, opacity 0.3s ease, color 0.3s ease;
+}
+
+.register-btn:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
 }
 
 .register-actions {
@@ -483,6 +511,14 @@
     flex: 1;
     padding: 0;
     box-sizing: border-box;
+    transition: background-color 0.3s ease, opacity 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.register-btn-secondary:disabled {
+    background: #f9fafb;
+    color: #d1d5db;
+    border-color: #f3f4f6;
+    cursor: not-allowed;
 }
 
 .login-link {
@@ -580,3 +616,16 @@
 }
 
 .required-asterisk { color: red; }
+
+.back-to-top-modal {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.back-to-top-modal:hover {
+    color: #EF4444;
+}

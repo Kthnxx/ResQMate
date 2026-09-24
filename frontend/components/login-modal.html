@@ -49,11 +49,11 @@
 
                 <div class="login-password-group">
                     <label for="password">Password <span class="required-asterisk">*</span></label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <input type="password" id="password" placeholder="••••••••" required minlength="8">
                     <i class="fa-solid fa-eye login-toggle-password toggle-password" data-target="password"></i>
                 </div>
 
-                <button type="submit" class="login-submit">
+                <button type="submit" class="login-submit" id="loginBtn" disabled>
                     Login
                 </button>
 
