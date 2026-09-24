@@ -167,6 +167,127 @@ function initializeModals() {
         document.getElementById("registerForm");
 
     if (registerForm) {
+        const registerBtn = document.getElementById("registerBtn");
+        const clearBtn = document.getElementById("clearBtn");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const passwordInput = document.getElementById("registerPassword");
+        const registerInputs = registerForm.querySelectorAll("input");
+        
+        function validateForm() {
+            const isFormValid = registerForm.checkValidity();
+            const doPasswordsMatch = passwordInput.value === confirmPasswordInput.value && passwordInput.value.length > 0;
+            
+            if (isFormValid && doPasswordsMatch) {
+                registerBtn.disabled = false;
+            } else {
+                registerBtn.disabled = true;
+            }
+
+            let hasInput = false;
+            registerInputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    hasInput = true;
+                }
+            });
+            clearBtn.disabled = !hasInput;
+        }
+
+        const validateConfirmPassword = () => {
+            if (confirmPasswordInput.value !== passwordInput.value && confirmPasswordInput.value.length > 0) {
+                confirmPasswordInput.setCustomValidity("Passwords do not match.");
+            } else {
+                confirmPasswordInput.setCustomValidity("");
+            }
+        };
+
+        passwordInput.addEventListener("input", validateConfirmPassword);
+        confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+
+        function validateSingleInput(input) {
+            let errorMsg = "";
+            let isMaxCharWarning = false;
+            
+            if (input.maxLength > 0 && input.value.length >= input.maxLength) {
+                errorMsg = `Maximum of ${input.maxLength} characters reached.`;
+                isMaxCharWarning = true;
+            } else if (!input.validity.valid) {
+                if (input.validity.valueMissing) {
+                    errorMsg = "please fill up this part";
+                } else if (input.validity.customError) {
+                    errorMsg = input.validationMessage;
+                } else if (input.validity.typeMismatch || input.validity.patternMismatch) {
+                    if (input.type === "email") errorMsg = "Please enter a valid email address.";
+                    else errorMsg = "Invalid format.";
+                } else if (input.validity.tooShort) {
+                    errorMsg = `Must be at least ${input.minLength} characters.`;
+                } else {
+                    errorMsg = input.validationMessage || "Invalid input.";
+                }
+            }
+
+            let parentToAppendTo = input;
+            if (input.parentElement.classList.contains('register-password-group')) {
+                parentToAppendTo = input.parentElement;
+            }
+
+            let errorEl = parentToAppendTo.nextElementSibling;
+            
+            if (!errorEl || !errorEl.classList.contains("field-error-msg")) {
+                errorEl = document.createElement("span");
+                errorEl.className = "field-error-msg";
+                parentToAppendTo.insertAdjacentElement("afterend", errorEl);
+            }
+
+            if (errorMsg) {
+                if (!isMaxCharWarning) {
+                    input.classList.add("input-error");
+                    errorEl.style.color = "";
+                } else {
+                    input.classList.remove("input-error");
+                    errorEl.style.color = "#f59e0b"; // amber for warning
+                }
+                errorEl.textContent = errorMsg;
+                errorEl.style.display = "block";
+            } else {
+                input.classList.remove("input-error");
+                errorEl.style.color = "";
+                errorEl.style.display = "none";
+            }
+        }
+
+        registerInputs.forEach(input => {
+            input.addEventListener("blur", () => {
+                validateSingleInput(input);
+            });
+            input.addEventListener("input", () => {
+                let parentToAppendTo = input;
+                if (input.parentElement.classList.contains('register-password-group')) {
+                    parentToAppendTo = input.parentElement;
+                }
+                let errorEl = parentToAppendTo.nextElementSibling;
+                let isErrorVisible = errorEl && errorEl.style.display === "block";
+
+                if (isErrorVisible || (input.maxLength > 0 && input.value.length >= input.maxLength)) {
+                    validateSingleInput(input);
+                }
+                validateForm();
+            });
+        });
+
+        registerForm.addEventListener("reset", () => {
+            registerInputs.forEach(input => {
+                input.classList.remove("input-error");
+                let parentToAppendTo = input;
+                if (input.parentElement.classList.contains('register-password-group')) {
+                    parentToAppendTo = input.parentElement;
+                }
+                let errorEl = parentToAppendTo.nextElementSibling;
+                if (errorEl && errorEl.classList.contains("field-error-msg")) {
+                    errorEl.style.display = "none";
+                }
+            });
+            setTimeout(validateForm, 0);
+        });
 
         registerForm.addEventListener(
             "submit",
@@ -279,6 +400,16 @@ function initializeModals() {
 
     }
 
+    const registerBackToTopBtn = document.getElementById("registerBackToTopBtn");
+    if (registerBackToTopBtn) {
+        registerBackToTopBtn.addEventListener("click", () => {
+            const registerRight = document.querySelector(".register-right");
+            if (registerRight) {
+                registerRight.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
     // ==========================
     // LOGIN
     // ==========================
@@ -287,6 +418,82 @@ function initializeModals() {
         document.getElementById("loginForm");
 
     if (loginForm) {
+        const loginBtn = document.getElementById("loginBtn");
+        const loginInputs = loginForm.querySelectorAll("input");
+
+        function validateLoginForm() {
+            if (loginForm.checkValidity()) {
+                loginBtn.disabled = false;
+            } else {
+                loginBtn.disabled = true;
+            }
+        }
+
+        function validateSingleLoginInput(input) {
+            let errorMsg = "";
+            
+            if (!input.validity.valid) {
+                if (input.validity.valueMissing) {
+                    errorMsg = "please fill up this part";
+                } else if (input.validity.typeMismatch || input.validity.patternMismatch) {
+                    if (input.type === "email") errorMsg = "Please enter a valid email address.";
+                    else errorMsg = "Invalid format.";
+                } else if (input.validity.tooShort) {
+                    errorMsg = `Must be at least ${input.minLength} characters.`;
+                } else {
+                    errorMsg = input.validationMessage || "Invalid input.";
+                }
+            }
+
+            let parentToAppendTo = input;
+            if (input.parentElement.classList.contains('login-password-group')) {
+                parentToAppendTo = input.parentElement;
+            }
+
+            let errorEl = parentToAppendTo.nextElementSibling;
+            
+            if (!errorEl || !errorEl.classList.contains("field-error-msg")) {
+                errorEl = document.createElement("span");
+                errorEl.className = "field-error-msg";
+                parentToAppendTo.insertAdjacentElement("afterend", errorEl);
+            }
+
+            if (errorMsg) {
+                input.classList.add("input-error");
+                errorEl.textContent = errorMsg;
+                errorEl.style.display = "block";
+            } else {
+                input.classList.remove("input-error");
+                errorEl.style.display = "none";
+            }
+        }
+
+        loginInputs.forEach(input => {
+            input.addEventListener("blur", () => {
+                validateSingleLoginInput(input);
+            });
+            input.addEventListener("input", () => {
+                if (input.classList.contains("input-error")) {
+                    validateSingleLoginInput(input);
+                }
+                validateLoginForm();
+            });
+        });
+
+        loginForm.addEventListener("reset", () => {
+            loginInputs.forEach(input => {
+                input.classList.remove("input-error");
+                let parentToAppendTo = input;
+                if (input.parentElement.classList.contains('login-password-group')) {
+                    parentToAppendTo = input.parentElement;
+                }
+                let errorEl = parentToAppendTo.nextElementSibling;
+                if (errorEl && errorEl.classList.contains("field-error-msg")) {
+                    errorEl.style.display = "none";
+                }
+            });
+            setTimeout(validateLoginForm, 0);
+        });
 
         loginForm.addEventListener(
             "submit",

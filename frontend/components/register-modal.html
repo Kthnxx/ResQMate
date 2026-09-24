@@ -47,11 +47,11 @@
                 <div class="name-group">
                     <div class="name-field">
                         <label for="firstName">First Name <span class="required-asterisk">*</span></label>
-                        <input type="text" id="firstName" placeholder="Juan" required>
+                        <input type="text" id="firstName" placeholder="Juan" required maxlength="25">
                     </div>
                     <div class="name-field">
                         <label for="lastName">Last Name <span class="required-asterisk">*</span></label>
-                        <input type="text" id="lastName" placeholder="Dela Cruz" required>
+                        <input type="text" id="lastName" placeholder="Dela Cruz" required maxlength="25">
                     </div>
                 </div>
 
@@ -79,10 +79,10 @@
                 </div>
 
                 <div class="register-actions">
-                    <button type="submit" class="register-btn">
+                    <button type="submit" class="register-btn" id="registerBtn" disabled>
                         Register
                     </button>
-                    <button type="reset" class="register-btn-secondary">
+                    <button type="reset" class="register-btn-secondary" id="clearBtn" disabled>
                         Clear
                     </button>
                 </div>
@@ -93,6 +93,13 @@
                 Already have an account?
                 <a href="#" id="openLoginLink">Login</a>
             </p>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button type="button" class="back-to-top-modal" id="registerBackToTopBtn">
+                    Back to top &uarr;
+                </button>
+            </div>
+
 
         </div>
 
