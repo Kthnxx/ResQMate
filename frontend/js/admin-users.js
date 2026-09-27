@@ -1,39 +1,22 @@
 const API_URL = "http://127.0.0.1:8000/users";
 
-const usersTableBody =
-    document.getElementById("usersTableBody");
-
-const modal =
-    document.getElementById("userModal");
+const usersTableBody = document.getElementById("usersTableBody");
+const modal          = document.getElementById("userModal");
 
 let editingUserId = null;
-
-let allUsers = [];
+let allUsers      = [];
 
 /* ===========================
    LOAD USERS
 =========================== */
-
 async function loadUsers() {
-
     try {
-
-        const response =
-            await fetch(API_URL);
-
-        const users =
-            await response.json();
-
-        allUsers = users;
-
+        const response = await fetch(API_URL);
+        const users    = await response.json();
+        allUsers       = users;
         renderUsers(users);
-
     } catch (error) {
-
-        console.error(
-            "Failed to load users",
-            error
-        );
+        console.error("Failed to load users", error);
     }
 }
 
@@ -44,307 +27,172 @@ function renderUsers(users) {
 
     usersTableBody.innerHTML = "";
 
+    if (users.length === 0) {
+        document.getElementById("emptyUsersMessage").style.display = "block";
+        return;
+    }
+
+    document.getElementById("emptyUsersMessage").style.display = "none";
+
     users.forEach(user => {
 
-        const roleClass =
-            user.role === "admin"
-                ? "rq-badge-admin"
-                : user.role === "staff"
-                    ? "rq-badge-staff"
-                    : "rq-badge-community";
+        const roleClass = user.role === "admin"
+            ? "rq-badge-admin"
+            : user.role === "staff"
+                ? "rq-badge-staff"
+                : "rq-badge-community";
 
-        const roleText =
-            user.role === "admin"
-                ? "ADMIN"
-                : user.role === "staff"
-                    ? "STAFF"
-                    : "USER";
+        const roleText = user.role === "admin"
+            ? "ADMIN"
+            : user.role === "staff"
+                ? "STAFF"
+                : "USER";
 
         usersTableBody.innerHTML += `
             <tr data-role="${user.role}">
-
                 <td>${user.user_id}</td>
-
                 <td>${user.full_name}</td>
-
                 <td>${user.email}</td>
-
+                <td><span class="rq-badge ${roleClass}">${roleText}</span></td>
                 <td>
-                    <span class="rq-badge ${roleClass}">
-                        ${roleText}
-                    </span>
-                </td>
-
-                <td>
-
-                    <button
-                        class="rq-btn-edit"
-                        onclick="editUser(
-                            ${user.user_id},
-                            '${user.full_name}',
-                            '${user.email}',
-                            '${user.role}'
-                        )"
-                    >
+                    <button class="rq-btn-edit"
+                        onclick="editUser(${user.user_id}, '${user.full_name.replace(/'/g,"\\'")}', '${user.email}', '${user.role}')">
                         Edit
                     </button>
-
-                    <button
-                        class="rq-btn-delete"
-                        onclick="deleteUser(${user.user_id})"
-                    >
+                    <button class="rq-btn-delete" onclick="deleteUser(${user.user_id})">
                         Delete
                     </button>
-
                 </td>
-
             </tr>
         `;
     });
 }
+
 /* ===========================
-   ADD USER
+   ADD USER BUTTON
 =========================== */
-
-document
-    .getElementById("addUserBtn")
-    .addEventListener("click", () => {
-
-        editingUserId = null;
-
-        document.getElementById(
-            "userModalTitle"
-        ).textContent =
-            "Add New User";
-
-        document.getElementById(
-            "userName"
-        ).value = "";
-
-        document.getElementById(
-            "userEmail"
-        ).value = "";
-
-        document.getElementById(
-            "userPassword"
-        ).value = "";
-
-        document.getElementById(
-            "userRole"
-        ).value = "community";
-
-        modal.classList.add("active");
-
-    });
+document.getElementById("addUserBtn").addEventListener("click", () => {
+    editingUserId = null;
+    document.getElementById("userModalTitle").textContent = "Add New User";
+    document.getElementById("userName").value     = "";
+    document.getElementById("userEmail").value    = "";
+    document.getElementById("userPassword").value = "";
+    document.getElementById("userRole").value     = "community_user";
+    modal.classList.add("active");
+});
 
 /* ===========================
    SAVE USER
 =========================== */
+document.getElementById("saveUserBtn").addEventListener("click", async () => {
 
-document
-    .getElementById("saveUserBtn")
-    .addEventListener("click", async () => {
+    const fullName = document.getElementById("userName").value.trim();
+    const email    = document.getElementById("userEmail").value.trim();
+    const password = document.getElementById("userPassword").value.trim();
+    const role     = document.getElementById("userRole").value;
 
-        const fullName =
-            document.getElementById(
-                "userName"
-            ).value;
+    if (!fullName || !email) {
+        alert("Please fill in Name and Email.");
+        return;
+    }
 
-        const email =
-            document.getElementById(
-                "userEmail"
-            ).value;
+    try {
+        if (!editingUserId) {
+            // CREATE via /users/create (accepts full_name)
+            const res = await fetch(`${API_URL}/create`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ full_name: fullName, email, password: password || "ResQMate2024!", role })
+            });
 
-        const password =
-            document.getElementById(
-                "userPassword"
-            ).value;
-
-        const role =
-            document.getElementById(
-                "userRole"
-            ).value;
-
-        if (
-            !fullName ||
-            !email
-        ) {
-            alert("Please fill all fields.");
-            return;
-        }
-
-        try {
-
-            if (!editingUserId) {
-
-                await fetch(
-                    `${API_URL}/create`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        body: JSON.stringify({
-                            full_name: fullName,
-                            email: email,
-                            password: password,
-                            role: role
-                        })
-                    }
-                );
-
-            } else {
-
-                await fetch(
-                    `${API_URL}/${editingUserId}`,
-                    {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-                        body: JSON.stringify({
-                            full_name: fullName,
-                            email: email,
-                            role: role
-                        })
-                    }
-                );
-
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.detail || "Failed to create user.");
+                return;
             }
 
-            modal.classList.remove(
-                "active"
-            );
+        } else {
+            // EDIT: split name into first/last for PUT endpoint
+            const parts     = fullName.split(" ");
+            const firstName = parts[0];
+            const lastName  = parts.slice(1).join(" ") || "";
 
-            loadUsers();
+            const res = await fetch(`${API_URL}/${editingUserId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ first_name: firstName, last_name: lastName, email, role })
+            });
 
-        } catch (error) {
-
-            console.error(error);
-
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.detail || "Failed to update user.");
+                return;
+            }
         }
 
-    });
+        modal.classList.remove("active");
+        loadUsers();
+
+    } catch (error) {
+        console.error(error);
+        alert("Request failed. Is the backend running?");
+    }
+});
 
 /* ===========================
    EDIT USER
 =========================== */
-
-window.editUser = function (
-    id,
-    fullName,
-    email,
-    role
-) {
-
+window.editUser = function(id, fullName, email, role) {
     editingUserId = id;
-
-    document.getElementById(
-        "userModalTitle"
-    ).textContent =
-        "Edit User";
-
-    document.getElementById(
-        "userName"
-    ).value = fullName;
-
-    document.getElementById(
-        "userEmail"
-    ).value = email;
-
-    document.getElementById(
-        "userRole"
-    ).value = role;
-
-    modal.classList.add(
-        "active"
-    );
+    document.getElementById("userModalTitle").textContent = "Edit User";
+    document.getElementById("userName").value   = fullName;
+    document.getElementById("userEmail").value  = email;
+    document.getElementById("userRole").value   = role;
+    document.getElementById("userPassword").value = "";
+    modal.classList.add("active");
 };
 
 /* ===========================
    DELETE USER
 =========================== */
-
-window.deleteUser =
-    async function (userId) {
-
-        const confirmed =
-            confirm(
-                "Delete this user?"
-            );
-
-        if (!confirmed) return;
-
-        try {
-
-            await fetch(
-                `${API_URL}/${userId}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-            loadUsers();
-
-        } catch (error) {
-
-            console.error(error);
-
-        }
-    };
+window.deleteUser = async function(userId) {
+    if (!confirm("Delete this user? This cannot be undone.")) return;
+    try {
+        await fetch(`${API_URL}/${userId}`, { method: "DELETE" });
+        loadUsers();
+    } catch (error) {
+        console.error(error);
+    }
+};
 
 /* ===========================
-   SEARCH
+   SEARCH + ROLE FILTER
 =========================== */
+document.getElementById("userSearch").addEventListener("input", applyFilters);
+document.getElementById("roleFilter")?.addEventListener("change", applyFilters);
 
-document
-    .getElementById("userSearch")
-    .addEventListener("input", () => {
+function applyFilters() {
+    const search = document.getElementById("userSearch").value.toLowerCase();
+    const role   = document.getElementById("roleFilter")?.value || "all";
 
-        const value =
-            document
-                .getElementById(
-                    "userSearch"
-                )
-                .value
-                .toLowerCase();
-
-        const filtered =
-            allUsers.filter(
-                user =>
-                    user.full_name
-                        .toLowerCase()
-                        .includes(value)
-                    ||
-                    user.email
-                        .toLowerCase()
-                        .includes(value)
-            );
-
-        renderUsers(filtered);
-
+    const filtered = allUsers.filter(user => {
+        const matchSearch = user.full_name.toLowerCase().includes(search) ||
+                            user.email.toLowerCase().includes(search);
+        const matchRole   = role === "all" || user.role === role;
+        return matchSearch && matchRole;
     });
+
+    renderUsers(filtered);
+}
 
 /* ===========================
    CLOSE MODAL
 =========================== */
-
-document
-    .getElementById("closeUserModal")
-    .addEventListener("click", () => {
-        modal.classList.remove("active");
-    });
-
-document
-    .getElementById("cancelUserModal")
-    .addEventListener("click", () => {
-        modal.classList.remove("active");
-    });
+document.getElementById("closeUserModal").addEventListener("click",  () => modal.classList.remove("active"));
+document.getElementById("cancelUserModal").addEventListener("click", () => modal.classList.remove("active"));
+modal.addEventListener("click", e => { if (e.target === modal) modal.classList.remove("active"); });
 
 /* ===========================
    INITIAL LOAD
 =========================== */
-
 loadUsers();

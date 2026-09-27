@@ -1,27 +1,32 @@
 const API_URL = "http://127.0.0.1:8000";
 
 let requestsData = [];
-let usersData = [];
+let usersData    = [];
 
 document.addEventListener("DOMContentLoaded", () => {
     loadRequests();
     setupFilters();
+
+    // Close view modal
+    document.getElementById("closeViewModal")?.addEventListener("click", () => {
+        document.getElementById("viewRequestModal").classList.remove("show");
+    });
 });
 
+/* ===========================
+   LOAD
+=========================== */
 async function loadRequests() {
     try {
-
         const [requestsRes, usersRes] = await Promise.all([
             fetch(`${API_URL}/requests/`),
             fetch(`${API_URL}/users/`)
         ]);
 
         requestsData = await requestsRes.json();
-        usersData = await usersRes.json();
+        usersData    = await usersRes.json();
 
-        if (!requestsData) {
-            requestsData = [];
-        }
+        if (!Array.isArray(requestsData)) requestsData = [];
 
         renderStatistics();
         renderRequestsTable();
@@ -31,228 +36,224 @@ async function loadRequests() {
     }
 }
 
+/* ===========================
+   STATISTICS
+=========================== */
 function renderStatistics() {
+    const total      = requestsData.length;
+    const pending    = requestsData.filter(r => (r.status||"").toLowerCase() === "pending").length;
+    const processing = requestsData.filter(r => (r.status||"").toLowerCase() === "processing").length;
+    const completed  = requestsData.filter(r => (r.status||"").toLowerCase() === "completed").length;
 
-    const total = requestsData.length;
-
-    const pending = requestsData.filter(
-        r => r.status?.toLowerCase() === "pending"
-    ).length;
-
-    const processing = requestsData.filter(
-        r => r.status?.toLowerCase() === "processing"
-    ).length;
-
-    const completed = requestsData.filter(
-        r => r.status?.toLowerCase() === "completed"
-    ).length;
-
-    document.getElementById("totalRequests").textContent = total;
-    document.getElementById("pendingRequests").textContent = pending;
+    document.getElementById("totalRequests").textContent      = total;
+    document.getElementById("pendingRequests").textContent    = pending;
     document.getElementById("processingRequests").textContent = processing;
-    document.getElementById("completedRequests").textContent = completed;
+    document.getElementById("completedRequests").textContent  = completed;
 }
 
-function renderRequestsTable(filteredData = requestsData) {
+/* ===========================
+   RENDER TABLE
+=========================== */
+function renderRequestsTable(data = requestsData) {
 
-    const tbody =
-        document.getElementById("requestsTableBody");
-
+    const tbody = document.getElementById("requestsTableBody");
     tbody.innerHTML = "";
 
-    filteredData.forEach(request => {
+    if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;">No requests found.</td></tr>`;
+        return;
+    }
 
-        const user =
-            usersData.find(
-                u => u.user_id === request.user_id
-            );
+    data.forEach(request => {
 
-        const requesterName =
-            user?.full_name || `User ${request.user_id}`;
+        const status   = (request.status || "pending").toLowerCase();
+        const priority = (request.priority_level || "medium").toLowerCase();
 
-        const category =
-            request.category_name || "Unknown";
+        // Action buttons based on current status
+        let actionBtns = `
+            <button class="rq-btn-view" title="View Details"
+                onclick="viewRequest(${request.request_id})">
+                <i class="fa-solid fa-eye"></i>
+            </button>`;
+
+        if (status === "pending") {
+            actionBtns += `
+                <button class="rq-btn-approve" title="Move to Processing"
+                    onclick="updateStatus(${request.request_id}, 'processing')">
+                    <i class="fa-solid fa-check"></i> Process
+                </button>
+                <button class="rq-btn-reject" title="Reject Request"
+                    onclick="rejectRequest(${request.request_id})">
+                    <i class="fa-solid fa-xmark"></i> Reject
+                </button>`;
+        } else if (status === "processing") {
+            actionBtns += `
+                <button class="rq-btn-approve" title="Mark Completed"
+                    onclick="updateStatus(${request.request_id}, 'completed')">
+                    <i class="fa-solid fa-flag-checkered"></i> Complete
+                </button>`;
+        }
 
         tbody.innerHTML += `
-            <tr data-status="${request.status.toLowerCase()}">
-
-                <td>#${request.request_id}</td>
-
-                <td>${requesterName}</td>
-
-                <td>${category}</td>
-
-                <td>${request.location_name || "-"}</td>
-
-                <td>
-                    <span class="rq-badge rq-badge-${request.priority_level}">
-                        ${request.priority_level}
-                    </span>
-                </td>
-
-                <td>
-                    <span class="rq-badge rq-badge-${request.status.toLowerCase()}">
-                        ${request.status}
-                    </span>
-                </td>
-
-                <td>
-                     ${request.assigned_staff || "Not Assigned"}
-                </td>
-
-               <td>
-                    <button
-                        class="rq-btn-view"
-                        aria-label="View Request Details"
-                        onclick="viewRequest(${request.request_id})">
-                        <i class="fa-solid fa-eye"></i>
-                    </button>
-                </td>
-
+            <tr data-status="${status}">
+                <td><strong>#${request.request_id}</strong></td>
+                <td>${request.full_name || "—"}</td>
+                <td>${request.category_name || "—"}</td>
+                <td>${request.location_name || "—"}</td>
+                <td><span class="rq-badge rq-badge-${priority}">${priority.toUpperCase()}</span></td>
+                <td><span class="rq-badge rq-badge-${status}">${request.status}</span></td>
+                <td>${request.assigned_staff || "Not Assigned"}</td>
+                <td style="white-space:nowrap;">${actionBtns}</td>
             </tr>
         `;
     });
 }
 
-function getCategoryName(categoryId) {
+/* ===========================
+   UPDATE STATUS (process / complete)
+=========================== */
+window.updateStatus = async function(requestId, newStatus) {
 
-    const categories = {
-        1: "Food",
-        2: "Water",
-        3: "Shelter",
-        4: "Medicine"
-    };
+    const label = newStatus === "processing" ? "move to Processing" : "mark as Completed";
+    if (!confirm(`Are you sure you want to ${label} Request #${requestId}?`)) return;
 
-    return categories[categoryId] || "Unknown";
-}
+    const user      = JSON.parse(localStorage.getItem("user"));
+    const updatedBy = user ? user.user_id : 1;
 
-function setupFilters() {
-
-    const searchInput =
-        document.getElementById("requestSearch");
-
-    const statusFilter =
-        document.getElementById("statusFilter");
-        
-    const provinceFilter = document.getElementById("provinceFilter");
-    const cityFilter = document.getElementById("cityFilter");
-
-    searchInput.addEventListener("input", filterRequests);
-    statusFilter.addEventListener("change", filterRequests);
-    if (provinceFilter) provinceFilter.addEventListener("change", filterRequests);
-    if (cityFilter) cityFilter.addEventListener("change", filterRequests);
-}
-
-function filterRequests() {
-
-    const search =
-        document.getElementById("requestSearch")
-            .value
-            .toLowerCase();
-
-    const status =
-        document.getElementById("statusFilter")
-            .value
-            .toLowerCase();
-            
-    const provinceFilterEl = document.getElementById("provinceFilter");
-    const province = provinceFilterEl ? provinceFilterEl.value.toLowerCase() : "all";
-    
-    const cityFilterEl = document.getElementById("cityFilter");
-    const city = cityFilterEl ? cityFilterEl.value.toLowerCase() : "all";
-
-    const filtered =
-        requestsData.filter(request => {
-
-            const user =
-                usersData.find(
-                    u => u.user_id === request.user_id
-                );
-
-            const requester =
-                user?.full_name?.toLowerCase() || "";
-
-            const matchesSearch =
-                requester.includes(search) ||
-                request.request_id.toString().includes(search);
-
-            const matchesStatus =
-                status === "all" ||
-                request.status.toLowerCase() === status;
-                
-            const locationStr = (request.location_name || "").toLowerCase();
-            const matchesProvince = province === "all" || locationStr.includes(province);
-            const matchesCity = city === "all" || locationStr.includes(city);
-
-            return matchesSearch && matchesStatus && matchesProvince && matchesCity;
-        });
-
-    renderRequestsTable(filtered);
-}
-
-function viewRequest(requestId) {
-
-    const request = requestsData.find(
-        r => r.request_id === requestId
-    );
-
-    if (!request) return;
-
-    const user =
-        usersData.find(
-            u => u.user_id === request.user_id
+    try {
+        const res = await fetch(
+            `${API_URL}/requests/${requestId}/status?status=${newStatus}&updated_by=${updatedBy}`,
+            { method: "PUT", headers: { "Content-Type": "application/json" } }
         );
 
-    document.getElementById("modalRequestId").textContent =
-        request.request_id;
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.detail || "Update failed.");
+            return;
+        }
 
-    document.getElementById("modalRequester").textContent =
-        user?.full_name || "Unknown User";
+        showToast(`Request #${requestId} updated to "${newStatus}".`, true);
+        loadRequests();
 
-    document.getElementById("modalCategory").textContent =
-        request.category_name || getCategoryName(request.category_id);
+    } catch (error) {
+        console.error(error);
+        showToast("Failed to update. Is the backend running?", false);
+    }
+};
 
-    document.getElementById("modalLocation").textContent =
-        request.location_name || "-";
+/* ===========================
+   REJECT REQUEST
+=========================== */
+window.rejectRequest = async function(requestId) {
 
-    document.getElementById("modalPriority").textContent =
-        request.priority_level;
+    const reason = prompt(`Enter rejection reason for Request #${requestId}:`);
+    if (reason === null) return;   // cancelled
 
-    document.getElementById("modalStatus").textContent =
-        request.status;
-        
+    const user      = JSON.parse(localStorage.getItem("user"));
+    const updatedBy = user ? user.user_id : 1;
+
+    try {
+        const url = `${API_URL}/requests/${requestId}/status?status=rejected&updated_by=${updatedBy}`
+            + (reason ? `&rejection_reason=${encodeURIComponent(reason)}` : "");
+
+        const res = await fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" }
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            alert(err.detail || "Reject failed.");
+            return;
+        }
+
+        showToast(`Request #${requestId} rejected.`, false);
+        loadRequests();
+
+    } catch (error) {
+        console.error(error);
+        showToast("Failed to reject. Is the backend running?", false);
+    }
+};
+
+/* ===========================
+   VIEW MODAL
+=========================== */
+window.viewRequest = function(requestId) {
+
+    const request = requestsData.find(r => r.request_id === requestId);
+    if (!request) return;
+
+    document.getElementById("modalRequestId").textContent   = `#${request.request_id}`;
+    document.getElementById("modalRequester").textContent   = request.full_name || "—";
+    document.getElementById("modalCategory").textContent    = request.category_name || "—";
+    document.getElementById("modalLocation").textContent    = request.location_name || "—";
+    document.getElementById("modalPriority").textContent    = request.priority_level || "—";
+    document.getElementById("modalStatus").textContent      = request.status || "—";
+    document.getElementById("modalDescription").textContent = request.request_details || "—";
+
     const rejectionRow = document.getElementById("rejectionReasonRow");
-    if (request.status && request.status.toLowerCase() === 'rejected' && request.rejection_reason) {
+    if (request.status?.toLowerCase() === "rejected" && request.rejection_reason) {
         document.getElementById("modalRejectionReason").textContent = request.rejection_reason;
         rejectionRow.style.display = "flex";
     } else {
         rejectionRow.style.display = "none";
     }
 
-    document.getElementById("modalDescription").textContent =
-        request.request_details;
+    document.getElementById("viewRequestModal").classList.add("show");
+};
 
-    document
-        .getElementById("viewRequestModal")
-        .classList.add("show");
+/* ===========================
+   FILTERS
+=========================== */
+function setupFilters() {
+    document.getElementById("requestSearch")?.addEventListener("input",  filterRequests);
+    document.getElementById("statusFilter")?.addEventListener("change",  filterRequests);
+    document.getElementById("provinceFilter")?.addEventListener("change",filterRequests);
+    document.getElementById("cityFilter")?.addEventListener("change",    filterRequests);
 }
 
+function filterRequests() {
+    const search   = (document.getElementById("requestSearch")?.value || "").toLowerCase();
+    const status   = (document.getElementById("statusFilter")?.value  || "all").toLowerCase();
+    const province = (document.getElementById("provinceFilter")?.value || "all").toLowerCase();
+    const city     = (document.getElementById("cityFilter")?.value     || "all").toLowerCase();
 
-document.addEventListener("DOMContentLoaded", () => {
+    const filtered = requestsData.filter(r => {
+        const text    = `${r.full_name} ${r.request_id} ${r.category_name}`.toLowerCase();
+        const loc     = (r.location_name || "").toLowerCase();
+        const mSearch = text.includes(search);
+        const mStatus = status === "all" || (r.status || "").toLowerCase() === status;
+        const mProv   = province === "all" || loc.includes(province);
+        const mCity   = city === "all" || loc.includes(city);
+        return mSearch && mStatus && mProv && mCity;
+    });
 
-    const closeBtn =
-        document.getElementById("closeViewModal");
+    renderRequestsTable(filtered);
+}
 
-    if (closeBtn) {
-
-        closeBtn.addEventListener("click", () => {
-
-            document
-                .getElementById("viewRequestModal")
-                .classList.remove("show");
-
-        });
-
+/* ===========================
+   TOAST
+=========================== */
+function showToast(message, success = true) {
+    let toast = document.getElementById("adminToast");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "adminToast";
+        toast.style.cssText = `
+            position:fixed;bottom:24px;right:24px;z-index:9999;
+            padding:14px 20px;border-radius:10px;font-weight:600;
+            font-size:14px;box-shadow:0 4px 12px rgba(0,0,0,.15);
+            transition:opacity .3s;display:none;`;
+        document.body.appendChild(toast);
     }
-
-});
+    toast.textContent      = message;
+    toast.style.background = success ? "#dcfce7" : "#fee2e2";
+    toast.style.color      = success ? "#15803d" : "#991b1b";
+    toast.style.opacity    = "1";
+    toast.style.display    = "block";
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => { toast.style.display = "none"; }, 300);
+    }, 3000);
+}

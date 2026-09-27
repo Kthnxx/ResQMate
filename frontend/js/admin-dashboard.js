@@ -1,24 +1,26 @@
 const API_URL = "http://127.0.0.1:8000";
 
+document.addEventListener("DOMContentLoaded", () => {
+    loadDashboardStats();
+    loadPriorityRequests();
+    loadResourceAlerts();
+    loadActiveDistributions();
+    loadRecentRequests();
+    loadRecentActivity();
+});
+
 /* =========================
    DASHBOARD STATS
 ========================= */
 async function loadDashboardStats() {
     try {
-        const response = await fetch(`${API_URL}/dashboard/`);
-        const data = await response.json();
+        const res  = await fetch(`${API_URL}/dashboard/`);
+        const data = await res.json();
 
-        document.getElementById("totalRequests").textContent =
-            data.total_requests || 0;
-
-        document.getElementById("pendingRequests").textContent =
-            data.pending_requests || 0;
-
-        document.getElementById("availableResources").textContent =
-            data.total_resources || 0;
-
-        document.getElementById("activeDistributions").textContent =
-            data.accepted_requests || 0;
+        document.getElementById("totalRequests").textContent      = data.total_requests       || 0;
+        document.getElementById("pendingRequests").textContent    = data.pending_requests     || 0;
+        document.getElementById("availableResources").textContent = data.total_resources      || 0;
+        document.getElementById("activeDistributions").textContent= data.processing_requests  || 0;
 
     } catch (error) {
         console.error("Dashboard Stats Error:", error);
@@ -26,52 +28,23 @@ async function loadDashboardStats() {
 }
 
 /* =========================
-   RECENT REQUESTS
+   PRIORITY REQUESTS
 ========================= */
-async function loadRecentRequests() {
+async function loadPriorityRequests() {
     try {
-        const response = await fetch(
-            "http://127.0.0.1:8000/requests/"
-        );
+        const res      = await fetch(`${API_URL}/requests/`);
+        const requests = await res.json();
 
-        const requests = await response.json();
+        const high   = requests.filter(r => (r.priority_level || "").toLowerCase() === "high").length;
+        const medium = requests.filter(r => (r.priority_level || "").toLowerCase() === "medium").length;
+        const low    = requests.filter(r => (r.priority_level || "").toLowerCase() === "low").length;
 
-        const tbody =
-            document.getElementById(
-                "recentRequestsBody"
-            );
-
-        if (!tbody) return;
-
-        tbody.innerHTML = "";
-
-        requests.slice(0, 5).forEach(request => {
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>#${request.request_id}</td>
-                    <td>${request.full_name}</td>
-                    <td>${request.category_name}</td>
-                    <td>
-                        <span class="badge ${request.priority_level
-                }">
-                            ${request.priority_level}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="badge pending">
-                            ${request.status}
-                        </span>
-                    </td>
-                </tr>
-            `;
-        });
+        document.getElementById("highPriorityCount").textContent   = high;
+        document.getElementById("mediumPriorityCount").textContent = medium;
+        document.getElementById("lowPriorityCount").textContent    = low;
 
     } catch (error) {
-        console.error(
-            "Recent Requests Error:",
-            error
-        );
+        console.error("Priority Error:", error);
     }
 }
 
@@ -79,47 +52,25 @@ async function loadRecentRequests() {
    RESOURCE ALERTS
 ========================= */
 async function loadResourceAlerts() {
-
     try {
-
-        const response =
-            await fetch(`${API_URL}/resources/`);
-
-        const resources =
-            await response.json();
-
-        const container =
-            document.getElementById("resourceAlerts");
-
+        const res       = await fetch(`${API_URL}/resources/`);
+        const resources = await res.json();
+        const container = document.getElementById("resourceAlerts");
         if (!container) return;
 
-        container.innerHTML = "";
-
-        const lowStock =
-            resources.filter(resource =>
-                resource.quantity_available < 20
-            );
+        const lowStock = resources.filter(r => parseInt(r.quantity_available) < 20);
 
         if (lowStock.length === 0) {
-
-            container.innerHTML = `
-                <div class="alert-item">
-                    ✅ All resources sufficiently stocked
-                </div>
-            `;
-
+            container.innerHTML = `<div class="alert-item">✅ All resources sufficiently stocked</div>`;
             return;
         }
 
-        lowStock.forEach(resource => {
-
+        container.innerHTML = "";
+        lowStock.forEach(r => {
             container.innerHTML += `
                 <div class="alert-item">
-                    ⚠ ${resource.resource_name}
-                    running low
-                    (${resource.quantity_available} ${resource.unit})
-                </div>
-            `;
+                    ⚠ ${r.resource_name} running low (${r.quantity_available} ${r.unit || "units"})
+                </div>`;
         });
 
     } catch (error) {
@@ -130,153 +81,101 @@ async function loadResourceAlerts() {
 /* =========================
    ACTIVE DISTRIBUTIONS
 ========================= */
-async function loadDistributions() {
-
+async function loadActiveDistributions() {
     try {
+        const res          = await fetch(`${API_URL}/distributions/`);
+        const distributions= await res.json();
 
-        const [distributionRes, usersRes] = await Promise.all([
-            fetch(`${API_URL}/distributions`),
-            fetch(`${API_URL}/users`)
-        ]);
-
-        const distributions = await distributionRes.json();
-        const users = await usersRes.json();
-
-        // Create lookup table
-        const userMap = {};
-
-        users.forEach(user => {
-            userMap[user.user_id] = user.full_name;
-        });
-
-        const tbody = document.querySelector(
-            "#distributionTable tbody"
-        );
-
+        // FIX: target activeDistributionsBody (matches dashboard.html)
+        const tbody = document.getElementById("activeDistributionsBody");
         if (!tbody) return;
 
         tbody.innerHTML = "";
 
-        distributions.forEach(item => {
+        if (distributions.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px;">No distributions yet.</td></tr>`;
+            return;
+        }
+
+        distributions.slice(0, 8).forEach(d => {
+            const date = d.distribution_date
+                ? new Date(d.distribution_date).toLocaleDateString("en-PH")
+                : "—";
 
             tbody.innerHTML += `
                 <tr>
-                    <td>${item.distribution_id}</td>
-                    <td>${item.request_id}</td>
-                    <td>${item.resource_id}</td>
-                    <td>
-                        ${userMap[item.staff_id] || "Unknown Staff"}
-                    </td>
-                    <td>${item.quantity_given}</td>
-                    <td>${item.distribution_date}</td>
-                </tr>
-            `;
+                    <td><strong>#${d.distribution_id}</strong></td>
+                    <td>#${d.request_id}</td>
+                    <td>${d.resource_name || "—"}</td>
+                    <td>${d.staff_name || "—"}</td>
+                    <td>${d.quantity_given}</td>
+                    <td>${date}</td>
+                </tr>`;
         });
 
-    }
-    catch (error) {
-
-        console.error(
-            "Failed to load distributions:",
-            error
-        );
+    } catch (error) {
+        console.error("Failed to load distributions:", error);
     }
 }
 
+/* =========================
+   RECENT REQUESTS
+========================= */
+async function loadRecentRequests() {
+    try {
+        const res      = await fetch(`${API_URL}/requests/`);
+        const requests = await res.json();
+        const tbody    = document.getElementById("recentRequestsBody");
+        if (!tbody) return;
+
+        tbody.innerHTML = "";
+
+        requests.slice(0, 5).forEach(r => {
+            const status   = (r.status || "pending").toLowerCase();
+            const priority = (r.priority_level || "medium").toLowerCase();
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>#${r.request_id}</strong></td>
+                    <td>${r.full_name || "—"}</td>
+                    <td>${r.category_name || "—"}</td>
+                    <td><span class="rq-badge rq-badge-${priority}">${priority.toUpperCase()}</span></td>
+                    <td><span class="rq-badge rq-badge-${status}">${r.status}</span></td>
+                </tr>`;
+        });
+
+    } catch (error) {
+        console.error("Recent Requests Error:", error);
+    }
+}
+
+/* =========================
+   RECENT ACTIVITY
+========================= */
 async function loadRecentActivity() {
-
-    const activityList =
-        document.getElementById("activityList");
-
+    const activityList = document.getElementById("activityList");
     if (!activityList) return;
 
     try {
-
-        const response =
-            await fetch(
-                "http://127.0.0.1:8000/requests/"
-            );
-
-        const requests =
-            await response.json();
+        const res      = await fetch(`${API_URL}/requests/`);
+        const requests = await res.json();
 
         activityList.innerHTML = "";
 
-        requests.slice(0, 5).forEach(request => {
+        if (requests.length === 0) {
+            activityList.innerHTML = `<div class="activity-item">No activity yet.</div>`;
+            return;
+        }
 
+        requests.slice(0, 5).forEach(r => {
             activityList.innerHTML += `
                 <div class="activity-item">
-                    Request #${request.request_id}
-                    was marked as
-                    ${request.status}
-                </div>
-            `;
+                    Request <strong>#${r.request_id}</strong> from <strong>${r.full_name || "Unknown"}</strong>
+                    is <strong>${r.status}</strong>.
+                </div>`;
         });
 
     } catch (error) {
-
-        activityList.innerHTML = `
-            <div class="activity-item">
-                No activity found
-            </div>
-        `;
+        activityList.innerHTML = `<div class="activity-item">No activity found.</div>`;
     }
 }
-
-async function loadPriorityRequests() {
-
-    try {
-
-        const response = await fetch(
-            "http://127.0.0.1:8000/requests/"
-        );
-
-        const requests = await response.json();
-
-        const high =
-            requests.filter(
-                r => r.priority_level === "high"
-            ).length;
-
-        const medium =
-            requests.filter(
-                r => r.priority_level === "medium"
-            ).length;
-
-        const low =
-            requests.filter(
-                r => r.priority_level === "low"
-            ).length;
-
-        document.getElementById(
-            "highPriorityCount"
-        ).textContent = high;
-
-        document.getElementById(
-            "mediumPriorityCount"
-        ).textContent = medium;
-
-        document.getElementById(
-            "lowPriorityCount"
-        ).textContent = low;
-
-    } catch (error) {
-
-        console.error(
-            "Priority Error:",
-            error
-        );
-    }
-}
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-        loadDashboardStats();
-        loadPriorityRequests();
-        loadResourceAlerts();
-        loadDistributions();
-        loadRecentRequests();
-        loadRecentActivity();
-    }
-);

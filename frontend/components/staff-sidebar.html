@@ -5,7 +5,6 @@
             <img src="../assets/logo.png" alt="ResQMate Logo">
             <h2>ResQMate</h2>
         </div>
-        <!-- 3 lines Toggle Button -->
         <button class="toggle-btn" aria-label="Toggle Sidebar"
             style="background: transparent; border: none; font-size: 1.1rem; cursor: pointer; padding: 8px; border-radius: 8px;">
             <i class="fa-solid fa-bars"></i>
@@ -19,44 +18,37 @@
                 <span>Dashboard</span>
             </a>
         </li>
-
         <li>
             <a href="../staff/requests.html">
                 <i class="fa-solid fa-file-lines"></i>
                 <span>Requests</span>
             </a>
         </li>
-
         <li>
             <a href="../staff/resources.html">
                 <i class="fa-solid fa-boxes-stacked"></i>
                 <span>Resources</span>
             </a>
         </li>
-
         <li>
             <a href="../staff/distributions.html">
                 <i class="fa-solid fa-truck"></i>
                 <span>Distributions</span>
             </a>
         </li>
-
     </ul>
 
     <!-- Bottom Section -->
     <div class="sidebar-bottom">
         <div class="sidebar-footer-row">
-
             <button class="profile-button">
                 <div class="profile-avatar" id="profileAvatar">S</div>
-
                 <div class="profile-info">
-                    <strong id="profileName">Staff</strong>
-                    <span id="profileRole">STAFF</span>
+                    <!-- Filled by loadStaffSidebar.js from localStorage -->
+                    <strong id="profileName">—</strong>
+                    <span id="profileRole">RELIEF STAFF</span>
                 </div>
             </button>
-
-            <!-- Logout Button -->
             <div class="logout">
                 <button title="Logout">
                     <i class="fas fa-sign-out-alt"></i>
