@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Staff Dashboard</title>
 
   <link rel="stylesheet" href="../style/customer-sidebar.css">
@@ -18,87 +17,64 @@
   <div class="dashboard-container">
 
     <div id="sidebar-container"></div>
-    
 
     <main class="main-content">
 
       <!-- Top Bar -->
       <div class="topbar">
         <div>
-          <h2>
-            Staff Dashboard
-          </h2>
-
-          <p>
-            Manage requests and relief operations
-          </p>
+          <h2>Staff Dashboard</h2>
+          <p>Your assigned requests and relief operations</p>
         </div>
       </div>
 
       <!-- Statistics -->
-
       <div class="stats-grid">
 
         <div class="stat-card">
-          <h3>Total Requests</h3>
-          <div id="totalRequests">
-            0
-          </div>
+          <h3>My Assigned</h3>
+          <div id="totalRequests">0</div>
         </div>
 
         <div class="stat-card">
-          <h3>Pending Requests</h3>
-          <div id="pendingRequests">
-            0
-          </div>
+          <h3>For Delivery</h3>
+          <div id="pendingRequests">0</div>
         </div>
 
         <div class="stat-card">
-          <h3>Distributions</h3>
-          <div id="completedDistributions">
-            0
-          </div>
+          <h3>Completed</h3>
+          <div id="completedDistributions">0</div>
         </div>
 
         <div class="stat-card">
           <h3>Resources</h3>
-          <div id="totalResources">
-            0
-          </div>
+          <div id="totalResources">0</div>
         </div>
 
       </div>
 
-      <!-- Requests Table -->
-
+      <!-- Recent Requests Table -->
       <div class="table-card">
-
-        <h3>
-          Recent Requests
-        </h3>
-
+        <h3>My Recent Requests</h3>
         <table>
-
           <thead>
             <tr>
               <th>ID</th>
-              <th>User</th>
+              <th>Requester</th>
               <th>Priority</th>
               <th>Status</th>
             </tr>
           </thead>
-
           <tbody id="recentRequestsTable">
           </tbody>
-
         </table>
-
       </div>
 
     </main>
 
   </div>
 
+  <!-- Logout modal wrapper must be outside main but inside body -->
   <div id="logout-modal-wrapper"></div>
 
   <script src="../components/logout-modal.js"></script>

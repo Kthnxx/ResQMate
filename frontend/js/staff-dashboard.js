@@ -1,166 +1,107 @@
-const API_URL =
-    "http://127.0.0.1:8000";
+/* ============================================================
+   staff-dashboard.js
+   Loads live stats from the backend matching the correct flow:
+   Staff only handles "Processing" → "Completed".
+   ============================================================ */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+const API_URL = "http://127.0.0.1:8000";
 
-        loadStaffProfile();
-        loadDashboardStats();
-        loadRecentRequests();
-
-    }
-);
-
-function loadStaffProfile() {
-
-    const user =
-        JSON.parse(
-            localStorage.getItem("user")
-        );
-
-    if (!user) return;
-
-    console.log(
-        "Logged in:",
-        user.full_name
-    );
-
-}
+document.addEventListener("DOMContentLoaded", () => {
+    loadDashboardStats();
+    loadRecentRequests();
+});
 
 async function loadDashboardStats() {
 
     try {
+        const user   = JSON.parse(localStorage.getItem("user"));
+        const staffId = user ? user.user_id : null;
 
-        const requestsResponse =
-            await fetch(
-                `${API_URL}/requests/`
-            );
+        const [reqRes, distRes, resRes] = await Promise.all([
+            fetch(`${API_URL}/requests/`),
+            fetch(`${API_URL}/distributions/`),
+            fetch(`${API_URL}/resources/`)
+        ]);
 
-        const requests =
-            await requestsResponse.json();
+        const allRequests      = await reqRes.json();
+        const allDistributions = await distRes.json();
+        const allResources     = await resRes.json();
 
-        const resourcesResponse =
-            await fetch(
-                `${API_URL}/resources/`
-            );
+        // Build distribution map keyed by request_id
+        const distMap = {};
+        allDistributions.forEach(d => { distMap[d.request_id] = d; });
 
-        const resources =
-            await resourcesResponse.json();
+        // Requests assigned to this staff (processing or completed)
+        const myRequests = allRequests.filter(r => {
+            const status = (r.status || "").toLowerCase();
+            const dist   = distMap[r.request_id];
+            if (!dist) return false;
+            if (status !== "processing" && status !== "completed") return false;
+            if (staffId) return dist.staff_id === staffId;
+            return true;
+        });
 
-        const distributionsResponse =
-            await fetch(
-                `${API_URL}/distributions/`
-            );
+        const processing = myRequests.filter(r => r.status.toLowerCase() === "processing").length;
+        const completed  = myRequests.filter(r => r.status.toLowerCase() === "completed").length;
 
-        const distributions =
-            await distributionsResponse.json();
+        document.getElementById("totalRequests").textContent          = myRequests.length;
+        document.getElementById("pendingRequests").textContent        = processing;
+        document.getElementById("completedDistributions").textContent = completed;
+        document.getElementById("totalResources").textContent         = allResources.length;
 
-        document.getElementById(
-            "totalRequests"
-        ).textContent =
-            requests.length;
-
-        document.getElementById(
-            "pendingRequests"
-        ).textContent =
-            requests.filter(
-                request =>
-                    request.status
-                        .toLowerCase() ===
-                    "pending"
-            ).length;
-
-        document.getElementById(
-            "completedDistributions"
-        ).textContent =
-            distributions.length;
-
-        document.getElementById(
-            "totalResources"
-        ).textContent =
-            resources.length;
-
+    } catch (err) {
+        console.error("Dashboard stats failed:", err);
     }
-    catch (error) {
-
-        console.error(
-            "Failed loading dashboard:",
-            error
-        );
-
-    }
-
 }
 
 async function loadRecentRequests() {
 
     try {
+        const user    = JSON.parse(localStorage.getItem("user"));
+        const staffId = user ? user.user_id : null;
 
-        const response =
-            await fetch(
-                `${API_URL}/requests/`
-            );
+        const [reqRes, distRes] = await Promise.all([
+            fetch(`${API_URL}/requests/`),
+            fetch(`${API_URL}/distributions/`)
+        ]);
 
-        const requests =
-            await response.json();
+        const allRequests      = await reqRes.json();
+        const allDistributions = await distRes.json();
 
-        const table =
-            document.getElementById(
-                "recentRequestsTable"
-            );
+        const distMap = {};
+        allDistributions.forEach(d => { distMap[d.request_id] = d; });
 
+        const myRequests = allRequests.filter(r => {
+            const status = (r.status || "").toLowerCase();
+            const dist   = distMap[r.request_id];
+            if (!dist) return false;
+            if (status !== "processing" && status !== "completed") return false;
+            if (staffId) return dist.staff_id === staffId;
+            return true;
+        });
+
+        const table = document.getElementById("recentRequestsTable");
         table.innerHTML = "";
 
-        requests
-            .slice(0, 5)
-            .forEach(request => {
+        if (myRequests.length === 0) {
+            table.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-muted">No assigned requests yet.</td></tr>`;
+            return;
+        }
 
-                const status =
-                    (request.status || "pending")
-                        .toLowerCase();
+        myRequests.slice(0, 5).forEach(r => {
+            const status   = (r.status || "pending").toLowerCase();
+            const priority = (r.priority_level || "medium").toLowerCase();
 
-                const priority =
-                    (request.priority_level || "low")
-                        .toLowerCase();
+            table.innerHTML += `
+                <tr>
+                    <td>#${String(r.request_id).padStart(4, "0")}</td>
+                    <td>${r.full_name || "—"}</td>
+                    <td><span class="rq-badge rq-badge-${priority}">${priority.toUpperCase()}</span></td>
+                    <td><span class="rq-badge rq-badge-${status}">${r.status.toUpperCase()}</span></td>
+                </tr>`;
+        });
 
-                table.innerHTML += `
-                    <tr>
-
-                        <td>
-                            ${request.request_id}
-                        </td>
-
-                        <td>
-                            ${request.user_id}
-                        </td>
-
-                        <td>
-                            <span class="rq-badge rq-badge-${priority}">
-                                ${(request.priority_level || "-").toUpperCase()}
-                            </span>
-
-                        </td>
-
-                        <td>
-                            <span class="rq-badge rq-badge-${status}">
-                                ${(request.status || "PENDING").toUpperCase()}
-                            </span>
-                        </td>
-
-                    </tr>
-                `;
-
-            });
-
+    } catch (err) {
+        console.error("Recent requests failed:", err);
     }
-    catch (error) {
-
-        console.error(
-            "Failed loading requests:",
-            error
-        );
-
-    }
-
 }

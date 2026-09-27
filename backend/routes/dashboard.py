@@ -5,58 +5,40 @@ from database import engine
 router = APIRouter()
 
 
-# DASHBOARD STATISTICS
 @router.get("/")
 def dashboard_stats():
 
     with engine.connect() as conn:
 
-        # Total assistance requests
         total_requests = conn.execute(
-            text("""
-                SELECT COUNT(*)
-                FROM assistance_requests
-            """)
+            text("SELECT COUNT(*) FROM assistance_requests")
         ).scalar()
 
-        # Pending requests
         pending_requests = conn.execute(
-            text("""
-                SELECT COUNT(*)
-                FROM assistance_requests
-                WHERE status = 'Pending'
-            """)
+            text("SELECT COUNT(*) FROM assistance_requests WHERE status = 'pending'")
         ).scalar()
 
-        # Accepted requests
-        accepted_requests = conn.execute(
-            text("""
-                SELECT COUNT(*)
-                FROM assistance_requests
-                WHERE status = 'Accepted'
-            """)
+        processing_requests = conn.execute(
+            text("SELECT COUNT(*) FROM assistance_requests WHERE status = 'processing'")
         ).scalar()
 
-        # Total registered users
+        completed_requests = conn.execute(
+            text("SELECT COUNT(*) FROM assistance_requests WHERE status = 'completed'")
+        ).scalar()
+
         total_users = conn.execute(
-            text("""
-                SELECT COUNT(*)
-                FROM users
-            """)
+            text("SELECT COUNT(*) FROM users")
         ).scalar()
 
-        # Total resource types
         total_resources = conn.execute(
-            text("""
-                SELECT COUNT(*)
-                FROM resources
-            """)
+            text("SELECT COUNT(*) FROM resources")
         ).scalar()
 
     return {
-        "total_requests": total_requests,
-        "pending_requests": pending_requests,
-        "accepted_requests": accepted_requests,
-        "total_users": total_users,
-        "total_resources": total_resources
+        "total_requests":      total_requests,
+        "pending_requests":    pending_requests,
+        "processing_requests": processing_requests,
+        "completed_requests":  completed_requests,
+        "total_users":         total_users,
+        "total_resources":     total_resources
     }

@@ -1,113 +1,69 @@
-const API_URL = "http://127.0.0.1:8000/distributions/";
+const API_BASE = "http://127.0.0.1:8000";
 
-const distributionModal =
-    document.getElementById("distributionModal");
-
-const deleteDistributionModal =
-    document.getElementById("deleteDistributionModal");
-
-const addDistributionBtn =
-    document.getElementById("addDistributionBtn");
-
-const cancelDistribution =
-    document.getElementById("cancelDistribution");
-
-const saveDistribution =
-    document.getElementById("saveDistribution");
-
-const cancelDeleteDistribution =
-    document.getElementById("cancelDeleteDistribution");
-
-const confirmDeleteDistribution =
-    document.getElementById("confirmDeleteDistribution");
-
-const distributionTableBody =
-    document.querySelector("#distributionTable tbody");
+const distributionModal      = document.getElementById("distributionModal");
+const deleteDistributionModal= document.getElementById("deleteDistributionModal");
+const addDistributionBtn     = document.getElementById("addDistributionBtn");
+const cancelDistribution     = document.getElementById("cancelDistribution");
+const saveDistribution       = document.getElementById("saveDistribution");
+const cancelDeleteDistribution   = document.getElementById("cancelDeleteDistribution");
+const confirmDeleteDistribution  = document.getElementById("confirmDeleteDistribution");
+const distributionTableBody  = document.querySelector("#distributionTable tbody");
 
 let editingDistributionId = null;
-let deletingDistributionId = null;
-
-let allDistributions = [];
+let deletingDistributionId= null;
+let allDistributions      = [];
 
 /* ===========================
    LOAD DISTRIBUTIONS
 =========================== */
-
 async function loadDistributions() {
-
     try {
-
-        const response =
-            await fetch(API_URL);
-
-        const distributions =
-            await response.json();
-
-        allDistributions = distributions;
-
+        const response     = await fetch(`${API_BASE}/distributions/`);
+        const distributions= await response.json();
+        allDistributions   = distributions;
         renderTable(distributions);
-
         updateStats(distributions);
-
     } catch (error) {
-
-        console.error(
-            "Failed to load distributions",
-            error
-        );
-
+        console.error("Failed to load distributions", error);
     }
 }
 
 /* ===========================
    RENDER TABLE
 =========================== */
-
 function renderTable(data) {
 
     distributionTableBody.innerHTML = "";
 
-    data.forEach(distribution => {
+    if (data.length === 0) {
+        distributionTableBody.innerHTML = `
+            <tr><td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;">No distributions yet.</td></tr>`;
+        return;
+    }
+
+    data.forEach(d => {
+        const date = d.distribution_date
+            ? new Date(d.distribution_date).toLocaleDateString("en-PH")
+            : "—";
 
         distributionTableBody.innerHTML += `
-            <tr data-status="${distribution.status}">
-                <td>${distribution.distribution_id}</td>
-                <td>${distribution.request_id}</td>
-                <td>${distribution.recipient_name}</td>
-                <td>${distribution.resource_name}</td>
-                <td>${distribution.quantity_given}</td>
-                <td>${distribution.staff_id}</td>
-
+            <tr>
+                <td><strong>#${d.distribution_id}</strong></td>
+                <td>#${d.request_id}</td>
+                <td>${d.staff_name || "—"}</td>
+                <td>${d.resource_name || "—"}</td>
+                <td>${d.quantity_given}</td>
+                <td>${d.staff_id}</td>
+                <td><span class="rq-badge rq-badge-approved">Assigned</span></td>
                 <td>
-                    <span class="rq-badge rq-badge-approved">
-                        ${distribution.status}
-                    </span>
-                </td>
-
-                <td>
-
-                    <button
-                        class="rq-btn-edit"
-                        onclick="editDistribution(
-                            ${distribution.distribution_id},
-                            ${distribution.request_id},
-                            '${distribution.recipient_name}',
-                            ${distribution.resource_id},
-                            ${distribution.staff_id},
-                            ${distribution.quantity_given},
-                            '${distribution.status}'
-                        )"
-                    >
+                    <button class="rq-btn-edit"
+                        onclick="editDistribution(${d.distribution_id}, ${d.request_id}, ${d.resource_id}, ${d.staff_id}, ${d.quantity_given})">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-
-                    <button
-                        class="rq-btn-delete"
-                        onclick="deleteDistribution(${distribution.distribution_id})"
-                    >
+                    <button class="rq-btn-delete"
+                        onclick="openDeleteDistribution(${d.distribution_id})">
                         <i class="fa-solid fa-trash"></i>
                     </button>
-
                 </td>
             </tr>
         `;
@@ -117,464 +73,166 @@ function renderTable(data) {
 /* ===========================
    UPDATE STATS
 =========================== */
-
 function updateStats(data) {
+    document.getElementById("totalDistributions").textContent = data.length;
 
-    document.getElementById(
-        "totalDistributions"
-    ).textContent = data.length;
+    const totalQty = data.reduce((sum, d) => sum + Number(d.quantity_given), 0);
+    document.getElementById("totalQuantity").textContent = totalQty;
 
-    const totalQty =
-        data.reduce(
-            (sum, d) =>
-                sum + Number(d.quantity_given),
-            0
-        );
-
-    document.getElementById(
-        "totalQuantity"
-    ).textContent = totalQty;
-
-    const resources =
-        [...new Set(
-            data.map(d => d.resource_id)
-        )];
-
-    document.getElementById(
-        "resourceCount"
-    ).textContent =
-        resources.length;
-
-    const staffs =
-        [...new Set(
-            data.map(d => d.staff_id)
-        )];
-
-    document.getElementById(
-        "staffCount"
-    ).textContent =
-        staffs.length;
+    document.getElementById("resourceCount").textContent = new Set(data.map(d => d.resource_id)).size;
+    document.getElementById("staffCount").textContent    = new Set(data.map(d => d.staff_id)).size;
 }
 
 /* ===========================
    OPEN CREATE MODAL
 =========================== */
-
 if (addDistributionBtn) {
-    addDistributionBtn.addEventListener(
-        "click",
-        () => {
-
-
+    addDistributionBtn.addEventListener("click", () => {
         editingDistributionId = null;
-
-        document.getElementById(
-            "distributionModalTitle"
-        ).textContent =
-            "Create Distribution";
-
-        document.getElementById(
-            "requestId"
-        ).value = "";
-
-        document.getElementById(
-            "recipient"
-        ).value = "";
-
-        document.getElementById(
-            "resource"
-        ).value = "";
-
-        document.getElementById(
-            "quantity"
-        ).value = "";
-
-        document.getElementById(
-            "staff"
-        ).value = "";
-
-        document.getElementById(
-            "distributionStatus"
-        ).value = "Preparing";
-
-        distributionModal.classList.add(
-            "show"
-        );
-
-        }
-    );
+        document.getElementById("distributionModalTitle").textContent = "Create Distribution";
+        document.getElementById("requestId").value = "";
+        document.getElementById("quantity").value  = "";
+        document.getElementById("resource").value  = "";
+        document.getElementById("staff").value     = "";
+        distributionModal.classList.add("show");
+    });
 }
 
 /* ===========================
    SAVE
 =========================== */
-
 if (saveDistribution) {
-    saveDistribution.addEventListener(
-        "click",
-        async () => {
+    saveDistribution.addEventListener("click", async () => {
 
-        const requestId =
-            document.getElementById(
-                "requestId"
-            ).value;
+        const requestId    = document.getElementById("requestId").value.trim();
+        const resourceId   = document.getElementById("resource").value;
+        const staffId      = document.getElementById("staff").value;
+        const quantity     = document.getElementById("quantity").value;
 
-        const recipient =
-            document.getElementById(
-                "recipient"
-            ).value;
-
-        const resourceId =
-            document.getElementById(
-                "resource"
-            ).value;
-
-        const quantity =
-            document.getElementById(
-                "quantity"
-            ).value;
-
-        const staffId =
-            document.getElementById(
-                "staff"
-            ).value;
-
-        const status =
-            document.getElementById(
-                "distributionStatus"
-            ).value;
-
-        if (
-            !requestId ||
-            !recipient ||
-            !resourceId ||
-            !quantity ||
-            !staffId
-        ) {
-
-            alert(
-                "Please complete all fields."
-            );
-
+        if (!requestId || !resourceId || !staffId || !quantity) {
+            alert("Please complete all fields.");
             return;
         }
 
         try {
+            let url, method;
 
             if (!editingDistributionId) {
-
-                await fetch(
-                    `${API_URL}/create?request_id=${requestId}&resource_id=${resourceId}&staff_id=${staffId}&quantity_given=${quantity}&recipient_name=${encodeURIComponent(recipient)}&status=${encodeURIComponent(status)}`,
-                    {
-                        method: "POST"
-                    }
-                );
-
+                url    = `${API_BASE}/distributions/create?request_id=${requestId}&resource_id=${resourceId}&staff_id=${staffId}&quantity_given=${quantity}`;
+                method = "POST";
             } else {
-
-                await fetch(
-                    `${API_URL}/${editingDistributionId}?request_id=${requestId}&resource_id=${resourceId}&staff_id=${staffId}&quantity_given=${quantity}&recipient_name=${encodeURIComponent(recipient)}&status=${encodeURIComponent(status)}`,
-                    {
-                        method: "PUT"
-                    }
-                );
-
+                url    = `${API_BASE}/distributions/${editingDistributionId}?request_id=${requestId}&resource_id=${resourceId}&staff_id=${staffId}&quantity_given=${quantity}`;
+                method = "PUT";
             }
 
-            distributionModal.classList.remove(
-                "show"
-            );
+            const res = await fetch(url, { method });
 
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.detail || "Failed to save distribution.");
+                return;
+            }
+
+            distributionModal.classList.remove("show");
             loadDistributions();
 
         } catch (error) {
-
             console.error(error);
-
+            alert("Request failed. Is the backend running?");
         }
-    }
-);
+    });
+}
 
 /* ===========================
    EDIT
 =========================== */
-
-window.editDistribution = function (
-    id,
-    requestId,
-    recipient,
-    resourceId,
-    staffId,
-    quantity,
-    status
-) {
-
+window.editDistribution = function(id, requestId, resourceId, staffId, quantity) {
     editingDistributionId = id;
-
-    document.getElementById(
-        "distributionModalTitle"
-    ).textContent =
-        "Edit Distribution";
-
-    document.getElementById(
-        "requestId"
-    ).value = requestId;
-
-    document.getElementById(
-        "recipient"
-    ).value = recipient;
-
-    document.getElementById(
-        "resource"
-    ).value = resourceId;
-
-    document.getElementById(
-        "quantity"
-    ).value = quantity;
-
-    document.getElementById(
-        "staff"
-    ).value = staffId;
-
-    document.getElementById(
-        "distributionStatus"
-    ).value = status;
-
-    distributionModal.classList.add(
-        "show"
-    );
+    document.getElementById("distributionModalTitle").textContent = "Edit Distribution";
+    document.getElementById("requestId").value = requestId;
+    document.getElementById("resource").value  = resourceId;
+    document.getElementById("staff").value     = staffId;
+    document.getElementById("quantity").value  = quantity;
+    distributionModal.classList.add("show");
 };
 
 /* ===========================
    DELETE
 =========================== */
-
-window.deleteDistribution =
-    function (id) {
-
-        deletingDistributionId = id;
-
-        deleteDistributionModal.classList.add(
-            "show"
-        );
-    };
+window.openDeleteDistribution = function(id) {
+    deletingDistributionId = id;
+    deleteDistributionModal.classList.add("show");
+};
 
 if (confirmDeleteDistribution) {
-    confirmDeleteDistribution.addEventListener(
-        "click",
-        async () => {
-
-
+    confirmDeleteDistribution.addEventListener("click", async () => {
         try {
-
-            await fetch(
-                `${API_URL}/${deletingDistributionId}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-            deleteDistributionModal.classList.remove(
-                "show"
-            );
-
+            const res = await fetch(`${API_BASE}/distributions/${deletingDistributionId}`, { method: "DELETE" });
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.detail || "Delete failed.");
+                return;
+            }
+            deleteDistributionModal.classList.remove("show");
             loadDistributions();
-
         } catch (error) {
-
             console.error(error);
-
         }
-
-        }
-    );
+    });
 }
 
 /* ===========================
    CLOSE MODALS
 =========================== */
+if (cancelDistribution)       cancelDistribution.addEventListener("click",       () => distributionModal.classList.remove("show"));
+if (cancelDeleteDistribution) cancelDeleteDistribution.addEventListener("click", () => deleteDistributionModal.classList.remove("show"));
 
-if (cancelDistribution) {
-    cancelDistribution.addEventListener(
-        "click",
-        () => {
-
-
-        distributionModal.classList.remove(
-            "show"
-        );
-
-        }
-    );
-}
-
-if (cancelDeleteDistribution) {
-    cancelDeleteDistribution.addEventListener(
-        "click",
-        () => {
-
-
-        deleteDistributionModal.classList.remove(
-            "show"
-        );
-
-        }
-    );
-}
+distributionModal?.addEventListener("click",       e => { if (e.target === distributionModal)       distributionModal.classList.remove("show"); });
+deleteDistributionModal?.addEventListener("click", e => { if (e.target === deleteDistributionModal) deleteDistributionModal.classList.remove("show"); });
 
 /* ===========================
-   SEARCH
+   SEARCH + STATUS FILTER
 =========================== */
+document.getElementById("distributionSearch")?.addEventListener("keyup", () => {
+    const value    = document.getElementById("distributionSearch").value.toLowerCase();
+    const filtered = allDistributions.filter(d => JSON.stringify(d).toLowerCase().includes(value));
+    renderTable(filtered);
+});
 
-document
-    .getElementById(
-        "distributionSearch"
-    )
-    .addEventListener(
-        "keyup",
-        () => {
+document.getElementById("statusFilter")?.addEventListener("change", () => {
+    const status = document.getElementById("statusFilter").value;
+    renderTable(status === "all" ? allDistributions : allDistributions);
+    // All distributions currently show as "Assigned" — filter is for future status extension
+});
 
-            const value =
-                document
-                    .getElementById(
-                        "distributionSearch"
-                    )
-                    .value
-                    .toLowerCase();
-
-            const filtered =
-                allDistributions.filter(
-                    d =>
-                        JSON.stringify(d)
-                            .toLowerCase()
-                            .includes(value)
-                );
-
-            renderTable(filtered);
-
-        }
-    );
-
+/* ===========================
+   POPULATE RESOURCES + STAFF DROPDOWNS
+=========================== */
 async function loadResources() {
-
     try {
-
-        const response =
-            await fetch("http://127.0.0.1:8000/resources");
-
-        const resources =
-            await response.json();
-
-        const resourceSelect =
-            document.getElementById("resource");
-
-        resourceSelect.innerHTML =
-            '<option value="">Select Resource</option>';
-
-        resources.forEach(resource => {
-
-            resourceSelect.innerHTML += `
-                <option value="${resource.resource_id}">
-                    ${resource.resource_name}
-                </option>
-            `;
-
+        const resources   = await (await fetch(`${API_BASE}/resources/`)).json();
+        const resourceSel = document.getElementById("resource");
+        resourceSel.innerHTML = '<option value="">Select Resource</option>';
+        resources.forEach(r => {
+            resourceSel.innerHTML += `<option value="${r.resource_id}">${r.resource_name} (${r.quantity_available} ${r.unit})</option>`;
         });
-
-    } catch (error) {
-
-        console.error(
-            "Failed to load resources",
-            error
-        );
-
-    }
-
+    } catch (e) { console.error("Failed to load resources", e); }
 }
 
 async function loadStaff() {
-
     try {
-
-        const response =
-            await fetch("http://127.0.0.1:8000/users");
-
-        const users =
-            await response.json();
-
-        const staffSelect =
-            document.getElementById("staff");
-
-        staffSelect.innerHTML =
-            '<option value="">Select Staff</option>';
-
-        users
-            .filter(user => user.role === "staff")
-            .forEach(user => {
-
-                staffSelect.innerHTML += `
-                    <option value="${user.user_id}">
-                        ${user.full_name}
-                    </option>
-                `;
-
-            });
-
-    } catch (error) {
-
-        console.error(
-            "Failed to load staff",
-            error
-        );
-
-    }
-
+        const users    = await (await fetch(`${API_BASE}/users/`)).json();
+        const staffSel = document.getElementById("staff");
+        staffSel.innerHTML = '<option value="">Select Staff</option>';
+        users.filter(u => u.role === "staff").forEach(u => {
+            staffSel.innerHTML += `<option value="${u.user_id}">${u.full_name}</option>`;
+        });
+    } catch (e) { console.error("Failed to load staff", e); }
 }
-
-/* ===========================
-   STATUS FILTER
-=========================== */
-
-document
-    .getElementById(
-        "statusFilter"
-    )
-    .addEventListener(
-        "change",
-        () => {
-
-            const status =
-                document.getElementById(
-                    "statusFilter"
-                ).value;
-
-            if (status === "all") {
-
-                renderTable(
-                    allDistributions
-                );
-
-                return;
-            }
-
-            const filtered =
-                allDistributions.filter(
-                    d =>
-                        d.status
-                            .toLowerCase()
-                            .replace(/\s/g, "")
-                            .includes(status)
-                );
-
-            renderTable(filtered);
-
-        }
-    );
 
 /* ===========================
    INITIAL LOAD
 =========================== */
-
 loadResources();
 loadStaff();
 loadDistributions();

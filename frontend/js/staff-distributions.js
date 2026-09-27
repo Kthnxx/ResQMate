@@ -1,460 +1,90 @@
-const API_URL =
-    "http://127.0.0.1:8000";
+/* ============================================================
+   staff-distributions.js  — READ ONLY for staff
+   Per the defined flow, only Admin creates distributions.
+   Staff only views what has been assigned to them.
+   The "New Distribution" button has been removed from the HTML.
+   ============================================================ */
 
-/* ===========================
-   CUSTOM MODAL
-=========================== */
+const API_URL = "http://127.0.0.1:8000";
 
-const modal =
-    document.getElementById(
-        "distributionModal"
-    );
+document.addEventListener("DOMContentLoaded", () => {
+    loadDistributions();
 
-const openBtn =
-    document.getElementById(
-        "openModalBtn"
-    );
-
-const closeBtn =
-    document.getElementById(
-        "closeModalBtn"
-    );
-
-if (openBtn) {
-
-    openBtn.addEventListener(
-        "click",
-        () => {
-
-            modal.classList.add(
-                "show"
-            );
-
-        }
-    );
-
-}
-
-if (closeBtn) {
-
-    closeBtn.addEventListener(
-        "click",
-        () => {
-
-            modal.classList.remove(
-                "show"
-            );
-
-        }
-    );
-
-}
-
-if (modal) {
-
-    modal.addEventListener(
-        "click",
-        (event) => {
-
-            if (
-                event.target === modal
-            ) {
-
-                modal.classList.remove(
-                    "show"
-                );
-
-            }
-
-        }
-    );
-
-}
-
-/* ===========================
-   PAGE LOAD
-=========================== */
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        loadDistributions();
-
-        const distributionForm = document.getElementById("distributionForm");
-        if (distributionForm) {
-            distributionForm.addEventListener(
-                "submit",
-                createDistribution
-            );
-        }
-
-        const searchInput = document.getElementById("searchInput");
-        if (searchInput) {
-            searchInput.addEventListener(
-                "keyup",
-                filterDistributions
-            );
-        }
-
-    }
-);
-
-/* ===========================
-   LOAD DISTRIBUTIONS
-=========================== */
+    document.getElementById("searchInput")
+        ?.addEventListener("keyup", filterDistributions);
+});
 
 async function loadDistributions() {
 
     try {
+        const user    = JSON.parse(localStorage.getItem("user"));
+        const staffId = user ? user.user_id : null;
 
-        const response =
-            await fetch(
-                `${API_URL}/distributions/`
-            );
+        const response = await fetch(`${API_URL}/distributions/`);
 
-        if (!response.ok) {
+        if (!response.ok) throw new Error("Failed to fetch distributions.");
 
-            throw new Error(
-                "Failed to fetch distributions."
-            );
+        let distributions = await response.json();
 
+        // If staff is logged in, only show their own assigned distributions
+        if (staffId) {
+            distributions = distributions.filter(d => d.staff_id === staffId);
         }
 
-        const distributions =
-            await response.json();
+        renderDistributions(distributions);
 
-        renderDistributions(
-            distributions
-        );
-
+    } catch (error) {
+        console.error(error);
+        showMessage("Failed to load distributions. Is the backend running?", false);
     }
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-        showMessage(
-            "Failed to load distributions.",
-            false
-        );
-
-    }
-
 }
 
-/* ===========================
-   RENDER TABLE
-=========================== */
+function renderDistributions(distributions) {
 
-function renderDistributions(
-    distributions
-) {
-
-    const table =
-        document.getElementById(
-            "distributionTableBody"
-        );
-
+    const table = document.getElementById("distributionTableBody");
     table.innerHTML = "";
 
-    if (
-        distributions.length === 0
-    ) {
-
+    if (distributions.length === 0) {
         table.innerHTML = `
             <tr>
-                <td colspan="7">
-                    No distributions found.
+                <td colspan="6" style="text-align:center; padding: 30px; color: #6b7280;">
+                    No distributions assigned to you yet.
                 </td>
-            </tr>
-        `;
-
+            </tr>`;
         return;
-
     }
 
-    distributions.forEach(
-        distribution => {
+    distributions.forEach(d => {
+        const date = d.distribution_date
+            ? new Date(d.distribution_date).toLocaleDateString("en-PH")
+            : "—";
 
-            table.innerHTML += `
-                <tr>
-
-                    <td>
-                        ${distribution.distribution_id}
-                    </td>
-
-                    <td>
-                        ${distribution.request_id}
-                    </td>
-
-                    <td>
-                        ${distribution.resource_id}
-                    </td>
-
-                    <td>
-                        ${distribution.staff_id}
-                    </td>
-
-                    <td>
-                        ${distribution.quantity_given}
-                    </td>
-
-                    <td>
-                        ${new Date(
-                distribution.distribution_date
-            ).toLocaleDateString()}
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="btn-delete"
-                            onclick="deleteDistribution(${distribution.distribution_id})">
-
-                            Delete
-
-                        </button>
-
-                    </td>
-
-                </tr>
-            `;
-
-        }
-    );
-
+        table.innerHTML += `
+            <tr>
+                <td>${d.distribution_id}</td>
+                <td>#${String(d.request_id).padStart(4, "0")}</td>
+                <td>${d.resource_name || "—"}</td>
+                <td>${d.staff_name || "—"}</td>
+                <td>${d.quantity_given}</td>
+                <td>${date}</td>
+            </tr>`;
+    });
 }
-
-/* ===========================
-   CREATE DISTRIBUTION
-=========================== */
-
-async function createDistribution(
-    event
-) {
-
-    event.preventDefault();
-
-    try {
-
-        const payload = {
-
-            request_id:
-                parseInt(
-                    document.getElementById(
-                        "requestId"
-                    ).value
-                ),
-
-            resource_id:
-                parseInt(
-                    document.getElementById(
-                        "resourceId"
-                    ).value
-                ),
-
-            staff_id:
-                parseInt(
-                    document.getElementById(
-                        "staffId"
-                    ).value
-                ),
-
-            quantity_given:
-                parseInt(
-                    document.getElementById(
-                        "quantityGiven"
-                    ).value
-                )
-
-        };
-
-        const response =
-            await fetch(
-                `${API_URL}/distributions/create`,
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify(
-                            payload
-                        )
-                }
-            );
-
-        if (!response.ok) {
-
-            throw new Error();
-
-        }
-
-        document
-            .getElementById(
-                "distributionForm"
-            )
-            .reset();
-
-        modal.classList.remove(
-            "show"
-        );
-
-        showMessage(
-            "Distribution created successfully.",
-            true
-        );
-
-        loadDistributions();
-
-    }
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-        showMessage(
-            "Failed to create distribution.",
-            false
-        );
-
-    }
-
-}
-
-/* ===========================
-   DELETE DISTRIBUTION
-=========================== */
-
-async function deleteDistribution(
-    distributionId
-) {
-
-    if (
-        !confirm(
-            "Delete this distribution?"
-        )
-    ) {
-
-        return;
-
-    }
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/distributions/${distributionId}`,
-                {
-                    method:
-                        "DELETE"
-                }
-            );
-
-        if (!response.ok) {
-
-            throw new Error();
-
-        }
-
-        showMessage(
-            "Distribution deleted.",
-            true
-        );
-
-        loadDistributions();
-
-    }
-    catch (error) {
-
-        console.error(
-            error
-        );
-
-        showMessage(
-            "Failed to delete distribution.",
-            false
-        );
-
-    }
-
-}
-
-/* ===========================
-   SEARCH FILTER
-=========================== */
 
 function filterDistributions() {
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    const rows   = document.querySelectorAll("#distributionTableBody tr");
 
-    const search =
-        document
-            .getElementById(
-                "searchInput"
-            )
-            .value
-            .toLowerCase();
-
-    const rows =
-        document.querySelectorAll(
-            "#distributionTableBody tr"
-        );
-
-    rows.forEach(
-        row => {
-
-            row.style.display =
-                row.textContent
-                    .toLowerCase()
-                    .includes(
-                        search
-                    )
-                    ? ""
-                    : "none";
-
-        }
-    );
-
+    rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(search) ? "" : "none";
+    });
 }
 
-/* ===========================
-   MESSAGE BOX
-=========================== */
-
-function showMessage(
-    message,
-    success
-) {
-
-    const box =
-        document.getElementById(
-            "messageBox"
-        );
-
-    box.textContent =
-        message;
-
-    box.className =
-        success
-            ? "success-message"
-            : "error-message";
-
-    box.style.display =
-        "block";
-
-    setTimeout(
-        () => {
-
-            box.style.display =
-                "none";
-
-        },
-        3000
-    );
-
+function showMessage(message, success) {
+    const box = document.getElementById("messageBox");
+    if (!box) return;
+    box.textContent  = message;
+    box.className    = success ? "success-message" : "error-message";
+    box.style.display = "block";
+    setTimeout(() => { box.style.display = "none"; }, 3000);
 }
