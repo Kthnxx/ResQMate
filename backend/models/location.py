@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from database import Base
 
 class Location(Base):
@@ -10,7 +10,24 @@ class Location(Base):
         index=True
     )
 
-    location_name = Column(String(100))
-    barangay = Column(String(100))
-    city = Column(String(100))
-    province = Column(String(100))
+    region_id = Column(
+        Integer,
+        ForeignKey("regions.region_id")
+    )
+
+    province_id = Column(
+        Integer,
+        ForeignKey("provinces.province_id")
+    )
+
+    city_id = Column(
+        Integer,
+        ForeignKey("cities.city_id")
+    )
+
+    barangay_id = Column(
+        Integer,
+        ForeignKey("barangays.barangay_id")
+    )
+
+    street_address = Column(String(255))
