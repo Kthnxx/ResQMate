@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import text
 from database import engine
+from typing import Optional
 
 router = APIRouter()
 
@@ -11,14 +12,14 @@ class CreateRequestData(BaseModel):
     assistance_type: str
     barangay: str
     city: str
-    province: str
+    province: Optional[str] = None # Made optional to handle blank province fields
+    region: str
     request_details: str
     priority: str
 
 
 @router.get("/")
 def get_requests():
-
     query = text("""
         SELECT
             ar.*,
@@ -48,7 +49,6 @@ def get_requests():
     """)
 
     with engine.connect() as conn:
-
         result = conn.execute(query)
 
         requests = []
@@ -76,9 +76,24 @@ def get_requests():
 @router.get("/{request_id}")
 def get_request(request_id: int):
     query = text("""
-        SELECT *
-        FROM assistance_requests
-        WHERE request_id = :request_id
+        SELECT
+            ar.*,
+            c.category_name,
+            l.location_name,
+            l.barangay,
+            l.city,
+            l.province,
+            l.region
+
+        FROM assistance_requests ar
+
+        LEFT JOIN categories c
+            ON ar.category_id = c.category_id
+
+        LEFT JOIN locations l
+            ON ar.location_id = l.location_id
+
+        WHERE ar.request_id = :request_id
     """)
 
     with engine.connect() as conn:
@@ -99,7 +114,13 @@ def get_request(request_id: int):
             "request_id": row.request_id,
             "user_id": row.user_id,
             "category_id": row.category_id,
+            "category_name": row.category_name,
             "location_id": row.location_id,
+            "location_name": row.location_name,
+            "barangay": row.barangay,
+            "city": row.city,
+            "province": row.province,
+            "region": row.region,
             "request_details": row.request_details,
             "priority_level": row.priority_level,
             "status": row.status,
@@ -113,8 +134,15 @@ def create_request(data: CreateRequestData):
     assistance_type = data.assistance_type.strip()
     barangay = data.barangay.strip()
     city = data.city.strip()
-    province = data.province.strip()
-    location = f"{barangay}, {city}, {province}"
+    
+    # Handle missing/blank province (e.g. for NCR / Metro Manila requests)
+    province = data.province.strip() if data.province else "Metro Manila"
+    if not province:
+        province = "Metro Manila"
+
+    region = data.region.strip()
+
+    location = f"{barangay}, {city}, {province}, {region}"
     request_details = data.request_details.strip()
     priority = data.priority.strip()
 
@@ -122,7 +150,8 @@ def create_request(data: CreateRequestData):
         "Food": "Food",
         "Water": "Water",
         "Shelter": "Shelter",
-        "Medicine": "Medicine"
+        "Medicine": "Medicine",
+        "General": "General"
     }
 
     priority_mapping = {
@@ -234,21 +263,24 @@ def create_request(data: CreateRequestData):
                         location_name,
                         barangay,
                         city,
-                        province
+                        province,
+                        region
                     )
                     VALUES
                     (
                         :location_name,
                         :barangay,
                         :city,
-                        :province
+                        :province,
+                        :region
                     )
                 """),
                 {
                     "location_name": location,
                     "barangay": barangay,
                     "city": city,
-                    "province": province
+                    "province": province,
+                    "region": region
                 }
             )
 
@@ -409,6 +441,7 @@ def get_user_requests(user_id: int):
             ar.request_details,
             ar.priority_level,
             ar.status,
+            ar.rejection_reason,
             ar.date_requested,
             c.category_name,
             l.location_name,

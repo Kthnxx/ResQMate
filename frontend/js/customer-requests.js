@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tbody.innerHTML = `
         <tr>
-            <td colspan="6" style="text-align: center; color: #718096; padding: 20px;">
+            <td colspan="5" style="text-align: center; color: #718096; padding: 20px;">
                 Loading your requests...
             </td>
         </tr>
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (requests.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="6" style="text-align: center; color: #718096; padding: 20px;">
+                    <td colspan="5" style="text-align: center; color: #718096; padding: 20px;">
                         No assistance requests found.
                     </td>
                 </tr>
@@ -116,9 +116,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const tdType = document.createElement("td");
             tdType.textContent = typeText;
 
-            const tdDetails = document.createElement("td");
-            tdDetails.textContent = req.request_details || "No details provided";
-
             const tdStatus = document.createElement("td");
             const statusSpan = document.createElement("span");
             statusSpan.className = `status-badge ${status}`;
@@ -133,7 +130,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             row.appendChild(tdId);
             row.appendChild(tdType);
-            row.appendChild(tdDetails);
             row.appendChild(tdStatus);
             row.appendChild(tdDate);
             row.appendChild(tdAction);
@@ -156,55 +152,152 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         tbody.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align: center; color: #ef4444; padding: 20px;">
+                <td colspan=5" style="text-align: center; color: #ef4444; padding: 20px;">
                     Error loading requests. Please try again later.
                 </td>
             </tr>
         `;
     }
 });
-});
 
 let customerRequestsData = [];
 
-async function viewRequest(id) {
+async function viewRequest(requestId) {
     try {
-        const response = await fetch(`${API_URL}/requests/${id}`);
-        const request = await response.json();
-        
-        document.getElementById("modalRequestId").textContent = request.request_id;
-        document.getElementById("modalCategory").textContent = request.category_name || "General";
-        document.getElementById("modalDescription").textContent = request.request_details || "No details provided";
-        document.getElementById("modalStatus").textContent = request.status;
-        
-        const rejectionRow = document.getElementById("rejectionReasonRow");
-        if (request.status && request.status.toLowerCase() === 'rejected' && request.rejection_reason) {
-            document.getElementById("modalRejectionReason").textContent = request.rejection_reason;
-            rejectionRow.style.display = "table-row";
-        } else {
-            rejectionRow.style.display = "none";
+        const response = await fetch(
+            `${API_URL}/requests/${requestId}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch request details");
         }
-        
-        document.getElementById("viewRequestModal").style.display = "flex";
-        
+
+        const request = await response.json();
+
+        document.getElementById(
+            "modalRequestIdBadge"
+        ).textContent = `Request ID #${request.request_id}`;
+
+        document.getElementById(
+            "modalCategory"
+        ).textContent = request.category_name || "General";
+
+        document.getElementById(
+            "modalBarangay"
+        ).textContent = request.barangay || "-";
+
+        document.getElementById(
+            "modalCity"
+        ).textContent = request.city || "-";
+
+        document.getElementById(
+            "modalProvince"
+        ).textContent = request.province || "-";
+
+        document.getElementById(
+            "modalRegion"
+        ).textContent = request.region || "-";
+
+        document.getElementById(
+            "modalDescription"
+        ).textContent = request.request_details || "-";
+
+        document.getElementById(
+            "modalPriority"
+        ).textContent = request.priority_level || "-";
+
+        const statusBadge =
+            document.getElementById(
+                "modalStatusBadge"
+            );
+
+        statusBadge.textContent =
+            request.status || "Pending";
+
+        statusBadge.className =
+            `status-badge-modal ${(request.status || "pending").toLowerCase()}`;
+
+        const rejectionRow =
+            document.getElementById(
+                "rejectionReasonRow"
+            );
+
+        if (
+            request.status &&
+            request.status.toLowerCase() === "rejected" &&
+            request.rejection_reason
+        ) {
+            document.getElementById(
+                "modalRejectionReason"
+            ).textContent =
+                request.rejection_reason;
+
+            rejectionRow.style.display =
+                "block";
+        } else {
+            rejectionRow.style.display =
+                "none";
+        }
+
+        document
+            .getElementById(
+                "viewRequestModal"
+            )
+            .classList.add("show");
+
     } catch (error) {
-        console.error("Error viewing request:", error);
+        console.error(error);
+        alert("Unable to load request details.");
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const closeBtn = document.getElementById("closeViewModal");
-    const modal = document.getElementById("viewRequestModal");
-    
-    if (closeBtn && modal) {
-        closeBtn.addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-        
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-                modal.style.display = "none";
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const modal =
+            document.getElementById(
+                "viewRequestModal"
+            );
+
+        document
+            .getElementById(
+                "closeViewModal"
+            )
+            ?.addEventListener(
+                "click",
+                closeModal
+            );
+
+        document
+            .getElementById(
+                "closeModalButton"
+            )
+            ?.addEventListener(
+                "click",
+                closeModal
+            );
+
+        modal?.addEventListener(
+            "click",
+            (e) => {
+
+                if (e.target === modal) {
+                    closeModal();
+                }
+
             }
-        });
+        );
+
     }
-});
+);
+
+function closeModal() {
+
+    document
+        .getElementById(
+            "viewRequestModal"
+        )
+        .classList.remove("show");
+
+}

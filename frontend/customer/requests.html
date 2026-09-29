@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../style/customer-requests.css">
     <link rel="stylesheet" href="../style/customer-sidebar.css">
     <link rel="stylesheet" href="../style/logout-modal.css">
+    <link rel="stylesheet" href="../style/shared-modal.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -21,6 +22,7 @@
     <div class="dashboard-container">
         <!-- Sidebar Container (Loaded via JS) -->
         <div id="sidebar-container"></div>
+        <div id="logout-modal-wrapper"></div>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -35,55 +37,12 @@
                         <tr>
                             <th>ID</th>
                             <th>Type</th>
-                            <th>Details</th>
                             <th>Status</th>
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="req-id">#0012</td>
-                            <td>Food</td>
-                            <td>Sample request detail</td>
-                            <td><span class="status-badge pending">Pending</span></td>
-                            <td>Sept 10, 2026</td>
-                        </tr>
-                        <tr>
-                            <td class="req-id">#0011</td>
-                            <td>Water</td>
-                            <td>Sample request detail</td>
-                            <td><span class="status-badge approved">Approved</span></td>
-                            <td>Sept 9, 2026</td>
-                        </tr>
-                        <tr>
-                            <td class="req-id">#0010</td>
-                            <td>Shelter</td>
-                            <td>Sample request detail</td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td>Sept 8, 2026</td>
-                        </tr>
-                        <tr>
-                            <td class="req-id">#0009</td>
-                            <td>Medicine</td>
-                            <td>Sample request detail</td>
-                            <td><span class="status-badge processing">Processing</span></td>
-                            <td>Sept 7, 2026</td>
-                        </tr>
-                        <tr>
-                            <td class="req-id">#0008</td>
-                            <td>Food</td>
-                            <td>Sample request detail</td>
-                            <td><span class="status-badge approved">Approved</span></td>
-                            <td>Sept 6, 2026</td>
-                        </tr>
-                        <tr>
-                            <td class="req-id">#0007</td>
-                            <td>Water</td>
-                            <td>Sample request detail</td>
-                            <td><span class="status-badge completed">Completed</span></td>
-                            <td>Sept 5, 2026</td>
-                        </tr>
+                    <tbody id="requestsTableBody">
                     </tbody>
                 </table>
             </div>
@@ -91,26 +50,117 @@
     </div>
 
     <!-- View Request Details Modal -->
-    <div class="custom-modal-overlay" id="viewRequestModal" style="display: none;">
-        <div class="custom-modal" style="background: white; padding: 2rem; border-radius: 8px; max-width: 600px; width: 100%; position: relative;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h3 style="margin: 0;">Request Details</h3>
-                <button id="closeViewModal" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">
+    <div class="custom-modal-overlay" id="viewRequestModal">
+
+        <div class="custom-modal">
+
+            <div class="modal-header">
+                <h3>Request Details</h3>
+
+                <button class="modal-close" id="closeViewModal">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            
-            <table style="width: 100%; text-align: left; border-collapse: collapse;">
-                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Request ID</th><td id="modalRequestId" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
-                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Type</th><td id="modalCategory" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
-                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Details</th><td id="modalDescription" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
-                <tr><th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">Status</th><td id="modalStatus" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;"></td></tr>
-                <tr id="rejectionReasonRow" style="display: none;">
-                    <th style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #ef4444;">Rejection Reason</th>
-                    <td id="modalRejectionReason" style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #ef4444; font-weight: 500;"></td>
-                </tr>
-            </table>
+
+            <div class="modal-body">
+
+                <div class="request-id-badge" id="modalRequestIdBadge">
+                    Request ID #--
+                </div>
+
+                <!-- CATEGORY + PRIORITY + STATUS -->
+                <div class="top-info-row">
+
+                    <div class="info-box">
+                        <span class="detail-label">Category</span>
+                        <div class="detail-value" id="modalCategory">--</div>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="detail-label">Priority</span>
+                        <div class="detail-value" id="modalPriority">--</div>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="detail-label">Status</span>
+                        <span class="status-badge-modal" id="modalStatusBadge">
+                            --
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- LOCATION -->
+                <div class="location-box">
+
+                    <div class="location-title">
+                        Location
+                    </div>
+
+                    <div class="location-line">
+
+                        <div class="location-item">
+                            <strong>Barangay:</strong>
+                            <span id="modalBarangay">--</span>
+                        </div>
+
+                        <div class="location-item">
+                            <strong>City:</strong>
+                            <span id="modalCity">--</span>
+                        </div>
+
+                        <div class="location-item">
+                            <strong>Province:</strong>
+                            <span id="modalProvince">--</span>
+                        </div>
+
+                        <div class="location-item">
+                            <strong>Region:</strong>
+                            <span id="modalRegion">--</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="detail-group">
+
+                    <span class="detail-label">
+                        Description
+                    </span>
+
+                    <div class="description-box" id="modalDescription">
+                        --
+                    </div>
+
+                </div>
+
+                <!-- REJECTION REASON -->
+                <div class="rejection-box" id="rejectionReasonRow" style="display:none;">
+
+                    <div class="rejection-title">
+                        Rejection Reason
+                    </div>
+
+                    <div class="rejection-text" id="modalRejectionReason">
+                        --
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button class="modal-btn" id="closeModalButton">
+                    Close
+                </button>
+
+            </div>
+
         </div>
+
     </div>
 
     <script src="../components/loadSidebar.js"></script>

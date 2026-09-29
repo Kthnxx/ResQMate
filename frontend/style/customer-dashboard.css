@@ -7,6 +7,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-transform: uppercase;
 }
 
 body {
@@ -241,9 +242,6 @@ body {
 }
 
 .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 16px;
 }
 
@@ -251,31 +249,25 @@ body {
     font-size: 1.1rem;
     font-weight: 600;
     color: #7f1d1d;
+    text-transform: uppercase;
 }
 
-.view-all-link {
-    color: #ef4444;
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-}
-
-.view-all-link:hover {
-    text-decoration: underline;
-}
+/* TABLE */
 
 .requests-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
+    text-align: center;
 }
 
 .requests-table th {
     color: #6b7280;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 0.85rem;
-    padding: 12px 16px;
+    padding: 14px 16px;
     border-bottom: 1px solid #fee2e2;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 .requests-table td {
@@ -283,11 +275,48 @@ body {
     font-size: 0.9rem;
     color: #374151;
     border-bottom: 1px solid #fef2f2;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.requests-table tbody tr:hover {
+    background: #fef2f2;
 }
 
 .req-id {
-    font-weight: 600;
+    font-weight: 700;
     color: #7f1d1d;
+}
+
+/* STATUS BADGES */
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background-color: #fef3c7;
+    color: #b45309;
+}
+
+.status-badge.approved {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.completed {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-badge.processing {
+    background-color: #fee2e2;
+    color: #dc2626;
 }
 
 
