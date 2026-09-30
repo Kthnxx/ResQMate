@@ -152,9 +152,6 @@ function loadRecentRequests(requests) {
             const tdType = document.createElement("td");
             tdType.textContent = type;
 
-            const tdDetails = document.createElement("td");
-            tdDetails.textContent = request.request_details || "No details provided";
-
             const tdStatus = document.createElement("td");
             const spanStatus = document.createElement("span");
             spanStatus.className = `status-badge ${status}`;
@@ -166,7 +163,6 @@ function loadRecentRequests(requests) {
 
             tr.appendChild(tdId);
             tr.appendChild(tdType);
-            tr.appendChild(tdDetails);
             tr.appendChild(tdStatus);
             tr.appendChild(tdDate);
 

@@ -2,9 +2,10 @@ const API_URL = "http://127.0.0.1:8000";
 
 const requestForm = document.getElementById("requestForm");
 const assistanceTypeInput = document.getElementById("assistanceType");
-const barangayInput = document.getElementById("barangay");
-const cityInput = document.getElementById("city");
+const regionInput = document.getElementById("region");
 const provinceInput = document.getElementById("province");
+const cityInput = document.getElementById("city");
+const barangayInput = document.getElementById("barangay");
 const detailsInput = document.getElementById("details");
 const priorityInput = document.getElementById("priority");
 const characterCount = document.getElementById("characterCount");
@@ -16,27 +17,81 @@ if (submitButton) {
     submitButton.disabled = true;
 }
 
-if (provinceInput) {
-    provinceInput.addEventListener("change", function () {
-        if (this.value) {
-            cityInput.disabled = false;
-        } else {
+// 1. Handle Region Change (Detects NCR / Metro Manila vs Regular Provinces)
+if (regionInput) {
+    regionInput.addEventListener("change", function () {
+        const selectedOption = this.options[this.selectedIndex];
+        const selectedText = selectedOption.text;
+        const selectedValue = this.value;
+
+        // Reset lower fields when region changes
+        if (cityInput) {
             cityInput.disabled = true;
             cityInput.value = "";
+        }
+        if (barangayInput) {
             barangayInput.disabled = true;
             barangayInput.value = "";
+        }
+        if (provinceInput) {
+            provinceInput.value = "";
+        }
+
+        if (selectedValue) {
+            // If NCR is selected, skip province and unlock City immediately!
+            if (selectedText.includes("NCR") || selectedText.includes("National Capital Region") || selectedText.includes("Metro Manila")) {
+                if (provinceInput) {
+                    provinceInput.required = false; // Province isn't strictly needed for NCR
+                    provinceInput.disabled = true;  // Keep province disabled so they don't get stuck
+                }
+                if (cityInput) {
+                    cityInput.disabled = false; // Unlock city directly!
+                }
+            } else {
+                // For other regions, enable the province dropdown
+                if (provinceInput) {
+                    provinceInput.required = true;
+                    provinceInput.disabled = false;
+                }
+            }
+        } else {
+            if (provinceInput) provinceInput.disabled = true;
         }
         checkFormValidity();
     });
 }
 
+// 2. Handle Province Change (For non-NCR regions)
+if (provinceInput) {
+    provinceInput.addEventListener("change", function () {
+        if (this.value) {
+            if (cityInput) {
+                cityInput.disabled = false;
+            }
+        } else {
+            if (cityInput) {
+                cityInput.disabled = true;
+                cityInput.value = "";
+            }
+            if (barangayInput) {
+                barangayInput.disabled = true;
+                barangayInput.value = "";
+            }
+        }
+        checkFormValidity();
+    });
+}
+
+// 3. Handle City Change -> Unlocks Barangay
 if (cityInput) {
     cityInput.addEventListener("change", function () {
         if (this.value) {
-            barangayInput.disabled = false;
+            if (barangayInput) barangayInput.disabled = false;
         } else {
-            barangayInput.disabled = true;
-            barangayInput.value = "";
+            if (barangayInput) {
+                barangayInput.disabled = true;
+                barangayInput.value = "";
+            }
         }
         checkFormValidity();
     });
@@ -140,16 +195,36 @@ if (requestForm) {
         }
 
         const assistanceType = assistanceTypeInput.value.trim();
-        
-        const barangay = barangayInput ? barangayInput.value.trim() : "";
-        const city = cityInput ? cityInput.value.trim() : "";
-        const province = provinceInput ? provinceInput.value.trim() : "";
-        const location = `${barangay}, ${city}, ${province}`;
-        
+
+        // --- CAPTURE TEXT NAMES PROPERLY FOR SUBMISSION ---
+        const regionSelectedOption = regionInput ? regionInput.options[regionInput.selectedIndex] : null;
+        const regionText = regionSelectedOption ? regionSelectedOption.text : "";
+
+        let provinceText = "";
+        if (provinceInput && !provinceInput.disabled && provinceInput.selectedIndex > 0) {
+            provinceText = provinceInput.options[provinceInput.selectedIndex].text;
+        } else if (regionText.includes("NCR") || regionText.includes("National Capital Region") || regionText.includes("Metro Manila")) {
+            provinceText = "Metro Manila";
+        }
+
+        const cityText = cityInput && cityInput.selectedIndex > 0
+            ? cityInput.options[cityInput.selectedIndex].text
+            : "";
+
+        const barangayText = barangayInput && barangayInput.selectedIndex > 0
+            ? barangayInput.options[barangayInput.selectedIndex].text
+            : "";
+
+        // Smart fallback for Metro Manila / NCR
+        if (regionText.includes("NCR") || regionText.includes("National Capital Region") || regionText.includes("Metro Manila") || !provinceText || provinceText === "Select Province") {
+            provinceText = "Metro Manila";
+        }
+        // ----------------------------------------------
+
         const details = detailsInput.value.trim();
         const priority = priorityInput.value;
 
-        if (!assistanceType || !barangay || !city || !province || !details || !priority) {
+        if (!assistanceType || !barangayText || !cityText || !details || !priority) {
             if (requestError) {
                 requestError.textContent = "Please complete all required fields.";
                 requestError.style.display = "block";
@@ -175,9 +250,10 @@ if (requestForm) {
                 body: JSON.stringify({
                     user_id: user.user_id,
                     assistance_type: assistanceType,
-                    barangay: barangay,
-                    city: city,
-                    province: province,
+                    barangay: barangayText, // Sends text name
+                    city: cityText,         // Sends text name
+                    province: provinceText, // Sends text name
+                    region: regionText,
                     request_details: details,
                     priority: priority
                 })
@@ -194,12 +270,9 @@ if (requestForm) {
             }
 
             alert("Your assistance request has been submitted successfully.");
-            
-            // Redirect to dashboard to view the new request
             window.location.href = "dashboard.html";
 
             requestForm.reset();
-
             assistanceTypeInput.value = "Food";
 
             assistanceOptions.forEach(option => {

@@ -1,0 +1,296 @@
+/* ===========================
+   RESQMATE VIEW MODAL
+=========================== */
+.custom-modal {
+    text-transform: uppercase;
+}
+
+.custom-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 16px;
+}
+
+.custom-modal-overlay.show {
+    display: flex;
+}
+
+.custom-modal {
+    width: 100%;
+    max-width: 650px;
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .12);
+    animation: modalFade .2s ease;
+}
+
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+.modal-header {
+    background: #991b1b;
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    opacity: .8;
+}
+
+/* ===========================
+   BODY
+=========================== */
+
+.modal-body {
+    padding: 20px;
+}
+
+.request-id-badge {
+    display: inline-block;
+    background: #fef2f2;
+    color: #b91c1c;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* ===========================
+   LABELS
+=========================== */
+
+.detail-label {
+    display: block;
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #6b7280;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    font-size: .92rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* ===========================
+   TOP INFO ROW
+=========================== */
+
+.top-info-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.info-box {
+    background: #fafafa;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.info-box .detail-value {
+    margin-top: 4px;
+}
+
+/* ===========================
+   LOCATION
+=========================== */
+
+.location-box {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 18px;
+}
+
+.location-title {
+    color: #991b1b;
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.location-line {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+}
+
+.location-item {
+    font-size: .88rem;
+    color: #374151;
+}
+
+.location-item strong {
+    color: #991b1b;
+    margin-right: 4px;
+}
+
+/* ===========================
+   DESCRIPTION
+=========================== */
+
+.detail-group {
+    margin-bottom: 16px;
+}
+
+.description-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px;
+    min-height: 90px;
+    line-height: 1.6;
+    color: #374151;
+    font-size: .9rem;
+}
+
+/* ===========================
+   STATUS BADGES
+=========================== */
+
+.status-badge-modal {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+}
+
+.status-badge-modal.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge-modal.approved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge-modal.completed {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-badge-modal.rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* ===========================
+   REJECTION
+=========================== */
+
+.rejection-box {
+    background: #fef2f2;
+    border-left: 4px solid #dc2626;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.rejection-title {
+    color: #b91c1c;
+    font-size: .8rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.rejection-text {
+    color: #7f1d1d;
+    font-size: .85rem;
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+.modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #e5e7eb;
+    background: #fafafa;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.modal-btn {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: .85rem;
+    font-weight: 600;
+    transition: background .2s ease;
+}
+
+.modal-btn:hover {
+    background: #b91c1c;
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media (max-width: 768px) {
+
+    .top-info-row {
+        grid-template-columns: 1fr;
+    }
+
+    .location-line {
+        grid-template-columns: 1fr;
+    }
+
+    .custom-modal {
+        max-width: 100%;
+    }
+}
