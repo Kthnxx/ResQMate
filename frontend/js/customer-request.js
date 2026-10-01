@@ -137,7 +137,11 @@ if (detailsInput && characterCount) {
 }
 
 if (cancelButton) {
-    cancelButton.addEventListener("click", function () {
+    cancelButton.addEventListener("click", function (e) {
+        if (!confirm("Are you sure you want to clear all data?")) {
+            e.preventDefault();
+            return;
+        }
         requestForm.reset();
 
         assistanceTypeInput.value = "Food";
@@ -238,14 +242,16 @@ if (requestForm) {
 
         if (submitButton) {
             submitButton.disabled = true;
-            submitButton.textContent = "Submitting...";
+            submitButton.textContent = "Processing...";
         }
 
         try {
-            const response = await fetch(`${API_URL}/requests/create`, {
+            const token = localStorage.getItem("token");
+            const response = await fetch(`${API_URL}/requestscreate`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     user_id: user.user_id,

@@ -70,6 +70,22 @@
                     <i class="fa-solid fa-eye register-toggle-password toggle-password"
                         data-target="registerPassword"></i>
                 </div>
+                        
+                <div id="passwordReqBox" class="password-req-box">
+                    <div class="req-title">Password Requirements</div>
+                    <div class="req-item req-invalid" id="req-length">
+                        <i class="fa-solid fa-xmark"></i> At least 8 characters long
+                    </div>
+                    <div class="req-item req-invalid" id="req-complex">
+                        <i class="fa-solid fa-xmark"></i> Must contain all of the following:
+                    </div>
+                    <ul class="req-sublist">
+                        <li id="req-upper">An uppercase letter</li>
+                        <li id="req-lower">A lowercase letter</li>
+                        <li id="req-num">A number</li>
+                        <li id="req-sym">A symbol (e.g. !@#$%^&*)</li>
+                    </ul>
+                </div>
 
                 <div class="register-password-group">
                     <label for="confirmPassword">Confirm Password <span class="required-asterisk">*</span></label>

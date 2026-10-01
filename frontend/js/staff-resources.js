@@ -23,8 +23,13 @@ async function loadResources() {
 
         const response =
             await fetch(
-                `${API_URL}/resources/`
-            );
+                `${API_URL}/resources`
+            , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+
+        if (!response.ok) {
+            console.error("Failed to load resources:", await response.text());
+            return;
+        }
 
         const resources =
             await response.json();
@@ -52,8 +57,16 @@ function renderResources(
         document.getElementById(
             "resourcesTableBody"
         );
+        
+    const emptyState = document.getElementById("emptyState");
 
     tbody.innerHTML = "";
+
+    if (resources.length === 0) {
+        if (emptyState) emptyState.style.display = "block";
+    } else {
+        if (emptyState) emptyState.style.display = "none";
+    }
 
     let available = 0;
     let low = 0;

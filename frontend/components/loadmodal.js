@@ -173,11 +173,13 @@ function initializeModals() {
         const passwordInput = document.getElementById("registerPassword");
         const registerInputs = registerForm.querySelectorAll("input");
         
+        let isPasswordSecure = false;
+
         function validateForm() {
             const isFormValid = registerForm.checkValidity();
             const doPasswordsMatch = passwordInput.value === confirmPasswordInput.value && passwordInput.value.length > 0;
             
-            if (isFormValid && doPasswordsMatch) {
+            if (isFormValid && doPasswordsMatch && isPasswordSecure) {
                 registerBtn.disabled = false;
             } else {
                 registerBtn.disabled = true;
@@ -198,10 +200,91 @@ function initializeModals() {
             } else {
                 confirmPasswordInput.setCustomValidity("");
             }
+            
+            // Only update the UI if the user has already interacted with it or if there's an active error to clear
+            if (confirmPasswordInput.classList.contains("input-error") || confirmPasswordInput.value.length > 0) {
+                validateSingleInput(confirmPasswordInput);
+            }
         };
 
+        const validatePasswordRequirements = () => {
+            const val = passwordInput.value;
+            const reqLength = document.getElementById("req-length");
+            const reqComplex = document.getElementById("req-complex");
+            const reqUpper = document.getElementById("req-upper");
+            const reqLower = document.getElementById("req-lower");
+            const reqNum = document.getElementById("req-num");
+            const reqSym = document.getElementById("req-sym");
+
+            let lengthValid = val.length >= 8;
+            
+            let hasUpper = /[A-Z]/.test(val);
+            let hasLower = /[a-z]/.test(val);
+            let hasNum = /[0-9]/.test(val);
+            let hasSym = /[^A-Za-z0-9]/.test(val);
+            
+            let conditionsMet = [hasUpper, hasLower, hasNum, hasSym].filter(Boolean).length;
+            let complexValid = conditionsMet >= 4;
+            
+            if (reqLength) {
+                reqLength.className = lengthValid ? "req-item req-valid" : "req-item req-invalid";
+                reqLength.innerHTML = lengthValid 
+                    ? `<i class="fa-solid fa-check"></i> At least 8 characters long`
+                    : `<i class="fa-solid fa-xmark"></i> At least 8 characters long`;
+            }
+
+            if (reqComplex) {
+                reqComplex.className = complexValid ? "req-item req-valid" : "req-item req-invalid";
+                reqComplex.innerHTML = complexValid 
+                    ? `<i class="fa-solid fa-check"></i> Must contain all of the following:`
+                    : `<i class="fa-solid fa-xmark"></i> Must contain all of the following:`;
+            }
+
+            if (reqUpper) reqUpper.className = hasUpper ? "met" : "";
+            if (reqLower) reqLower.className = hasLower ? "met" : "";
+            if (reqNum) reqNum.className = hasNum ? "met" : "";
+            if (reqSym) reqSym.className = hasSym ? "met" : "";
+
+            isPasswordSecure = lengthValid && complexValid;
+            if (!isPasswordSecure && val.length > 0) {
+                passwordInput.setCustomValidity("Password does not meet requirements.");
+            } else {
+                passwordInput.setCustomValidity("");
+            }
+        };
+
+        passwordInput.addEventListener("input", validatePasswordRequirements);
         passwordInput.addEventListener("input", validateConfirmPassword);
         confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+        
+        const emailInput = document.getElementById("registerEmail");
+        if (emailInput) {
+            emailInput.addEventListener("input", function() {
+                if (this.validity.customError) {
+                    this.setCustomValidity("");
+                    validateSingleInput(this);
+                }
+            });
+            emailInput.addEventListener("blur", async function() {
+                if (this.value && !this.validity.typeMismatch && !this.validity.valueMissing) {
+                    try {
+                        const response = await fetch(`http://127.0.0.1:8000/users/check-email?email=${encodeURIComponent(this.value)}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.exists) {
+                                this.setCustomValidity("Email already registered.");
+                            } else {
+                                this.setCustomValidity("");
+                            }
+                            validateSingleInput(this);
+                            validateForm();
+                        }
+                    } catch (e) {
+                        console.error("Failed to check email", e);
+                    }
+                }
+            });
+        }
 
         function validateSingleInput(input) {
             let errorMsg = "";
@@ -363,12 +446,20 @@ function initializeModals() {
                         document.getElementById("registerError");
 
                     if (!response.ok) {
-
-                        registerError.textContent =
-                            data.detail;
-
-                        registerError.classList.add("show");
-
+                        if (data.detail === "Email already registered") {
+                            const emailInput = document.getElementById("registerEmail");
+                            if (emailInput) {
+                                emailInput.setCustomValidity("Email already registered.");
+                                emailInput.dispatchEvent(new Event("input"));
+                                emailInput.focus();
+                            } else {
+                                registerError.textContent = data.detail;
+                                registerError.classList.add("show");
+                            }
+                        } else {
+                            registerError.textContent = data.detail || "Registration failed.";
+                            registerError.classList.add("show");
+                        }
                         return;
                     }
 

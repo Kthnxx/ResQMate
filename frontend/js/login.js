@@ -6,6 +6,12 @@ loginForm.addEventListener("submit", async (e) => {
 
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    
+    const submitBtn = loginForm.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Processing...";
+    }
 
     try {
 
@@ -31,9 +37,14 @@ loginForm.addEventListener("submit", async (e) => {
         if (!response.ok) {
 
             loginError.textContent =
-                "Invalid Credentials";
+                "Invalid username or password";
 
             loginError.classList.add("show");
+            
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Login";
+            }
 
             return;
         }
@@ -44,6 +55,7 @@ loginForm.addEventListener("submit", async (e) => {
             "user",
             JSON.stringify(data)
         );
+        localStorage.setItem("token", data.token);
 
         alert("Login Successful");
 
@@ -70,6 +82,11 @@ loginForm.addEventListener("submit", async (e) => {
         alert(
             "Cannot connect to server."
         );
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Login";
+        }
     }
 
 });

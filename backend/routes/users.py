@@ -1,10 +1,29 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import text
 from database import engine
+import secrets
+from security import get_current_user, get_current_admin
 
 router = APIRouter()
+
+
+# =========================
+# CHECK EMAIL
+# =========================
+
+@router.get("/check-email")
+def check_email(email: str):
+    with engine.connect() as conn:
+        existing = conn.execute(
+            text("SELECT user_id FROM users WHERE email = :email"),
+            {"email": email}
+        ).fetchone()
+        
+    if existing:
+        return {"exists": True}
+    return {"exists": False}
 
 
 # =========================
@@ -46,7 +65,7 @@ class CreateUserRequest(BaseModel):
 # =========================
 
 @router.get("/")
-def get_users():
+def get_users(admin: dict = Depends(get_current_admin)):
 
     with engine.connect() as conn:
 
@@ -136,7 +155,7 @@ def register_user(data: RegisterRequest):
 # =========================
 
 @router.post("/create")
-def create_user(data: CreateUserRequest):
+def create_user(data: CreateUserRequest, admin: dict = Depends(get_current_admin)):
 
     role_map = {
         "community_user": "community_user",
@@ -216,13 +235,36 @@ def login_user(data: LoginRequest):
     if result.password != data.password:
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
+    # Generate session token
+    session_token = secrets.token_urlsafe(32)
+    
+    with engine.begin() as conn:
+        conn.execute(
+            text("UPDATE users SET session_token = :token WHERE user_id = :uid"),
+            {"token": session_token, "uid": result.user_id}
+        )
+
     return {
         "message":  "Login successful",
         "user_id":  result.user_id,
         "full_name": result.full_name,
         "email":    result.email,
-        "role":     result.role
+        "role":     result.role,
+        "token":    session_token
     }
+
+# =========================
+# LOGOUT USER
+# =========================
+
+@router.post("/logout")
+def logout_user(user: dict = Depends(get_current_user)):
+    with engine.begin() as conn:
+        conn.execute(
+            text("UPDATE users SET session_token = NULL WHERE user_id = :uid"),
+            {"uid": user["user_id"]}
+        )
+    return {"message": "Logged out successfully"}
 
 
 # =========================
@@ -230,7 +272,7 @@ def login_user(data: LoginRequest):
 # =========================
 
 @router.put("/{user_id}")
-def update_user(user_id: int, data: UpdateUserRequest):
+def update_user(user_id: int, data: UpdateUserRequest, admin: dict = Depends(get_current_admin)):
 
     role_map = {
         "community_user": "community_user",
@@ -272,7 +314,7 @@ def update_user(user_id: int, data: UpdateUserRequest):
 # =========================
 
 @router.delete("/{user_id}")
-def delete_user(user_id: int):
+def delete_user(user_id: int, admin: dict = Depends(get_current_admin)):
 
     with engine.begin() as conn:
 

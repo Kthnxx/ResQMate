@@ -1,13 +1,14 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import text
 from database import engine
+from security import require_role, get_current_admin, get_current_staff
 
 router = APIRouter()
 
 
 # GET ALL DISTRIBUTIONS
 @router.get("/")
-def get_distributions():
+def get_distributions(user: dict = Depends(require_role(["admin", "staff"]))):
 
     query = text("""
         SELECT
@@ -47,12 +48,7 @@ def get_distributions():
 
 # CREATE DISTRIBUTION
 @router.post("/create")
-def create_distribution(
-    request_id:     int,
-    resource_id:    int,
-    staff_id:       int,
-    quantity_given: int
-):
+def create_distribution(request_id:     int, resource_id:    int, staff_id:       int, quantity_given: int, admin: dict = Depends(get_current_admin)):
 
     if quantity_given <= 0:
         raise HTTPException(status_code=400, detail="Quantity given must be greater than 0")
@@ -117,13 +113,7 @@ def create_distribution(
 
 # UPDATE DISTRIBUTION
 @router.put("/{distribution_id}")
-def update_distribution(
-    distribution_id: int,
-    request_id:      int,
-    resource_id:     int,
-    staff_id:        int,
-    quantity_given:  int
-):
+def update_distribution(distribution_id: int, request_id:      int, resource_id:     int, staff_id:        int, quantity_given:  int, admin: dict = Depends(get_current_admin)):
 
     with engine.begin() as conn:
 
@@ -179,7 +169,7 @@ def update_distribution(
 
 # DELETE DISTRIBUTION
 @router.delete("/{distribution_id}")
-def delete_distribution(distribution_id: int):
+def delete_distribution(distribution_id: int, admin: dict = Depends(get_current_admin)):
 
     with engine.begin() as conn:
 

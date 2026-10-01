@@ -1,11 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from security import get_current_user, get_current_admin, require_role
 from sqlalchemy import text
 from database import engine
 
 router = APIRouter()
 
 @router.get("/")
-def get_notifications():
+def get_notifications(user: dict = Depends(get_current_user)):
 
     query = text("""
         SELECT *
@@ -32,11 +33,7 @@ def get_notifications():
 
 
 @router.post("/create")
-def create_notification(
-    user_id: int,
-    title: str,
-    message: str
-):
+def create_notification(user_id: int, title: str, message: str, user: dict = Depends(get_current_user)):
 
     query = text("""
         INSERT INTO notifications

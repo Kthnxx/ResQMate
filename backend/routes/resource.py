@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from security import get_current_user, get_current_admin, require_role
 from sqlalchemy import text
 from database import engine
 
@@ -7,7 +8,7 @@ router = APIRouter()
 
 # GET ALL RESOURCES
 @router.get("/")
-def get_resources():
+def get_resources(user: dict = Depends(get_current_user)):
 
     with engine.connect() as conn:
 
@@ -31,14 +32,7 @@ def get_resources():
 
 # CREATE RESOURCE
 @router.post("/create")
-def create_resource(
-    resource_name:      str,
-    category:           str  = "General",
-    quantity_available: int  = 0,
-    unit:               str  = "units",
-    location:           str  = "",
-    status:             str  = "Available"
-):
+def create_resource(resource_name:      str, admin: dict = Depends(get_current_admin), category:           str  = "General", quantity_available: int  = 0, unit:               str  = "units", location:           str  = "", status:             str  = "Available"):
 
     with engine.begin() as conn:
         conn.execute(
@@ -63,15 +57,7 @@ def create_resource(
 
 # UPDATE RESOURCE
 @router.put("/{resource_id}")
-def update_resource(
-    resource_id:        int,
-    resource_name:      str,
-    category:           str,
-    quantity_available: int,
-    unit:               str,
-    location:           str  = "",
-    status:             str  = "Available"
-):
+def update_resource(resource_id:        int, resource_name:      str, category:           str, quantity_available: int, unit:               str, location:           str  = "", status:             str  = "Available", admin: dict = Depends(get_current_admin)):
 
     with engine.begin() as conn:
 
@@ -106,7 +92,7 @@ def update_resource(
 
 # DELETE RESOURCE
 @router.delete("/{resource_id}")
-def delete_resource(resource_id: int):
+def delete_resource(resource_id: int, admin: dict = Depends(get_current_admin)):
 
     with engine.begin() as conn:
 

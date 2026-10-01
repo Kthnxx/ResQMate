@@ -20,7 +20,7 @@ async function loadDistributions() {
         const user    = JSON.parse(localStorage.getItem("user"));
         const staffId = user ? user.user_id : null;
 
-        const response = await fetch(`${API_URL}/distributions/`);
+        const response = await fetch(`${API_URL}/distributions`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
         if (!response.ok) throw new Error("Failed to fetch distributions.");
 

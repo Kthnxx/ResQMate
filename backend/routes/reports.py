@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from security import get_current_user, get_current_admin, require_role
 from sqlalchemy import text
 from database import engine
 
@@ -6,7 +7,7 @@ router = APIRouter()
 
 
 @router.get("/")
-def get_reports():
+def get_reports(admin: dict = Depends(get_current_admin)):
 
     with engine.connect() as conn:
 
@@ -45,7 +46,7 @@ def get_reports():
 
 
 @router.get("/monthly")
-def get_monthly_requests():
+def get_monthly_requests(admin: dict = Depends(get_current_admin)):
 
     with engine.connect() as conn:
 

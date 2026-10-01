@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch(
-            `${API_URL}/requests/user/${user.user_id}`
-        );
+            `${API_URL}/requestsuser/${user.user_id}`
+        , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
         if (!response.ok) {
             throw new Error("Failed to fetch requests.");
@@ -165,8 +165,8 @@ let customerRequestsData = [];
 async function viewRequest(requestId) {
     try {
         const response = await fetch(
-            `${API_URL}/requests/${requestId}`
-        );
+            `${API_URL}/requests${requestId}`
+        , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
         if (!response.ok) {
             throw new Error("Failed to fetch request details");

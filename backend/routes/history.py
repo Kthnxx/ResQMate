@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from security import get_current_user, get_current_admin, require_role
 from sqlalchemy import text
 from database import engine
 
@@ -6,7 +7,7 @@ router = APIRouter()
 
 
 @router.get("/{request_id}")
-def get_request_history(request_id: int):
+def get_request_history(request_id: int, user: dict = Depends(get_current_user)):
 
     query = text("""
         SELECT *
@@ -37,12 +38,7 @@ def get_request_history(request_id: int):
 
 
 @router.post("/create")
-def create_history(
-    request_id: int,
-    updated_by: int,
-    status: str,
-    remarks: str
-):
+def create_history(request_id: int, updated_by: int, status: str, remarks: str, user: dict = Depends(get_current_user)):
 
     query = text("""
         INSERT INTO request_status_history
