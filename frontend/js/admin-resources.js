@@ -14,7 +14,7 @@ let editingResourceId   = null;
 ================================== */
 async function loadResources() {
     try {
-        const response  = await fetch(API_URL);
+        const response  = await fetch(API_URL, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
         const resources = await response.json();
         updateStats(resources);
         renderTable(resources);
@@ -129,6 +129,14 @@ resourceForm.addEventListener("submit", async (e) => {
         return;
     }
 
+    const submitBtn = resourceForm.querySelector('button[type="submit"]');
+    let originalText = "Save";
+    if (submitBtn) {
+        originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Processing...";
+    }
+
     try {
         if (editingResourceId === null) {
             // CREATE
@@ -149,6 +157,11 @@ resourceForm.addEventListener("submit", async (e) => {
     } catch (error) {
         console.error(error);
         alert("Request failed. Is the backend running?");
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+        }
     }
 });
 

@@ -18,7 +18,7 @@ let allDistributions      = [];
 =========================== */
 async function loadDistributions() {
     try {
-        const response     = await fetch(`${API_BASE}/distributions/`);
+        const response     = await fetch(`${API_BASE}/distributions/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
         const distributions= await response.json();
         allDistributions   = distributions;
         renderTable(distributions);
@@ -210,7 +210,7 @@ document.getElementById("statusFilter")?.addEventListener("change", () => {
 =========================== */
 async function loadResources() {
     try {
-        const resources   = await (await fetch(`${API_BASE}/resources/`)).json();
+        const resources   = await (await fetch(`${API_BASE}/resources/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })).json();
         const resourceSel = document.getElementById("resource");
         resourceSel.innerHTML = '<option value="">Select Resource</option>';
         resources.forEach(r => {
@@ -221,7 +221,7 @@ async function loadResources() {
 
 async function loadStaff() {
     try {
-        const users    = await (await fetch(`${API_BASE}/users/`)).json();
+        const users    = await (await fetch(`${API_BASE}/users/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })).json();
         const staffSel = document.getElementById("staff");
         staffSel.innerHTML = '<option value="">Select Staff</option>';
         users.filter(u => u.role === "staff").forEach(u => {

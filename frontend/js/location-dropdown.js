@@ -26,7 +26,7 @@ async function loadRegions() {
 
         const response = await fetch(
             `${LOCATION_API_URL}/locations/regions`
-        );
+        , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
         const result = await response.json();
 
@@ -82,7 +82,7 @@ regionSelect.addEventListener("change", async () => {
     provinceSelect.disabled = false;
 
     try {
-        const response = await fetch(`${API_URL}/locations/regions/${regionCode}/provinces`);
+        const response = await fetch(`${API_URL}/locationsregions/${regionCode}/provinces`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
         const result = await response.json();
         const provinces = result.data || result;
 
@@ -133,10 +133,10 @@ async function loadCities(
         // If NCR, we fetch cities using the region code/province code endpoint depending on your backend
         // For NCR, if your API expects the region code or province code, adjust here:
         const endpoint = (codeToFetch === "1300000000" || regionSelect.value === "1300000000")
-            ? `${API_URL}/locations/regions/1300000000/cities-municipalities`
-            : `${API_URL}/locations/provinces/${codeToFetch}/cities`;
+            ? `${API_URL}/locationsregions/1300000000/cities-municipalities`
+            : `${API_URL}/locationsprovinces/${codeToFetch}/cities`;
 
-        const response = await fetch(endpoint);
+        const response = await fetch(endpoint, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
         const result = await response.json();
 
@@ -186,7 +186,7 @@ citySelect.addEventListener(
 
             const response = await fetch(
                 `${LOCATION_API_URL}/locations/cities/${cityCode}/barangays`
-            );
+            , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
             const result = await response.json();
 

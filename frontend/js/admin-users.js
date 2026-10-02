@@ -11,7 +11,7 @@ let allUsers      = [];
 =========================== */
 async function loadUsers() {
     try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
         const users    = await response.json();
         allUsers       = users;
         renderUsers(users);
@@ -96,12 +96,19 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
         return;
     }
 
+    const saveBtn = document.getElementById("saveUserBtn");
+    const originalText = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Processing...";
+
     try {
         if (!editingUserId) {
             // CREATE via /users/create (accepts full_name)
             const res = await fetch(`${API_URL}/create`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
                 body: JSON.stringify({ full_name: fullName, email, password: password || "ResQMate2024!", role })
             });
 
@@ -119,7 +126,9 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
 
             const res = await fetch(`${API_URL}/${editingUserId}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    },
                 body: JSON.stringify({ first_name: firstName, last_name: lastName, email, role })
             });
 
@@ -136,6 +145,9 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
     } catch (error) {
         console.error(error);
         alert("Request failed. Is the backend running?");
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalText;
     }
 });
 

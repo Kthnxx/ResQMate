@@ -50,8 +50,8 @@ async function loadRequests() {
         const staffId = user ? user.user_id : null;
 
         const [reqRes, distRes] = await Promise.all([
-            fetch(`${API_URL}/requests/`),
-            fetch(`${API_URL}/distributions/`)
+            fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
+            fetch(`${API_URL}/distributions`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
         ]);
 
         if (!reqRes.ok || !distRes.ok) throw new Error("Failed to fetch data.");
@@ -170,8 +170,10 @@ async function markCompleted(requestId) {
         const updatedBy = user ? user.user_id : 1;
 
         const res = await fetch(
-            `${API_URL}/requests/${requestId}/status?status=Completed&updated_by=${updatedBy}`,
-            { method: "PUT", headers: { "Content-Type": "application/json" } }
+            `${API_URL}/requests${requestId}/status?status=Completed&updated_by=${updatedBy}`,
+            { method: "PUT", headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    } }
         );
 
         if (!res.ok) throw new Error("Update failed");

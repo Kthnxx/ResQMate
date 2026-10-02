@@ -28,7 +28,7 @@ async function loadNotifications() {
         const response =
             await fetch(
                 `http://127.0.0.1:8000/requests/user/${user.user_id}`
-            );
+            , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
         if (!response.ok) {
 

@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from sqlalchemy import text
 from database import engine
 from typing import Optional
+from security import get_current_user, get_current_admin, get_current_customer, require_role
 
 router = APIRouter()
 
@@ -19,7 +20,7 @@ class CreateRequestData(BaseModel):
 
 
 @router.get("/")
-def get_requests():
+def get_requests(user: dict = Depends(require_role(["admin", "staff"]))):
     query = text("""
         SELECT
             ar.*,
@@ -74,7 +75,7 @@ def get_requests():
 
 
 @router.get("/{request_id}")
-def get_request(request_id: int):
+def get_request(request_id: int, user: dict = Depends(get_current_user)):
     query = text("""
         SELECT
             ar.*,
@@ -130,7 +131,7 @@ def get_request(request_id: int):
 
 
 @router.post("/create")
-def create_request(data: CreateRequestData):
+def create_request(data: CreateRequestData, customer: dict = Depends(get_current_customer)):
     assistance_type = data.assistance_type.strip()
     barangay = data.barangay.strip()
     city = data.city.strip()
@@ -340,16 +341,11 @@ def create_request(data: CreateRequestData):
 
 
 @router.put("/{request_id}/status")
-def update_request_status(
-    request_id: int,
-    status: str,
-    updated_by: int,
-    rejection_reason: str = None
-):
+def update_request_status(request_id: int, status: str, updated_by: int, rejection_reason: str = None, admin: dict = Depends(get_current_admin)):
     with engine.begin() as conn:
         user_result = conn.execute(
             text("""
-                SELECT user_id
+                SELECT user_id, status
                 FROM assistance_requests
                 WHERE request_id = :request_id
             """),
@@ -361,6 +357,9 @@ def update_request_status(
                 status_code=404,
                 detail="Request Not Found"
             )
+
+        if user_result.status.lower() == 'completed':
+            raise HTTPException(status_code=403, detail="Forbidden: Completed requests are read-only")
 
         user_id = user_result.user_id
 
@@ -431,7 +430,10 @@ def update_request_status(
 
 
 @router.get("/user/{user_id}")
-def get_user_requests(user_id: int):
+def get_user_requests(user_id: int, user: dict = Depends(get_current_user)):
+    if user["role"] == "community_user" and user["user_id"] != user_id:
+        raise HTTPException(status_code=403, detail="Forbidden: Cannot view other users' requests")
+        
     query = text("""
         SELECT
             ar.request_id,

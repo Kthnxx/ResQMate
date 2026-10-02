@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from security import get_current_user, get_current_admin, require_role
 from sqlalchemy import text
 from database import engine
 

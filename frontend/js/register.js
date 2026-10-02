@@ -25,11 +25,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const passwordInput = document.getElementById("registerPassword");
     const registerInputs = registerForm.querySelectorAll("input");
     
+    let isPasswordSecure = false;
+
     function validateForm() {
         const isFormValid = registerForm.checkValidity();
         const doPasswordsMatch = passwordInput.value === confirmPasswordInput.value && passwordInput.value.length > 0;
         
-        if (isFormValid && doPasswordsMatch) {
+        if (isFormValid && doPasswordsMatch && isPasswordSecure) {
             registerBtn.disabled = false;
         } else {
             registerBtn.disabled = true;
@@ -44,8 +46,65 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
+    const validatePasswordRequirements = () => {
+        const val = passwordInput.value;
+        const reqLength = document.getElementById("req-length");
+        const reqComplex = document.getElementById("req-complex");
+        const reqUpper = document.getElementById("req-upper");
+        const reqLower = document.getElementById("req-lower");
+        const reqNum = document.getElementById("req-num");
+        const reqSym = document.getElementById("req-sym");
+
+        let lengthValid = val.length >= 8;
+        
+        let hasUpper = /[A-Z]/.test(val);
+        let hasLower = /[a-z]/.test(val);
+        let hasNum = /[0-9]/.test(val);
+        let hasSym = /[^A-Za-z0-9]/.test(val);
+        
+        let conditionsMet = [hasUpper, hasLower, hasNum, hasSym].filter(Boolean).length;
+        let complexValid = conditionsMet >= 3;
+        
+        if (reqLength) {
+            reqLength.className = lengthValid ? "req-item req-valid" : "req-item req-invalid";
+            reqLength.innerHTML = lengthValid 
+                ? `<i class="fa-solid fa-check"></i> At least 8 characters long`
+                : `<i class="fa-solid fa-xmark"></i> At least 8 characters long`;
+        }
+
+        if (reqComplex) {
+            reqComplex.className = complexValid ? "req-item req-valid" : "req-item req-invalid";
+            reqComplex.innerHTML = complexValid 
+                ? `<i class="fa-solid fa-check"></i> At least 3 of the following:`
+                : `<i class="fa-solid fa-xmark"></i> At least 3 of the following:`;
+        }
+
+        if (reqUpper) reqUpper.className = hasUpper ? "met" : "";
+        if (reqLower) reqLower.className = hasLower ? "met" : "";
+        if (reqNum) reqNum.className = hasNum ? "met" : "";
+        if (reqSym) reqSym.className = hasSym ? "met" : "";
+
+        isPasswordSecure = lengthValid && complexValid;
+        if (!isPasswordSecure && val.length > 0) {
+            passwordInput.setCustomValidity("Password does not meet requirements.");
+        } else {
+            passwordInput.setCustomValidity("");
+        }
+    };
+
+    passwordInput.addEventListener("input", validatePasswordRequirements);
     passwordInput.addEventListener("input", validateConfirmPassword);
     confirmPasswordInput.addEventListener("input", validateConfirmPassword);
+    
+    const emailInput = document.getElementById("registerEmail");
+    if (emailInput) {
+        emailInput.addEventListener("input", function() {
+            if (this.validity.customError) {
+                this.setCustomValidity("");
+                validateSingleInput(this);
+            }
+        });
+    }
 
     function validateSingleInput(input) {
         let errorMsg = "";
@@ -100,7 +159,11 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    registerForm.addEventListener("reset", () => {
+    registerForm.addEventListener("reset", (e) => {
+        if (!confirm("Are you sure you want to clear all data?")) {
+            e.preventDefault();
+            return;
+        }
         registerInputs.forEach(input => {
             input.classList.remove("input-error");
             let parentToAppendTo = input;
@@ -149,6 +212,10 @@ registerForm.addEventListener(
             return;
         }
 
+        const registerBtn = document.getElementById("registerBtn");
+        registerBtn.disabled = true;
+        registerBtn.textContent = "Processing...";
+
         try {
 
             const response = await fetch(
@@ -174,7 +241,18 @@ registerForm.addEventListener(
                 await response.json();
 
             if (!response.ok) {
-                alert(data.detail);
+                if (data.detail === "Email already registered") {
+                    const emailInput = document.getElementById("registerEmail");
+                    if (emailInput) {
+                        emailInput.setCustomValidity("Email already registered.");
+                        emailInput.dispatchEvent(new Event("input"));
+                        emailInput.focus();
+                    } else {
+                        alert(data.detail);
+                    }
+                } else {
+                    alert(data.detail || "Registration failed.");
+                }
                 return;
             }
 
@@ -201,6 +279,9 @@ registerForm.addEventListener(
             alert(
                 "Cannot connect to server."
             );
+        } finally {
+            registerBtn.disabled = false;
+            registerBtn.textContent = "Register";
         }
 
     }

@@ -19,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadRequests() {
     try {
         const [requestsRes, usersRes] = await Promise.all([
-            fetch(`${API_URL}/requests/`),
-            fetch(`${API_URL}/users/`)
+            fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
+            fetch(`${API_URL}/users`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
         ]);
 
         requestsData = await requestsRes.json();
@@ -122,8 +122,10 @@ window.updateStatus = async function(requestId, newStatus) {
 
     try {
         const res = await fetch(
-            `${API_URL}/requests/${requestId}/status?status=${newStatus}&updated_by=${updatedBy}`,
-            { method: "PUT", headers: { "Content-Type": "application/json" } }
+            `${API_URL}/requests${requestId}/status?status=${newStatus}&updated_by=${updatedBy}`,
+            { method: "PUT", headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    } }
         );
 
         if (!res.ok) {
@@ -153,12 +155,14 @@ window.rejectRequest = async function(requestId) {
     const updatedBy = user ? user.user_id : 1;
 
     try {
-        const url = `${API_URL}/requests/${requestId}/status?status=rejected&updated_by=${updatedBy}`
+        const url = `${API_URL}/requests${requestId}/status?status=rejected&updated_by=${updatedBy}`
             + (reason ? `&rejection_reason=${encodeURIComponent(reason)}` : "");
 
         const res = await fetch(url, {
             method: "PUT",
-            headers: { "Content-Type": "application/json" }
+            headers: { "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
         });
 
         if (!res.ok) {

@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from security import get_current_user, get_current_admin, require_role
 import requests
 
 router = APIRouter(
@@ -8,7 +9,7 @@ router = APIRouter(
 
 
 @router.get("/regions")
-def get_regions():
+def get_regions(user: dict = Depends(get_current_user)):
 
     response = requests.get(
         "https://psgc.cloud/api/v2/regions"
@@ -18,7 +19,7 @@ def get_regions():
 
 
 @router.get("/regions/{region_code}/provinces")
-def get_provinces(region_code: str):
+def get_provinces(region_code: str, user: dict = Depends(get_current_user)):
 
     # NCR special case
     if region_code == "1300000000":
@@ -43,7 +44,7 @@ def get_provinces(region_code: str):
 
 
 @router.get("/regions/{region_code}/cities-municipalities")
-def get_ncr_cities(region_code: str):
+def get_ncr_cities(region_code: str, user: dict = Depends(get_current_user)):
 
     response = requests.get(
         f"https://psgc.cloud/api/v2/regions/{region_code}/cities-municipalities"
@@ -59,7 +60,7 @@ def get_ncr_cities(region_code: str):
 
 
 @router.get("/provinces/{province_code}/cities")
-def get_cities(province_code: str):
+def get_cities(province_code: str, user: dict = Depends(get_current_user)):
 
     # NCR special case
     if province_code == "1300000000":
@@ -90,7 +91,7 @@ def get_cities(province_code: str):
 
 
 @router.get("/cities/{city_code}/barangays")
-def get_barangays(city_code: str):
+def get_barangays(city_code: str, user: dict = Depends(get_current_user)):
 
     response = requests.get(
         f"https://psgc.cloud/api/v2/cities-municipalities/{city_code}/barangays"
