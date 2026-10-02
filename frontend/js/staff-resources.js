@@ -83,7 +83,7 @@ function renderResources(
             "AVAILABLE";
 
         let badge =
-            "rq-badge-available";
+            "rq-badge-active";
 
         if (quantity === 0) {
 
@@ -91,7 +91,7 @@ function renderResources(
                 "DEPLETED";
 
             badge =
-                "rq-badge-depleted";
+                "rq-badge-inactive";
 
             depleted++;
 
@@ -102,7 +102,7 @@ function renderResources(
                 "LOW STOCK";
 
             badge =
-                "rq-badge-low";
+                "rq-badge-medium";
 
             low++;
 

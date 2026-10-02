@@ -125,7 +125,7 @@ if (saveDistribution) {
                 method = "PUT";
             }
 
-            const res = await fetch(url, { method });
+            const res = await fetch(url, { method, headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
 
             if (!res.ok) {
                 const err = await res.json();
@@ -167,7 +167,7 @@ window.openDeleteDistribution = function(id) {
 if (confirmDeleteDistribution) {
     confirmDeleteDistribution.addEventListener("click", async () => {
         try {
-            const res = await fetch(`${API_BASE}/distributions/${deletingDistributionId}`, { method: "DELETE" });
+            const res = await fetch(`${API_BASE}/distributions/${deletingDistributionId}`, { method: "DELETE", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
             if (!res.ok) {
                 const err = await res.json();
                 alert(err.detail || "Delete failed.");

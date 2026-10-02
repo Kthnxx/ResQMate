@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="../style/customer-sidebar.css">
   <link rel="stylesheet" href="../style/logout-modal.css">
+  <link rel="stylesheet" href="../style/profile-modal.css">
   <link rel="stylesheet" href="../style/staff-dashboard.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -17,6 +18,8 @@
   <div class="dashboard-container">
 
     <div id="sidebar-container"></div>
+    <div id="logout-modal-wrapper"></div>
+    <div id="profile-modal-wrapper"></div>
 
     <main class="main-content">
 
@@ -65,8 +68,7 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody id="recentRequestsTable">
-          </tbody>
+          <tbody id="recentRequestsTable"></tbody>
         </table>
       </div>
 
@@ -74,10 +76,8 @@
 
   </div>
 
-  <!-- Logout modal wrapper must be outside main but inside body -->
-  <div id="logout-modal-wrapper"></div>
-
   <script src="../components/logout-modal.js"></script>
+  <script src="../components/profile-modal.js"></script>
   <script src="../components/loadStaffSidebar.js"></script>
   <script src="../js/staff-dashboard.js"></script>
 
