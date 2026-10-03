@@ -236,12 +236,12 @@ def login_user(data: LoginRequest):
         ).fetchone()
 
     if not result:
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+        raise HTTPException(status_code=401, detail={"error": "Invalid email or password"})
 
     # Check for lockout
     now = datetime.now(timezone.utc).replace(tzinfo=None)
     if result.locked_until and result.locked_until > now:
-        raise HTTPException(status_code=429, detail="Too many failed attempts. Account locked for 15 minutes.")
+        raise HTTPException(status_code=429, detail={"error": "Too many failed attempts. Account locked for 15 minutes.", "attempts_remaining": 0})
 
     if result.password != data.password:
         failed_attempts = (result.failed_login_attempts or 0) + 1
@@ -252,13 +252,14 @@ def login_user(data: LoginRequest):
                     text("UPDATE users SET failed_login_attempts = :attempts, locked_until = :lock_time WHERE user_id = :uid"),
                     {"attempts": failed_attempts, "lock_time": lockout_time, "uid": result.user_id}
                 )
-                raise HTTPException(status_code=429, detail="Too many failed attempts. Account locked for 15 minutes.")
+                raise HTTPException(status_code=429, detail={"error": "Too many failed attempts. Account locked for 15 minutes.", "attempts_remaining": 0})
             else:
                 conn.execute(
                     text("UPDATE users SET failed_login_attempts = :attempts WHERE user_id = :uid"),
                     {"attempts": failed_attempts, "uid": result.user_id}
                 )
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+        attempts_remaining = 3 - failed_attempts
+        raise HTTPException(status_code=401, detail={"error": "Invalid email or password", "attempts_remaining": attempts_remaining})
 
     # Generate JWT session token
     exp_time = now + timedelta(hours=24)

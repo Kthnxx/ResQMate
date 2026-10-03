@@ -698,12 +698,21 @@ function initializeModals() {
                         document.getElementById("loginError");
 
                     if (!response.ok) {
+                        let errorMsg = "Invalid Credentials";
+                        if (data && data.detail) {
+                            if (typeof data.detail === 'string') {
+                                errorMsg = data.detail;
+                            } else if (data.detail.error) {
+                                if (data.detail.attempts_remaining !== undefined && data.detail.attempts_remaining > 0) {
+                                    errorMsg = `Invalid credentials. You have ${data.detail.attempts_remaining} attempts remaining before temporary lockout.`;
+                                } else {
+                                    errorMsg = data.detail.error;
+                                }
+                            }
+                        }
 
-                        loginError.textContent =
-                            "Invalid Credentials";
-
+                        loginError.textContent = errorMsg;
                         loginError.classList.add("show");
-
                         return;
                     }
 
