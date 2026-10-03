@@ -1,4 +1,4 @@
-const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
+var API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
 /* ============================================================
    staff-distributions.js  — READ ONLY for staff
    Per the defined flow, only Admin creates distributions.
@@ -6,7 +6,7 @@ const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location
    The "New Distribution" button has been removed from the HTML.
    ============================================================ */
 
-const API_URL = API_BASE_URL;
+var API_URL = API_BASE_URL;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadDistributions();

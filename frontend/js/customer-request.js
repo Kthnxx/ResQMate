@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+var API_URL = "http://127.0.0.1:8000";
 
 const requestForm = document.getElementById("requestForm");
 const assistanceTypeInput = document.getElementById("assistanceType");

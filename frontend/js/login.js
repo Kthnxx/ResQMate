@@ -1,4 +1,4 @@
-const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
+var API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
 const loginForm = document.getElementById("loginForm");
 
 loginForm.addEventListener("submit", async (e) => {
