@@ -14,7 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
 ========================= */
 async function loadDashboardStats() {
     try {
-        const res  = await fetch(`${API_URL}/dashboard`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const res  = await fetch(`${API_URL}/dashboard`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const data = await res.json();
 
         document.getElementById("totalRequests").textContent      = data.total_requests       || 0;
@@ -32,7 +35,10 @@ async function loadDashboardStats() {
 ========================= */
 async function loadPriorityRequests() {
     try {
-        const res      = await fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const res      = await fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const requests = await res.json();
 
         const high   = requests.filter(r => (r.priority_level || "").toLowerCase() === "high").length;
@@ -53,7 +59,10 @@ async function loadPriorityRequests() {
 ========================= */
 async function loadResourceAlerts() {
     try {
-        const res       = await fetch(`${API_URL}/resources`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const res       = await fetch(`${API_URL}/resources/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const resources = await res.json();
         const container = document.getElementById("resourceAlerts");
         if (!container) return;
@@ -83,7 +92,10 @@ async function loadResourceAlerts() {
 ========================= */
 async function loadActiveDistributions() {
     try {
-        const res          = await fetch(`${API_URL}/distributions`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const res          = await fetch(`${API_URL}/distributions/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const distributions= await res.json();
 
         // FIX: target activeDistributionsBody (matches dashboard.html)
@@ -123,7 +135,10 @@ async function loadActiveDistributions() {
 ========================= */
 async function loadRecentRequests() {
     try {
-        const res      = await fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const res      = await fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const requests = await res.json();
         const tbody    = document.getElementById("recentRequestsBody");
         if (!tbody) return;
@@ -157,7 +172,10 @@ async function loadRecentActivity() {
     if (!activityList) return;
 
     try {
-        const res      = await fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const res      = await fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const requests = await res.json();
 
         activityList.innerHTML = "";

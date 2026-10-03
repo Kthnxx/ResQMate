@@ -19,8 +19,14 @@ document.addEventListener("DOMContentLoaded", () => {
 async function loadRequests() {
     try {
         const [requestsRes, usersRes] = await Promise.all([
-            fetch(`${API_URL}/requests/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
-            fetch(`${API_URL}/users/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} }),
+            fetch(`${API_URL}/users/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} })
         ]);
 
         requestsData = await requestsRes.json();
@@ -123,9 +129,10 @@ window.updateStatus = async function(requestId, newStatus) {
     try {
         const res = await fetch(
             `${API_URL}/requests/${requestId}/status?status=${newStatus}&updated_by=${updatedBy}`,
-            { method: "PUT", headers: { "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    } }
+            { method: "PUT", headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            } }
         );
 
         if (!res.ok) {
@@ -160,9 +167,10 @@ window.rejectRequest = async function(requestId) {
 
         const res = await fetch(url, {
             method: "PUT",
-            headers: { "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    }
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
         });
 
         if (!res.ok) {

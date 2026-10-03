@@ -3,7 +3,6 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-transform: uppercase;
 }
 
 body {
@@ -37,14 +36,12 @@ body {
     font-weight: 600;
     color: #7f1d1d;
     margin-bottom: 5px;
-    text-transform: uppercase;
 }
 
 .header-title p {
     font-size: 14px;
     color: #6b7280;
     margin-bottom: 30px;
-    text-transform: uppercase;
 }
 
 /* ===========================
@@ -73,7 +70,6 @@ body {
     font-weight: 700;
     padding: 18px 20px;
     border-bottom: 1px solid #fee2e2;
-    text-transform: uppercase;
     text-align: center;
 }
 
@@ -82,7 +78,6 @@ body {
     font-size: 14px;
     color: #374151;
     border-bottom: 1px solid #fee2e2;
-    text-transform: uppercase;
     text-align: center;
     vertical-align: middle;
 }
@@ -112,7 +107,6 @@ body {
     border-radius: 999px;
     font-size: 12px;
     font-weight: 700;
-    text-transform: uppercase;
 }
 
 .status-badge.pending {
@@ -153,7 +147,6 @@ body {
     border-radius: 7px;
     font-size: 12px;
     font-weight: 700;
-    text-transform: uppercase;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -196,7 +189,6 @@ body {
 .no-action {
     color: #cbd5e1;
     font-size: 0.9rem;
-    text-transform: uppercase;
 }
 
 /* ===========================

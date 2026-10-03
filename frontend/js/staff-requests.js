@@ -50,8 +50,14 @@ async function loadRequests() {
         const staffId = user ? user.user_id : null;
 
         const [reqRes, distRes] = await Promise.all([
-            fetch(`${API_URL}/requests/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
-            fetch(`${API_URL}/distributions/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} }),
+            fetch(`${API_URL}/distributions/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} })
         ]);
 
         if (!reqRes.ok || !distRes.ok) throw new Error("Failed to fetch data.");
@@ -171,9 +177,10 @@ async function markCompleted(requestId) {
 
         const res = await fetch(
             `${API_URL}/requests/${requestId}/status?status=completed&updated_by=${updatedBy}`,
-            { method: "PUT", headers: { "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    } }
+            { method: "PUT", headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            } }
         );
 
         if (!res.ok) throw new Error("Update failed");

@@ -25,3 +25,4 @@ class User(Base):
     )
     phone_number = Column(String(20))
     dob = Column(DateTime)
+    session_token = Column(String(255), nullable=True)

@@ -39,8 +39,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch(
-            `${API_URL}/requestsuser/${user.user_id}`
-        , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            `${API_URL}/requests/user/${user.user_id}`
+        , { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
 
         if (!response.ok) {
             throw new Error("Failed to fetch requests.");
@@ -165,8 +168,11 @@ let customerRequestsData = [];
 async function viewRequest(requestId) {
     try {
         const response = await fetch(
-            `${API_URL}/requests${requestId}`
-        , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            `${API_URL}/requests/${requestId}`
+        , { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
 
         if (!response.ok) {
             throw new Error("Failed to fetch request details");

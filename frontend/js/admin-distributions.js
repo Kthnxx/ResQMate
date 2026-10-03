@@ -18,7 +18,10 @@ let allDistributions      = [];
 =========================== */
 async function loadDistributions() {
     try {
-        const response     = await fetch(`${API_BASE}/distributions/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const response     = await fetch(`${API_BASE}/distributions/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const distributions= await response.json();
         allDistributions   = distributions;
         renderTable(distributions);
@@ -125,7 +128,10 @@ if (saveDistribution) {
                 method = "PUT";
             }
 
-            const res = await fetch(url, { method, headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            const res = await fetch(url, { method, headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
 
             if (!res.ok) {
                 const err = await res.json();
@@ -167,7 +173,10 @@ window.openDeleteDistribution = function(id) {
 if (confirmDeleteDistribution) {
     confirmDeleteDistribution.addEventListener("click", async () => {
         try {
-            const res = await fetch(`${API_BASE}/distributions/${deletingDistributionId}`, { method: "DELETE", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            const res = await fetch(`${API_BASE}/distributions/${deletingDistributionId}`, { method: "DELETE", headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
             if (!res.ok) {
                 const err = await res.json();
                 alert(err.detail || "Delete failed.");
@@ -210,7 +219,10 @@ document.getElementById("statusFilter")?.addEventListener("change", () => {
 =========================== */
 async function loadResources() {
     try {
-        const resources   = await (await fetch(`${API_BASE}/resources/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })).json();
+        const resources   = await (await fetch(`${API_BASE}/resources/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} })).json();
         const resourceSel = document.getElementById("resource");
         resourceSel.innerHTML = '<option value="">Select Resource</option>';
         resources.forEach(r => {
@@ -221,7 +233,10 @@ async function loadResources() {
 
 async function loadStaff() {
     try {
-        const users    = await (await fetch(`${API_BASE}/users/`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })).json();
+        const users    = await (await fetch(`${API_BASE}/users/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} })).json();
         const staffSel = document.getElementById("staff");
         staffSel.innerHTML = '<option value="">Select Staff</option>';
         users.filter(u => u.role === "staff").forEach(u => {
