@@ -2,28 +2,28 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import Base, engine
+from backend.database import Base, engine
 
 # Import Models
-from models.user import User
-from models.category import Category
-from models.location import Location
-from models.assistance_request import AssistanceRequest
-from models.resource import Resource
-from models.distribution import Distribution
-from models.notification import Notification
-from models.request_status_history import RequestStatusHistory
+from backend.models.user import User
+from backend.models.category import Category
+from backend.models.location import Location
+from backend.models.assistance_request import AssistanceRequest
+from backend.models.resource import Resource
+from backend.models.distribution import Distribution
+from backend.models.notification import Notification
+from backend.models.request_status_history import RequestStatusHistory
 
 # Import Routers
-from routes.users import router as user_router
-from routes.notification import router as notification_router
-from routes.history import router as history_router
-from routes.request import router as request_router
-from routes.resource import router as resource_router
-from routes.distribution import router as distribution_router
-from routes.dashboard import router as dashboard_router
-from routes import reports
-from routes import location
+from backend.routes.users import router as user_router
+from backend.routes.notification import router as notification_router
+from backend.routes.history import router as history_router
+from backend.routes.request import router as request_router
+from backend.routes.resource import router as resource_router
+from backend.routes.distribution import router as distribution_router
+from backend.routes.dashboard import router as dashboard_router
+from backend.routes import reports
+from backend.routes import location
 
 # Create Tables
 Base.metadata.create_all(bind=engine)

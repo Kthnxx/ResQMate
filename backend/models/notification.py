@@ -8,7 +8,7 @@ from sqlalchemy import (
     ForeignKey
 )
 from sqlalchemy.sql import func
-from database import Base
+from backend.database import Base
 
 class Notification(Base):
     __tablename__ = "notifications"

@@ -7,7 +7,7 @@ from sqlalchemy import (
     DateTime
 )
 from sqlalchemy.sql import func
-from database import Base
+from backend.database import Base
 
 class RequestStatusHistory(Base):
     __tablename__ = "request_status_history"

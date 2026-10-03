@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String
-from database import Base
+from backend.database import Base
 
 class Location(Base):
     __tablename__ = "locations"
@@ -14,4 +14,4 @@ class Location(Base):
     barangay = Column(String(100))
     city = Column(String(100))
     province = Column(String(100))
-    region = Column(String(100))
+    region = Column(String(100))

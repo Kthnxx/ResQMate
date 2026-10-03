@@ -2,7 +2,7 @@ import os
 import jwt
 from fastapi import Request, HTTPException, Depends
 from sqlalchemy import text
-from database import engine
+from backend.database import engine
 
 JWT_SECRET = os.getenv("JWT_SECRET", "supersecretkey")
 

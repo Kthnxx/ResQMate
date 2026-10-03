@@ -2,12 +2,12 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy import text
-from database import engine
+from backend.database import engine
 import secrets
 import jwt
 import os
 from datetime import datetime, timedelta, timezone
-from security import get_current_user, get_current_admin
+from backend.security import get_current_user, get_current_admin
 
 router = APIRouter()
 

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-from security import get_current_user, get_current_admin, require_role
+from backend.security import get_current_user, get_current_admin, require_role
 import requests
 
 router = APIRouter(

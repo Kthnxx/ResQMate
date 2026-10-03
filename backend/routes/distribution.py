@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import text
-from database import engine
-from security import require_role, get_current_admin, get_current_staff
+from backend.database import engine
+from backend.security import require_role, get_current_admin, get_current_staff
 
 router = APIRouter()
 

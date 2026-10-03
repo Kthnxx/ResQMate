@@ -8,7 +8,7 @@ from sqlalchemy import (
     DateTime
 )
 from sqlalchemy.sql import func
-from database import Base
+from backend.database import Base
 
 class AssistanceRequest(Base):
     __tablename__ = "assistance_requests"

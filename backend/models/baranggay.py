@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from database import Base
+from backend.database import Base
 
 class Barangay(Base):
     __tablename__ = "barangays"
