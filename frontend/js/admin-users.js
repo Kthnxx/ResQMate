@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000/users";
+const API_URL = "http://127.0.0.1:8000/users/";
 
 const usersTableBody = document.getElementById("usersTableBody");
 const modal          = document.getElementById("userModal");
@@ -11,7 +11,10 @@ let allUsers      = [];
 =========================== */
 async function loadUsers() {
     try {
-        const response = await fetch(API_URL, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        const response = await fetch(API_URL, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         const users    = await response.json();
         allUsers       = users;
         renderUsers(users);
@@ -106,9 +109,10 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
             // CREATE via /users/create (accepts full_name)
             const res = await fetch(`${API_URL}/create`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ full_name: fullName, email, password: password || "ResQMate2024!", role })
             });
 
@@ -126,9 +130,10 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
 
             const res = await fetch(`${API_URL}/${editingUserId}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json",
-                        "Authorization": `Bearer ${localStorage.getItem("token")}`
-                    },
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ first_name: firstName, last_name: lastName, email, role })
             });
 
@@ -170,7 +175,10 @@ window.editUser = function(id, fullName, email, role) {
 window.deleteUser = async function(userId) {
     if (!confirm("Delete this user? This cannot be undone.")) return;
     try {
-        await fetch(`${API_URL}/${userId}`, { method: "DELETE", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+        await fetch(`${API_URL}/${userId}`, { method: "DELETE", headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
         loadUsers();
     } catch (error) {
         console.error(error);

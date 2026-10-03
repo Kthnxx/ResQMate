@@ -188,7 +188,6 @@ body {
 .table thead th {
   font-size: 0.85rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.03em;
   color: #6b7280;
   border-bottom: 1px solid #fee2e2;

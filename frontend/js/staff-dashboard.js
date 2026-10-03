@@ -18,9 +18,18 @@ async function loadDashboardStats() {
         const staffId = user ? user.user_id : null;
 
         const [reqRes, distRes, resRes] = await Promise.all([
-            fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
-            fetch(`${API_URL}/distributions`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
-            fetch(`${API_URL}/resources`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} }),
+            fetch(`${API_URL}/distributions/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} }),
+            fetch(`${API_URL}/resources/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} })
         ]);
 
         const allRequests      = await reqRes.json();
@@ -61,8 +70,14 @@ async function loadRecentRequests() {
         const staffId = user ? user.user_id : null;
 
         const [reqRes, distRes] = await Promise.all([
-            fetch(`${API_URL}/requests`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }),
-            fetch(`${API_URL}/distributions`, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } })
+            fetch(`${API_URL}/requests/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} }),
+            fetch(`${API_URL}/distributions/`, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} })
         ]);
 
         const allRequests      = await reqRes.json();

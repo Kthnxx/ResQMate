@@ -34,34 +34,31 @@
 
     <!-- Hero Section -->
     <section class="hero">
-
-        <div class="hero-text">
-
-            <h1>
-                Your Partner<br>
-                in Times of Crisis
-            </h1>
-
-            <p>
-                Request assistance, coordinate relief operations,
-                and track disaster response in one platform.
-            </p>
-
-            <div class="hero-buttons">
-
-                <button class="primary-btn" id="requestAssistanceBtn"
-                    onclick="document.getElementById('loginModal').classList.add('show')">
-                    Request Assistance
-                </button>
-
-                <button class="secondary-btn" id="learnMoreBtn">
-                    Learn More
-                </button>
-
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1>
+                    Your Partner<br>
+                    in Times of Crisis
+                </h1>
+                <p>
+                    Request assistance, coordinate relief operations,
+                    and track disaster response in one platform.
+                </p>
+                <div class="hero-buttons">
+                    <button class="primary-btn" id="requestAssistanceBtn"
+                        onclick="document.getElementById('loginModal').classList.add('show')">
+                        Request Assistance
+                    </button>
+                    <button class="secondary-btn" id="learnMoreBtn">
+                        Learn More
+                    </button>
+                </div>
             </div>
-
+            
+            <div class="hero-image">
+                <img src="assets/hero_illustration.jpg" alt="Disaster Relief Dashboard Mockup">
+            </div>
         </div>
-
     </section>
     <!-- Features Section -->
     <section class="features" id="featuresSection">
@@ -102,6 +99,46 @@
 
         <div class="text-center mt-2rem">
             <a href="#top" class="back-to-top-small text-primary">Back to top ↑</a>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faqSection">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <button class="faq-question">
+                    Who can use ResQMate?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>ResQMate is designed for community users to request emergency assistance (Food, Water, Shelter, Medicine, General), and for authorized staff and administrators to review, manage, and dispatch relief distributions.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <button class="faq-question">
+                    How do I track the status of my assistance request?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Once logged in, you can navigate to the 'My Requests' dashboard to view real-time updates and status changes on any active requests you have submitted.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <button class="faq-question">
+                    What should I do during an immediate, life-threatening emergency?
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>ResQMate is a supplemental coordination tool. For immediate life-threatening emergencies, please contact your local hotline or emergency services (like 911 or local LGU rescue units) right away.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-2rem" style="z-index: 1; padding-bottom: 30px;">
+            <a href="#top" class="back-to-top-main">Back to top ↑</a>
         </div>
     </section>
 
@@ -176,6 +213,21 @@
     </section>
 
     <script src="components/loadmodal.js"></script>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const faqItem = button.parentElement;
+                
+                // Optional: Close others
+                // document.querySelectorAll('.faq-item').forEach(item => {
+                //     if (item !== faqItem) item.classList.remove('active');
+                // });
+
+                faqItem.classList.toggle('active');
+            });
+        });
+    </script>
 
 </body>
 

@@ -273,16 +273,34 @@ input.input-error {
     margin-top: 30px;
     text-align: center;
     font-size: 13px;
-    color: #666;
+    color: #64748b;
     line-height: 1.5;
+    background: #fdf2f2;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #fce8e8;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .forgot-password-text p {
     margin: 4px 0;
 }
 
-.forgot-password-text strong {
-    color: #720d0d;
+.forgot-password-text .recovery-title {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.forgot-password-text a {
+    color: #EF4444;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.forgot-password-text a:hover {
+    text-decoration: underline;
 }
 
 

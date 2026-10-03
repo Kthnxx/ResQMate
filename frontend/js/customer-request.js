@@ -247,11 +247,11 @@ if (requestForm) {
 
         try {
             const token = localStorage.getItem("token");
-            const response = await fetch(`${API_URL}/requestscreate`, {
+            const response = await fetch(`${API_URL}/requests/create`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     user_id: user.user_id,

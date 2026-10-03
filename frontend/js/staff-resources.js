@@ -23,8 +23,11 @@ async function loadResources() {
 
         const response =
             await fetch(
-                `${API_URL}/resources`
-            , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+                `${API_URL}/resources/`
+            , { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
 
         if (!response.ok) {
             console.error("Failed to load resources:", await response.text());

@@ -78,27 +78,76 @@ function initializeModals() {
         registerModal.classList.add("show");
     });
 
+    function resetLoginModal() {
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) loginForm.reset();
+        
+        const loginError = document.getElementById("loginError");
+        if (loginError) loginError.classList.remove("show");
+        
+        document.querySelectorAll("#loginForm input").forEach(input => {
+            input.classList.remove("input-error");
+        });
+        
+        const loginBtn = document.getElementById("loginBtn");
+        if (loginBtn) loginBtn.disabled = true;
+    }
+
+    function resetRegisterModal() {
+        const registerForm = document.getElementById("registerForm");
+        if (registerForm) registerForm.reset();
+        
+        const registerError = document.getElementById("registerError");
+        if (registerError) {
+            registerError.classList.remove("show");
+            registerError.classList.remove("success-alert");
+        }
+        
+        document.querySelectorAll("#registerForm input").forEach(input => {
+            input.classList.remove("input-error");
+        });
+        
+        const registerBtn = document.getElementById("registerBtn");
+        if (registerBtn) registerBtn.disabled = true;
+    }
+
     // Close Login
     closeLogin.addEventListener("click", () => {
         loginModal.classList.remove("show");
+        resetLoginModal();
     });
 
     // Close Register
     closeRegister.addEventListener("click", () => {
         registerModal.classList.remove("show");
+        resetRegisterModal();
     });
 
     // Click Outside Modal
     window.addEventListener("click", (e) => {
-
         if (e.target === loginModal) {
             loginModal.classList.remove("show");
+            resetLoginModal();
         }
 
         if (e.target === registerModal) {
             registerModal.classList.remove("show");
+            resetRegisterModal();
         }
+    });
 
+    // Escape Key to Close
+    window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            if (loginModal && loginModal.classList.contains("show")) {
+                loginModal.classList.remove("show");
+                resetLoginModal();
+            }
+            if (registerModal && registerModal.classList.contains("show")) {
+                registerModal.classList.remove("show");
+                resetRegisterModal();
+            }
+        }
     });
 
     // Register -> Login
@@ -106,19 +155,15 @@ function initializeModals() {
         document.getElementById("openLoginLink");
 
     if (openLoginLink) {
-
         openLoginLink.addEventListener(
             "click",
             (e) => {
-
                 e.preventDefault();
-
                 registerModal.classList.remove("show");
+                resetRegisterModal();
                 loginModal.classList.add("show");
-
             }
         );
-
     }
 
     // Login -> Register
@@ -126,14 +171,12 @@ function initializeModals() {
         document.getElementById("openRegisterLink");
 
     if (openRegisterLink) {
-
         openRegisterLink.addEventListener(
             "click",
             (e) => {
-
                 e.preventDefault();
-
                 loginModal.classList.remove("show");
+                resetLoginModal();
                 
                 const dobInput = document.getElementById("registerDob");
                 if (dobInput) {
@@ -141,10 +184,8 @@ function initializeModals() {
                 }
                 
                 registerModal.classList.add("show");
-
             }
         );
-
     }
 
     // ==========================
@@ -497,6 +538,16 @@ function initializeModals() {
             const registerRight = document.querySelector(".register-right");
             if (registerRight) {
                 registerRight.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    const loginBackToTopBtn = document.getElementById("loginBackToTopBtn");
+    if (loginBackToTopBtn) {
+        loginBackToTopBtn.addEventListener("click", () => {
+            const loginRight = document.querySelector(".login-right");
+            if (loginRight) {
+                loginRight.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     }

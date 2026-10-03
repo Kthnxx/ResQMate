@@ -23,7 +23,10 @@ async function loadDashboard() {
         const response =
             await fetch(
                 `http://127.0.0.1:8000/requests/user/${user.user_id}`
-            , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            , { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
 
         if (!response.ok) {
             throw new Error("Failed to load requests.");

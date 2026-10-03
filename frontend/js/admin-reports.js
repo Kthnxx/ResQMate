@@ -10,7 +10,10 @@ async function loadReports() {
     try {
 
         const response =
-            await fetch(API_URL, { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            await fetch(API_URL, { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} });
 
         const data =
             await response.json();
@@ -111,7 +114,10 @@ async function loadMonthlyChart() {
     const response =
         await fetch(
             "http://127.0.0.1:8000/reports/monthly",
-            { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+            { headers: {
+    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+    'Content-Type': 'application/json'
+} }
         );
 
     if (!response.ok) throw new Error("Monthly fetch failed");
