@@ -36,7 +36,7 @@ function renderTable(resources) {
 
     if (resources.length === 0) {
         resourceTableBody.innerHTML = `
-            <tr><td colspan="7" style="text-align:center;padding:30px;color:#9ca3af;">No resources found.</td></tr>`;
+            <tr><td colspan="7" style="text-align:center;padding:30px;color:#9ca3af;">No data yet</td></tr>`;
         return;
     }
 

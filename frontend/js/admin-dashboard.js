@@ -76,6 +76,14 @@ async function loadResourceAlerts() {
         }
 
         container.innerHTML = "";
+        if (!lowStock || lowStock.length === 0) {
+            if ((container.tagName === "TBODY" || container.tagName === "TABLE" || "container".toLowerCase().includes("table") || "container".toLowerCase().includes("body"))) {
+                container.innerHTML = `<tr><td colspan='100%' style='text-align:center;color:#9ca3af;padding:20px;'>No data yet</td></tr>`;
+            } else {
+                container.innerHTML = `<div style='text-align:center;color:#9ca3af;padding:20px;'>No data yet</div>`;
+            }
+            return;
+        }
         lowStock.forEach(r => {
             container.innerHTML += `
                 <div class="alert-item">
@@ -106,7 +114,7 @@ async function loadActiveDistributions() {
         tbody.innerHTML = "";
 
         if (distributions.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px;">No distributions yet.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:20px;">No data yet</td></tr>`;
             return;
         }
 
@@ -145,6 +153,14 @@ async function loadRecentRequests() {
         if (!tbody) return;
 
         tbody.innerHTML = "";
+        if (!requests || requests.length === 0) {
+            if ((tbody.tagName === "TBODY" || tbody.tagName === "TABLE" || "tbody".toLowerCase().includes("table") || "tbody".toLowerCase().includes("body"))) {
+                tbody.innerHTML = `<tr><td colspan='100%' style='text-align:center;color:#9ca3af;padding:20px;'>No data yet</td></tr>`;
+            } else {
+                tbody.innerHTML = `<div style='text-align:center;color:#9ca3af;padding:20px;'>No data yet</div>`;
+            }
+            return;
+        }
 
         requests.slice(0, 5).forEach(r => {
             const status   = (r.status || "pending").toLowerCase();
@@ -182,7 +198,7 @@ async function loadRecentActivity() {
         activityList.innerHTML = "";
 
         if (requests.length === 0) {
-            activityList.innerHTML = `<div class="activity-item">No activity yet.</div>`;
+            activityList.innerHTML = `<div class="activity-item">No data yet</div>`;
             return;
         }
 
@@ -195,6 +211,6 @@ async function loadRecentActivity() {
         });
 
     } catch (error) {
-        activityList.innerHTML = `<div class="activity-item">No activity found.</div>`;
+        activityList.innerHTML = `<div class="activity-item">No data yet</div>`;
     }
 }

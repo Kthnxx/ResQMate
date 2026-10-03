@@ -109,6 +109,11 @@ function loadRecentRequests(requests) {
 
     tableBody.innerHTML = "";
 
+    if (!requests || requests.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan='100%' style='text-align:center;color:#9ca3af;padding:20px;'>No data yet</td></tr>`;
+        return;
+    }
+
     requests
         .slice(0, 5)
         .forEach(request => {

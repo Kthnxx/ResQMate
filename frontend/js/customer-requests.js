@@ -71,9 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (requests.length === 0) {
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center; color: #718096; padding: 20px;">
-                        No assistance requests found.
-                    </td>
+                    <td colspan="5" style="text-align: center; color: #718096; padding: 20px;">No data yet</td>
                 </tr>
             `;
             return;

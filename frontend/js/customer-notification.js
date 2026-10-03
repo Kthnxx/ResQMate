@@ -107,7 +107,7 @@ function displayNotifications(
         notificationList.innerHTML = `
             <div class="empty-notifications">
                 <i class="fa-regular fa-bell-slash"></i>
-                <h3>No Notification Yet</h3>
+                <h3>No data yet</h3>
                 <p>You currently have no request updates.</p>
             </div>
         `;

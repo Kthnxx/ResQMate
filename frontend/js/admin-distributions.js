@@ -41,7 +41,7 @@ function renderTable(data) {
 
     if (data.length === 0) {
         distributionTableBody.innerHTML = `
-            <tr><td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;">No distributions yet.</td></tr>`;
+            <tr><td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;">No data yet</td></tr>`;
         return;
     }
 

@@ -51,9 +51,7 @@ function renderDistributions(distributions) {
     if (distributions.length === 0) {
         table.innerHTML = `
             <tr>
-                <td colspan="6" style="text-align:center; padding: 30px; color: #6b7280;">
-                    No distributions assigned to you yet.
-                </td>
+                <td colspan="6" style="text-align:center; padding: 30px; color: #6b7280;">No data yet</td>
             </tr>`;
         return;
     }

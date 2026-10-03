@@ -100,7 +100,7 @@ async function loadRecentRequests() {
         table.innerHTML = "";
 
         if (myRequests.length === 0) {
-            table.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-muted">No assigned requests yet.</td></tr>`;
+            table.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-muted">No data yet</td></tr>`;
             return;
         }
 

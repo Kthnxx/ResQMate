@@ -67,7 +67,7 @@ function renderRequestsTable(data = requestsData) {
     tbody.innerHTML = "";
 
     if (data.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;">No requests found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:#9ca3af;">No data yet</td></tr>`;
         return;
     }
 
