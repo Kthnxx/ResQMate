@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
 async function loadModals() {
 
     // Login Modal
@@ -309,7 +310,7 @@ function initializeModals() {
             emailInput.addEventListener("blur", async function() {
                 if (this.value && !this.validity.typeMismatch && !this.validity.valueMissing) {
                     try {
-                        const response = await fetch(`http://127.0.0.1:8000/users/check-email?email=${encodeURIComponent(this.value)}`);
+                        const response = await fetch(`${API_BASE_URL}/users/check-email?email=${encodeURIComponent(this.value)}`);
                         if (response.ok) {
                             const data = await response.json();
                             if (data.exists) {
@@ -462,7 +463,7 @@ function initializeModals() {
                 try {
 
                     const response = await fetch(
-                        "http://127.0.0.1:8000/users/register",
+                        `${API_BASE_URL}/users/register`,
                         {
                             method: "POST",
                             headers: {
@@ -661,7 +662,7 @@ function initializeModals() {
                 try {
 
                     const response = await fetch(
-                        "http://127.0.0.1:8000/users/login",
+                        `${API_BASE_URL}/users/login`,
                         {
                             method: "POST",
                             headers: {

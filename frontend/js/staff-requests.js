@@ -1,4 +1,4 @@
-const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
 /* ============================================================
    staff-requests.js — REFACTORED FLOW
    Staff only sees requests in "processing" or "completed"

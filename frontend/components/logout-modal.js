@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
 function initLogoutModal() {
 
     document.addEventListener("click", function (e) {
@@ -44,7 +45,7 @@ function initLogoutModal() {
             
             const token = localStorage.getItem("token");
             if (token) {
-                fetch("http://127.0.0.1:8000/users/logout", {
+                fetch(`${API_BASE_URL}/users/logout`, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${token}`
