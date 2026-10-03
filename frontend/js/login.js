@@ -7,7 +7,7 @@ loginForm.addEventListener("submit", async (e) => {
 
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    
+
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     if (submitBtn) {
         submitBtn.disabled = true;
@@ -41,7 +41,7 @@ loginForm.addEventListener("submit", async (e) => {
                 "Invalid username or password";
 
             loginError.classList.add("show");
-            
+
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.textContent = "Login";
@@ -56,7 +56,14 @@ loginForm.addEventListener("submit", async (e) => {
             "user",
             JSON.stringify(data)
         );
+        console.log("TOKEN FROM API:", data.token);
+
         localStorage.setItem("token", data.token);
+
+        console.log(
+            "TOKEN AFTER SAVE:",
+            localStorage.getItem("token")
+        );
 
         alert("Login Successful");
 

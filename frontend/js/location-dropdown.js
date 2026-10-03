@@ -1,5 +1,4 @@
-const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
-const LOCATION_API_URL = API_BASE_URL;
+const LOCATION_API_URL = "http://127.0.0.1:8000";
 
 const regionSelect = document.getElementById("region");
 const provinceSelect = document.getElementById("province");
@@ -18,11 +17,17 @@ function decodeText(text) {
     }
 }
 
-function getAuthHeaders() {
-    const token = localStorage.getItem('token') || localStorage.getItem('access_token') || sessionStorage.getItem('token');
+function getToken() {
+    const user = JSON.parse(
+        localStorage.getItem("user") || "{}"
+    );
+
+    return user.token || "";
+}
+
+function getHeaders() {
     return {
-        'Authorization': token ? `Bearer ${token}` : '',
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${getToken()}`
     };
 }
 
@@ -34,12 +39,22 @@ async function loadRegions() {
     try {
 
         const response = await fetch(
-            `${LOCATION_API_URL}/locations/regions`
-        , { headers: getAuthHeaders() });
+            `${LOCATION_API_URL}/locations/regions`,
+            {
+                headers: getHeaders()
+            }
+        );
 
         const result = await response.json();
 
+        console.log("Regions:", result);
+
         const regions = result.data || result;
+
+        if (!Array.isArray(regions)) {
+            console.error("Invalid regions data:", result);
+            return;
+        }
 
         regionSelect.innerHTML =
             '<option value="">Select Region</option>';
@@ -68,44 +83,85 @@ async function loadRegions() {
 /* ==========================
    REGION CHANGE
 ========================== */
-regionSelect.addEventListener("change", async () => {
-    const regionCode = regionSelect.value;
-    const selectedText = regionSelect.options[regionSelect.selectedIndex].text;
+regionSelect.addEventListener(
+    "change",
+    async () => {
 
-    provinceSelect.innerHTML = '<option value="">Select Province</option>';
-    citySelect.innerHTML = '<option value="">Select City</option>';
-    barangaySelect.innerHTML = '<option value="">Select Barangay</option>';
+        const regionCode =
+            regionSelect.value;
 
-    // NCR special case
-    if (regionCode === "1300000000" || selectedText.includes("NCR") || selectedText.includes("National Capital Region") || selectedText.includes("Metro Manila")) {
-        provinceSelect.innerHTML = `
-            <option value="1300000000" selected>
-                Metro Manila
-            </option>
-        `;
-        provinceSelect.disabled = false;
-        loadCities("1300000000");
-        return;
-    }
+        const selectedText =
+            regionSelect.options[
+                regionSelect.selectedIndex
+            ].text;
 
-    provinceSelect.disabled = false;
+        provinceSelect.innerHTML =
+            '<option value="">Select Province</option>';
 
-    try {
-        const response = await fetch(`${LOCATION_API_URL}/locations/regions/${regionCode}/provinces`, { headers: getAuthHeaders() });
-        const result = await response.json();
-        const provinces = result.data || result;
+        citySelect.innerHTML =
+            '<option value="">Select City</option>';
 
-        provinces.forEach(province => {
-            provinceSelect.innerHTML += `
-                <option value="${province.code}">
-                    ${decodeText(province.name)}
+        barangaySelect.innerHTML =
+            '<option value="">Select Barangay</option>';
+
+        if (!regionCode) return;
+
+        if (
+            regionCode === "1300000000" ||
+            selectedText.includes("NCR") ||
+            selectedText.includes("Metro Manila") ||
+            selectedText.includes("National Capital Region")
+        ) {
+
+            provinceSelect.innerHTML = `
+                <option value="1300000000">
+                    Metro Manila
                 </option>
             `;
-        });
-    } catch (error) {
-        console.error("Failed to load provinces", error);
+
+            loadCities("1300000000");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                `${LOCATION_API_URL}/locations/regions/${regionCode}/provinces`,
+                {
+                    headers: getHeaders()
+                }
+            );
+
+            const result =
+                await response.json();
+
+            const provinces =
+                result.data || result;
+
+            if (!Array.isArray(provinces))
+                return;
+
+            provinces.forEach(province => {
+
+                provinceSelect.innerHTML += `
+                    <option value="${province.code}">
+                        ${decodeText(province.name)}
+                    </option>
+                `;
+
+            });
+
+        } catch (error) {
+
+            console.error(
+                "Failed to load provinces",
+                error
+            );
+
+        }
+
     }
-});
+);
 
 /* ==========================
    PROVINCE CHANGE
@@ -113,8 +169,6 @@ regionSelect.addEventListener("change", async () => {
 provinceSelect.addEventListener(
     "change",
     () => {
-        // If NCR is selected, don't re-trigger regular province code fetching
-        if (regionSelect.value === "130000000") return;
 
         loadCities(
             provinceSelect.value
@@ -139,18 +193,31 @@ async function loadCities(
     if (!codeToFetch) return;
 
     try {
-        // If NCR, we fetch cities using the region code/province code endpoint depending on your backend
-        // For NCR, if your API expects the region code or province code, adjust here:
-        const endpoint = (codeToFetch === "1300000000" || regionSelect.value === "1300000000")
-            ? `${LOCATION_API_URL}/locations/regions/1300000000/cities-municipalities`
-            : `${LOCATION_API_URL}/locations/provinces/${codeToFetch}/cities`;
 
-        const response = await fetch(endpoint, { headers: getAuthHeaders() });
+        const endpoint =
+            (
+                codeToFetch === "1300000000" ||
+                regionSelect.value === "1300000000"
+            )
+                ? `${LOCATION_API_URL}/locations/regions/1300000000/cities-municipalities`
+                : `${LOCATION_API_URL}/locations/provinces/${codeToFetch}/cities`;
 
-        const result = await response.json();
+        const response =
+            await fetch(
+                endpoint,
+                {
+                    headers: getHeaders()
+                }
+            );
+
+        const result =
+            await response.json();
 
         const cities =
             result.data || result;
+
+        if (!Array.isArray(cities))
+            return;
 
         cities.forEach(city => {
 
@@ -161,9 +228,6 @@ async function loadCities(
             `;
 
         });
-
-        // Ensure city dropdown is unlocked
-        citySelect.disabled = false;
 
     } catch (error) {
 
@@ -193,26 +257,32 @@ citySelect.addEventListener(
 
         try {
 
-            const response = await fetch(
-                `${LOCATION_API_URL}/locations/cities/${cityCode}/barangays`
-            , { headers: getAuthHeaders() });
+            const response =
+                await fetch(
+                    `${LOCATION_API_URL}/locations/cities/${cityCode}/barangays`,
+                    {
+                        headers: getHeaders()
+                    }
+                );
 
-            const result = await response.json();
+            const result =
+                await response.json();
 
             const barangays =
                 result.data || result;
+
+            if (!Array.isArray(barangays))
+                return;
 
             barangays.forEach(barangay => {
 
                 barangaySelect.innerHTML += `
                     <option value="${barangay.code}">
-                        ${barangay.name}
+                        ${decodeText(barangay.name)}
                     </option>
                 `;
 
             });
-
-            barangaySelect.disabled = false;
 
         } catch (error) {
 
