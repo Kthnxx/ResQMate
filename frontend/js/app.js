@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 document.addEventListener('DOMContentLoaded', () => {
     // Select the form - assuming it's the first form on the page since index.html is currently empty
     const form = document.querySelector('form');
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             
             try {
-                const response = await fetch('http://127.0.0.1:8000/requests/create', {
+                const response = await fetch(`${API_BASE_URL}/requests/create`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

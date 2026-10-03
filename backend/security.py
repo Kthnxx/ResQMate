@@ -1,7 +1,10 @@
-import secrets
+import os
+import jwt
 from fastapi import Request, HTTPException, Depends
 from sqlalchemy import text
 from database import engine
+
+JWT_SECRET = os.getenv("JWT_SECRET", "supersecretkey")
 
 def get_session_token(request: Request):
     auth_header = request.headers.get("Authorization")
@@ -10,6 +13,16 @@ def get_session_token(request: Request):
     return auth_header.split(" ")[1]
 
 def get_current_user(token: str = Depends(get_session_token)):
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token payload")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Session expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
     with engine.connect() as conn:
         result = conn.execute(
             text("SELECT user_id, role, session_token FROM users WHERE session_token = :token"),

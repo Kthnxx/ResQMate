@@ -26,3 +26,5 @@ class User(Base):
     phone_number = Column(String(20))
     dob = Column(DateTime)
     session_token = Column(String(255), nullable=True)
+    failed_login_attempts = Column(Integer, default=0)
+    locked_until = Column(DateTime, nullable=True)
