@@ -9,7 +9,17 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL environment variable is not set")
 
-engine = create_engine(DATABASE_URL)
+connect_args = {}
+if "ssl-mode" in DATABASE_URL:
+    import urllib.parse
+    parsed = urllib.parse.urlparse(DATABASE_URL)
+    query = urllib.parse.parse_qs(parsed.query)
+    query.pop('ssl-mode', None)
+    new_query = urllib.parse.urlencode(query, doseq=True)
+    DATABASE_URL = urllib.parse.urlunparse(parsed._replace(query=new_query))
+    connect_args = {"ssl": {}}
+
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 
 SessionLocal = sessionmaker(
     autocommit=False,
