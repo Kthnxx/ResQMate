@@ -460,6 +460,11 @@ function initializeModals() {
                     return;
                 }
 
+                const registerBtn = document.getElementById("registerBtn");
+                const originalText = registerBtn.textContent;
+                registerBtn.disabled = true;
+                registerBtn.textContent = "Registering...";
+
                 try {
 
                     const response = await fetch(
@@ -526,6 +531,12 @@ function initializeModals() {
                         "Cannot connect to server."
                     );
 
+                } finally {
+                    const registerBtn = document.getElementById("registerBtn");
+                    if (registerBtn) {
+                        registerBtn.disabled = false;
+                        registerBtn.textContent = "Register";
+                    }
                 }
 
             }
@@ -659,6 +670,11 @@ function initializeModals() {
                 const password =
                     document.getElementById("password").value;
 
+                const loginBtn = document.getElementById("loginBtn");
+                const originalText = loginBtn.textContent;
+                loginBtn.disabled = true;
+                loginBtn.textContent = "Logging in...";
+
                 try {
 
                     const response = await fetch(
@@ -726,6 +742,12 @@ function initializeModals() {
                         "Cannot connect to server."
                     );
 
+                } finally {
+                    const loginBtn = document.getElementById("loginBtn");
+                    if (loginBtn) {
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = "Login";
+                    }
                 }
 
             }
