@@ -13,45 +13,20 @@ from database import Base
 class AssistanceRequest(Base):
     __tablename__ = "assistance_requests"
 
-    request_id = Column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
-
-    user_id = Column(
-        Integer,
-        ForeignKey("users.user_id")
-    )
-
-    category_id = Column(
-        Integer,
-        ForeignKey("categories.category_id")
-    )
-
-    location_id = Column(
-        Integer,
-        ForeignKey("locations.location_id")
-    )
-
+    request_id = Column(Integer, primary_key=True, index=True)
+    user_id    = Column(Integer, ForeignKey("users.user_id"))
+    category_id= Column(Integer, ForeignKey("categories.category_id"))
+    location_id= Column(Integer, ForeignKey("locations.location_id"))
     request_details = Column(Text)
 
     priority_level = Column(
-        Enum(
-            "low",
-            "medium",
-            "high",
-            "critical"
-        ),
+        Enum("low", "medium", "high", "critical"),
         default="medium"
     )
 
-    status = Column(
-        String(50),
-        default="pending"
-    )
+    status = Column(String(50), default="pending")
 
-    date_requested = Column(
-        DateTime,
-        server_default=func.now()
-    )
+    # Added: admin fills this when rejecting
+    rejection_reason = Column(Text, nullable=True)
+
+    date_requested = Column(DateTime, server_default=func.now())

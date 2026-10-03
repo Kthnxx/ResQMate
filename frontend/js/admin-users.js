@@ -170,7 +170,7 @@ window.editUser = function(id, fullName, email, role) {
 window.deleteUser = async function(userId) {
     if (!confirm("Delete this user? This cannot be undone.")) return;
     try {
-        await fetch(`${API_URL}/${userId}`, { method: "DELETE" });
+        await fetch(`${API_URL}/${userId}`, { method: "DELETE", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
         loadUsers();
     } catch (error) {
         console.error(error);
@@ -190,7 +190,7 @@ function applyFilters() {
     const filtered = allUsers.filter(user => {
         const matchSearch = user.full_name.toLowerCase().includes(search) ||
                             user.email.toLowerCase().includes(search);
-        const matchRole   = role === "all" || user.role === role;
+        const matchRole   = role === "all" || user.role === role || (role === "community_user" && user.role === "community_user");
         return matchSearch && matchRole;
     });
 

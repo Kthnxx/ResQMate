@@ -106,10 +106,15 @@ function updateStatusBreakdown(data) {
 
 async function loadMonthlyChart() {
 
+    try {
+
     const response =
         await fetch(
-            "http://127.0.0.1:8000/reports/monthly"
-        , { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
+            "http://127.0.0.1:8000/reports/monthly",
+            { headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } }
+        );
+
+    if (!response.ok) throw new Error("Monthly fetch failed");
 
     const data =
         await response.json();
@@ -134,9 +139,11 @@ async function loadMonthlyChart() {
 
     document.getElementById("barSep").style.height =
         `${(data.Sep / max) * 100}%`;
-}
 
-loadMonthlyChart();
+    } catch (error) {
+        console.error("Failed to load monthly chart", error);
+    }
+}
 
 /* ===========================
    EXPORT CSV
@@ -154,4 +161,7 @@ function exportCSV() {
    INITIAL LOAD
 =========================== */
 
-loadReports();
+document.addEventListener("DOMContentLoaded", () => {
+    loadReports();
+    loadMonthlyChart();
+});

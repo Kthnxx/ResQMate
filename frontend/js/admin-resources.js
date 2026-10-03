@@ -141,13 +141,13 @@ resourceForm.addEventListener("submit", async (e) => {
         if (editingResourceId === null) {
             // CREATE
             const url = `${API_URL}/create?resource_name=${encodeURIComponent(resource_name)}&category=${encodeURIComponent(category)}&quantity_available=${quantity_available}&unit=${encodeURIComponent(unit)}&location=${encodeURIComponent(location)}`;
-            const res = await fetch(url, { method: "POST" });
+            const res = await fetch(url, { method: "POST", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
             if (!res.ok) { const err = await res.json(); alert(err.detail || "Failed to add resource."); return; }
 
         } else {
             // UPDATE
             const url = `${API_URL}/${editingResourceId}?resource_name=${encodeURIComponent(resource_name)}&category=${encodeURIComponent(category)}&quantity_available=${quantity_available}&unit=${encodeURIComponent(unit)}&location=${encodeURIComponent(location)}`;
-            const res = await fetch(url, { method: "PUT" });
+            const res = await fetch(url, { method: "PUT", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
             if (!res.ok) { const err = await res.json(); alert(err.detail || "Failed to update resource."); return; }
         }
 
@@ -207,7 +207,7 @@ window.deleteResource = async function(id) {
 
 async function doDeleteResource(id) {
     try {
-        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE", headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` } });
         if (!res.ok) { const err = await res.json(); alert(err.detail || "Delete failed."); return; }
         loadResources();
     } catch (error) {
