@@ -215,7 +215,7 @@ registerForm.addEventListener(
 
         const registerBtn = document.getElementById("registerBtn");
         registerBtn.disabled = true;
-        registerBtn.textContent = "Processing...";
+        registerBtn.textContent = "Registering...";
 
         try {
 

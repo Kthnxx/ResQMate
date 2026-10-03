@@ -11,7 +11,7 @@ loginForm.addEventListener("submit", async (e) => {
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = "Processing...";
+        submitBtn.textContent = "Logging in...";
     }
 
     try {

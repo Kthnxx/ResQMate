@@ -77,3 +77,10 @@
 
     cursor: pointer;
 }
+
+/* Global Button UI Feedback */
+button:active, .btn:active, input[type="submit"]:active, a.btn:active, .confirm-btn:active {
+    transform: scale(0.96) !important;
+    opacity: 0.9 !important;
+    transition: transform 0.1s ease, opacity 0.1s ease !important;
+}
