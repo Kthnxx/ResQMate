@@ -1,5 +1,4 @@
-const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
-const API_URL = API_BASE_URL;
+const API_URL = "http://127.0.0.1:8000";
 
 const requestForm = document.getElementById("requestForm");
 const assistanceTypeInput = document.getElementById("assistanceType");
@@ -247,24 +246,31 @@ if (requestForm) {
         }
 
         try {
-            const token = localStorage.getItem("token");
-            const response = await fetch(`${API_URL}/requests/create`, {
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    user_id: user.user_id,
-                    assistance_type: assistanceType,
-                    barangay: barangayText, // Sends text name
-                    city: cityText,         // Sends text name
-                    province: provinceText, // Sends text name
-                    region: regionText,
-                    request_details: details,
-                    priority: priority
-                })
-            });
+            const userData = JSON.parse(
+                localStorage.getItem("user") || "{}"
+            );
+
+            const token = userData.token;
+            const response = await fetch(
+                `${API_URL}/requests/create`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        user_id: user.user_id,
+                        assistance_type: assistanceType,
+                        barangay: barangayText,
+                        city: cityText,
+                        province: provinceText,
+                        region: regionText,
+                        request_details: details,
+                        priority: priority
+                    })
+                }
+            );
 
             const data = await response.json();
 

@@ -4,6 +4,17 @@ document.addEventListener(
     loadDashboard
 );
 
+function getAuthHeaders() {
+    const userData = JSON.parse(
+        localStorage.getItem("user") || "{}"
+    );
+
+    return {
+        "Authorization": `Bearer ${userData.token || ""}`,
+        "Content-Type": "application/json"
+    };
+}
+
 async function loadDashboard() {
 
     const user =
@@ -21,13 +32,13 @@ async function loadDashboard() {
 
     try {
 
-        const response =
-            await fetch(
-                `${API_BASE_URL}/requests/user/${user.user_id}`
-            , { headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
-} });
+        const response = await fetch(
+            `${API_BASE_URL}/requests/user/${user.user_id}`,
+            {
+                method: "GET",
+                headers: getAuthHeaders()
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to load requests.");

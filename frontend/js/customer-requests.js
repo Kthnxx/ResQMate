@@ -1,5 +1,16 @@
-const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : "https://res-q-mate-ten.vercel.app";
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 const API_URL = API_BASE_URL;
+
+function getAuthHeaders() {
+    const userData = JSON.parse(
+        localStorage.getItem("user") || "{}"
+    );
+
+    return {
+        "Authorization": `Bearer ${userData.token || ""}`,
+        "Content-Type": "application/json"
+    };
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     const storedUser = localStorage.getItem("user");
@@ -14,6 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         user = JSON.parse(storedUser);
+        console.log("USER:", user);
+        console.log("TOKEN:", user.token);
     } catch (error) {
         alert("Invalid user information. Please log in again.");
         return;
@@ -40,11 +53,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch(
-            `${API_URL}/requests/user/${user.user_id}`
-        , { headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
-} });
+            `${API_URL}/requests/user/${user.user_id}`,
+            {
+                method: "GET",
+                headers: getAuthHeaders()
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to fetch requests.");
@@ -169,11 +183,12 @@ let customerRequestsData = [];
 async function viewRequest(requestId) {
     try {
         const response = await fetch(
-            `${API_URL}/requests/${requestId}`
-        , { headers: {
-    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-    'Content-Type': 'application/json'
-} });
+            `${API_URL}/requests/${requestId}`,
+            {
+                method: "GET",
+                headers: getAuthHeaders()
+            }
+        );
 
         if (!response.ok) {
             throw new Error("Failed to fetch request details");
