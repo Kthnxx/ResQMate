@@ -12,7 +12,7 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/(users|notifications|history|requests|resources|distributions|dashboard|reports|location|docs|openapi\\.json)(/.*)?",
       "dest": "/backend/main.py"
     },
     {
