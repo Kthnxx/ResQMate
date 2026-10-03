@@ -241,18 +241,18 @@ def login_user(data: LoginRequest):
     # Check for lockout
     now = datetime.now(timezone.utc).replace(tzinfo=None)
     if result.locked_until and result.locked_until > now:
-        raise HTTPException(status_code=429, detail={"error": "Too many failed attempts. Account locked for 15 minutes.", "attempts_remaining": 0})
+        raise HTTPException(status_code=403, detail={"error": "Account locked due to too many failed attempts.", "attempts_remaining": 0, "locked_until": result.locked_until.isoformat()})
 
     if result.password != data.password:
         failed_attempts = (result.failed_login_attempts or 0) + 1
         with engine.begin() as conn:
             if failed_attempts >= 3:
-                lockout_time = now + timedelta(minutes=15)
+                lockout_time = now + timedelta(minutes=3)
                 conn.execute(
                     text("UPDATE users SET failed_login_attempts = :attempts, locked_until = :lock_time WHERE user_id = :uid"),
                     {"attempts": failed_attempts, "lock_time": lockout_time, "uid": result.user_id}
                 )
-                raise HTTPException(status_code=429, detail={"error": "Too many failed attempts. Account locked for 15 minutes.", "attempts_remaining": 0})
+                raise HTTPException(status_code=403, detail={"error": "Too many failed attempts. Account locked for 3 minutes.", "attempts_remaining": 0, "locked_until": lockout_time.isoformat()})
             else:
                 conn.execute(
                     text("UPDATE users SET failed_login_attempts = :attempts WHERE user_id = :uid"),

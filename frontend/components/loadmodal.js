@@ -698,6 +698,7 @@ function initializeModals() {
                         document.getElementById("loginError");
 
                     if (!response.ok) {
+                        if (window.lockoutInterval) clearInterval(window.lockoutInterval);
                         let errorMsg = "Invalid Credentials";
                         if (data && data.detail) {
                             if (typeof data.detail === 'string') {
@@ -705,6 +706,27 @@ function initializeModals() {
                             } else if (data.detail.error) {
                                 if (data.detail.attempts_remaining !== undefined && data.detail.attempts_remaining > 0) {
                                     errorMsg = `Invalid credentials. You have ${data.detail.attempts_remaining} attempts remaining before temporary lockout.`;
+                                } else if (data.detail.locked_until) {
+                                    const lockedUntil = new Date(data.detail.locked_until + "Z");
+                                    const updateTimer = () => {
+                                        const seconds = Math.ceil((lockedUntil - new Date()) / 1000);
+                                        if (seconds > 0) {
+                                            loginError.textContent = `Account locked. Try again in ${seconds} seconds.`;
+                                            const btn = document.getElementById("loginBtn");
+                                            if (btn) btn.disabled = true;
+                                        } else {
+                                            loginError.textContent = "Lockout ended. You may try again.";
+                                            const btn = document.getElementById("loginBtn");
+                                            if (btn) btn.disabled = false;
+                                            clearInterval(window.lockoutInterval);
+                                            window.isLockedOut = false;
+                                        }
+                                    };
+                                    window.isLockedOut = true;
+                                    updateTimer();
+                                    window.lockoutInterval = setInterval(updateTimer, 1000);
+                                    loginError.classList.add("show");
+                                    return;
                                 } else {
                                     errorMsg = data.detail.error;
                                 }
@@ -754,8 +776,10 @@ function initializeModals() {
                 } finally {
                     const loginBtn = document.getElementById("loginBtn");
                     if (loginBtn) {
-                        loginBtn.disabled = false;
                         loginBtn.textContent = "Login";
+                        if (!window.isLockedOut) {
+                            loginBtn.disabled = false;
+                        }
                     }
                 }
 
