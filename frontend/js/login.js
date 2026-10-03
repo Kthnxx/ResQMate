@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 const loginForm = document.getElementById("loginForm");
 
 loginForm.addEventListener("submit", async (e) => {
@@ -16,7 +17,7 @@ loginForm.addEventListener("submit", async (e) => {
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/users/login",
+            `${API_BASE_URL}/users/login`,
             {
                 method: "POST",
                 headers: {

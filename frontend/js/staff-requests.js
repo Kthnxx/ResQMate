@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 /* ============================================================
    staff-requests.js — REFACTORED FLOW
    Staff only sees requests in "processing" or "completed"
@@ -6,7 +7,7 @@
    Admin handles: Approve, Reject, Create Distribution.
    ============================================================ */
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = API_BASE_URL;
 
 document.addEventListener("DOMContentLoaded", () => {
 

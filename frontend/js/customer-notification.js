@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 document.addEventListener(
     "DOMContentLoaded",
     loadNotifications
@@ -27,7 +28,7 @@ async function loadNotifications() {
 
         const response =
             await fetch(
-                `http://127.0.0.1:8000/requests/user/${user.user_id}`
+                `${API_BASE_URL}/requests/user/${user.user_id}`
             , { headers: {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
     'Content-Type': 'application/json'

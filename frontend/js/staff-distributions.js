@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 /* ============================================================
    staff-distributions.js  — READ ONLY for staff
    Per the defined flow, only Admin creates distributions.
@@ -5,7 +6,7 @@
    The "New Distribution" button has been removed from the HTML.
    ============================================================ */
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = API_BASE_URL;
 
 document.addEventListener("DOMContentLoaded", () => {
     loadDistributions();

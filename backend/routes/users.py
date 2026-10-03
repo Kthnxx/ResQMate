@@ -4,6 +4,9 @@ from typing import Optional
 from sqlalchemy import text
 from database import engine
 import secrets
+import jwt
+import os
+from datetime import datetime, timedelta, timezone
 from security import get_current_user, get_current_admin
 
 router = APIRouter()
@@ -212,6 +215,7 @@ def create_user(data: CreateUserRequest, admin: dict = Depends(get_current_admin
 
 @router.post("/login")
 def login_user(data: LoginRequest):
+    JWT_SECRET = os.getenv("JWT_SECRET", "supersecretkey")
 
     with engine.connect() as conn:
 
@@ -222,7 +226,9 @@ def login_user(data: LoginRequest):
                     CONCAT_WS(' ', first_name, last_name) AS full_name,
                     email,
                     password,
-                    role
+                    role,
+                    failed_login_attempts,
+                    locked_until
                 FROM users
                 WHERE email = :email
             """),
@@ -232,15 +238,40 @@ def login_user(data: LoginRequest):
     if not result:
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
+    # Check for lockout
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    if result.locked_until and result.locked_until > now:
+        raise HTTPException(status_code=429, detail="Too many failed attempts. Account locked for 15 minutes.")
+
     if result.password != data.password:
+        failed_attempts = (result.failed_login_attempts or 0) + 1
+        with engine.begin() as conn:
+            if failed_attempts >= 3:
+                lockout_time = now + timedelta(minutes=15)
+                conn.execute(
+                    text("UPDATE users SET failed_login_attempts = :attempts, locked_until = :lock_time WHERE user_id = :uid"),
+                    {"attempts": failed_attempts, "lock_time": lockout_time, "uid": result.user_id}
+                )
+                raise HTTPException(status_code=429, detail="Too many failed attempts. Account locked for 15 minutes.")
+            else:
+                conn.execute(
+                    text("UPDATE users SET failed_login_attempts = :attempts WHERE user_id = :uid"),
+                    {"attempts": failed_attempts, "uid": result.user_id}
+                )
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
-    # Generate session token
-    session_token = secrets.token_urlsafe(32)
+    # Generate JWT session token
+    exp_time = now + timedelta(hours=24)
+    payload = {
+        "sub": str(result.user_id),
+        "role": result.role,
+        "exp": exp_time
+    }
+    session_token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
     
     with engine.begin() as conn:
         conn.execute(
-            text("UPDATE users SET session_token = :token WHERE user_id = :uid"),
+            text("UPDATE users SET session_token = :token, failed_login_attempts = 0, locked_until = NULL WHERE user_id = :uid"),
             {"token": session_token, "uid": result.user_id}
         )
 

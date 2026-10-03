@@ -1,5 +1,6 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 const API_URL =
-    "http://127.0.0.1:8000/reports";
+    `${API_BASE_URL}/reports`;
 
 /* ===========================
    LOAD REPORTS
@@ -113,7 +114,7 @@ async function loadMonthlyChart() {
 
     const response =
         await fetch(
-            "http://127.0.0.1:8000/reports/monthly",
+            `${API_BASE_URL}/reports/monthly`,
             { headers: {
     'Authorization': `Bearer ${localStorage.getItem('token')}`,
     'Content-Type': 'application/json'

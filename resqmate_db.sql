@@ -44,6 +44,8 @@ CREATE TABLE users (
 	phone_number VARCHAR(20), 
 	dob DATETIME, 
 	session_token VARCHAR(255), 
+	failed_login_attempts INTEGER DEFAULT 0,
+	locked_until DATETIME DEFAULT NULL,
 	PRIMARY KEY (user_id), 
 	UNIQUE (email)
 );

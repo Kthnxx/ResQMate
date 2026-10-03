@@ -1,3 +1,4 @@
+const API_BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost" ? "http://127.0.0.1:8000" : `${window.location.origin}/api`;
 const registerForm =
     document.getElementById("registerForm");
 
@@ -219,7 +220,7 @@ registerForm.addEventListener(
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:8000/users/register",
+                `${API_BASE_URL}/users/register`,
                 {
                     method: "POST",
                     headers: {
